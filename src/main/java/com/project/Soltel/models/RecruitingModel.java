@@ -77,4 +77,8 @@ public class RecruitingModel {
 	}
     
     
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a10c3fe4223e28fbf9fbbf0deb372ab13fc4f35f

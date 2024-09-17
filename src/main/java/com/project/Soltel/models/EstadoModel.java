@@ -9,7 +9,10 @@ import jakarta.persistence.Table;
 @Table(name = "EstadoModel")
 public class EstadoModel {
 	
+<<<<<<< HEAD
 	
+=======
+>>>>>>> a10c3fe4223e28fbf9fbbf0deb372ab13fc4f35f
     @Id
     private Integer IdEstado;
 
@@ -60,4 +63,8 @@ public class EstadoModel {
 		this.estado = estado;
 		this.activo = activo;
 	}    
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a10c3fe4223e28fbf9fbbf0deb372ab13fc4f35f
