@@ -15,8 +15,20 @@ public class CandidatosModel {
     @Column(nullable = false, length = 100)
     private String nombreCandidato;
     
+    @Column
+    private Boolean activo;
+
+    
     	// Getters y Setters
     
+	public Integer getIdCandidato() {
+		return IdCandidato;
+	}
+
+	public void setIdCandidato(Integer idCandidato) {
+		IdCandidato = idCandidato;
+	}
+
 	public String getNombreCandidato() {
 		return nombreCandidato;
 	}
@@ -24,11 +36,29 @@ public class CandidatosModel {
 	public void setNombreCandidato(String nombreCandidato) {
 		this.nombreCandidato = nombreCandidato;
 	}
-	
-	public CandidatosModel() {
+
+	public Boolean getActivo() {
+		return activo;
 	}
 
-	public CandidatosModel(String nombreCandidato) {
-		this.nombreCandidato = nombreCandidato;
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
 	}
+
+	
+	
+		// Constructors
+	
+	public CandidatosModel() {
+		super();
+	}
+
+	public CandidatosModel(Integer idCandidato, String nombreCandidato, Boolean activo) {
+		super();
+		IdCandidato = idCandidato;
+		this.nombreCandidato = nombreCandidato;
+		this.activo = activo;
+	}
+    
+   
 }

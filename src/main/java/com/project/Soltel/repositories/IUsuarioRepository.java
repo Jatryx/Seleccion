@@ -1,5 +1,24 @@
 package com.project.Soltel.repositories;
 
-public interface IUsuarioRepository {
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.project.Soltel.models.UsuarioModel;
+
+@Repository
+public interface IUsuarioRepository extends JpaRepository<UsuarioModel, Integer> {
+
+    @Query("SELECT a FROM UsuarioModel a WHERE a.activo = true")
+    List<UsuarioModel> findUsuarioActivo();
+
+    @Query("SELECT a FROM UsuarioModel a WHERE a.activo = false")
+    List<UsuarioModel> findUsuarioInactivo();
+
+    @Query("SELECT a FROM UsuarioModel a WHERE a.codope = :codope")
+    UsuarioModel findUsuarioByCodope(String codope);
+
 
 }

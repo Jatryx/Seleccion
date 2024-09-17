@@ -10,15 +10,71 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "RecruitingModel")
 public class RecruitingModel {
+	
     @Id
-    private Integer idRecruiting;
+    private Integer IdRecruiting;
 
     @ManyToOne
-    @JoinColumn(name = "IdEmpresa", referencedColumnName = "id")
+    @JoinColumn(name = "empresaId", referencedColumnName = "IdEmpresa", nullable = false)
     private EmpresaModel empresa;
 
     @Column(nullable = false, length = 50)
     private String nombreProyecto;
-
+    
+    @Column
+    private Boolean activo;
+    
+    
+    
     // Getters y Setters
+
+	public Integer getIdRecruiting() {
+		return IdRecruiting;
+	}
+
+	public void setIdRecruiting(Integer idRecruiting) {
+		IdRecruiting = idRecruiting;
+	}
+
+	public EmpresaModel getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(EmpresaModel empresa) {
+		this.empresa = empresa;
+	}
+
+	public String getNombreProyecto() {
+		return nombreProyecto;
+	}
+
+	public void setNombreProyecto(String nombreProyecto) {
+		this.nombreProyecto = nombreProyecto;
+	}
+
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+	
+	
+	
+	// Constructor
+
+	public RecruitingModel() {
+		super();
+	}
+
+	public RecruitingModel(Integer idRecruiting, EmpresaModel empresa, String nombreProyecto, Boolean activo) {
+		super();
+		IdRecruiting = idRecruiting;
+		this.empresa = empresa;
+		this.nombreProyecto = nombreProyecto;
+		this.activo = activo;
+	}
+    
+    
 }
