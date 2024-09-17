@@ -8,10 +8,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "UbicacionModel")
 public class UbicacionModel {
-<<<<<<< HEAD
 	
-=======
->>>>>>> a10c3fe4223e28fbf9fbbf0deb372ab13fc4f35f
+
     @Id
     private Integer IdUbicacion;
 
@@ -61,8 +59,4 @@ public class UbicacionModel {
 		this.nombreProvincia = nombreProvincia;
 		this.activo = activo;
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> a10c3fe4223e28fbf9fbbf0deb372ab13fc4f35f
