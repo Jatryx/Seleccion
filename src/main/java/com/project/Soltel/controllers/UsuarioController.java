@@ -22,19 +22,19 @@ public class UsuarioController {
         return usuarioRepository.findAll();
     }
 
-    @GetMapping("/{codope}")
+    @GetMapping("/consultar/{codope}")
     public ResponseEntity<UsuarioModel> getUsuarioByCodope(@PathVariable("codope") String codope) {
         UsuarioModel usuario = usuarioRepository.findUsuarioByCodope(codope);
         return (usuario != null) ? ResponseEntity.ok(usuario) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping
+    @PostMapping("/insertar")
     public ResponseEntity<UsuarioModel> createUsuario(@RequestBody UsuarioModel usuario) {
         UsuarioModel savedUsuario = usuarioRepository.save(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUsuario);
     }
 
-    @PutMapping("/{codope}")
+    @PutMapping("/actualizar/{codope}")
     public ResponseEntity<UsuarioModel> updateUsuario(@PathVariable("codope") String codope, @RequestBody UsuarioModel usuarioDetails) {
         UsuarioModel existingUsuario = usuarioRepository.findUsuarioByCodope(codope);
         if (existingUsuario != null) {
@@ -46,8 +46,9 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PutMapping("/activar/{codope}")
 
-    @DeleteMapping("/{codope}")
+    @DeleteMapping("/eliminar/{codope}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable("codope") String codope) {
         UsuarioModel usuarioOptional = usuarioRepository.findUsuarioByCodope(codope);
         if (usuarioOptional != null) {
