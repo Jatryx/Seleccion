@@ -19,6 +19,4 @@ public interface IUsuarioRepository extends JpaRepository<UsuarioModel, Integer>
 
     @Query("SELECT a FROM UsuarioModel a WHERE a.codope = :codope")
     UsuarioModel findUsuarioByCodope(String codope);
-
-
 }

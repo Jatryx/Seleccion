@@ -41,7 +41,7 @@ public class OfertasController {
             OfertasModel existingOferta = oferta.get();
             // Actualiza los campos necesarios aquí
             existingOferta.setNombreCandidato(ofertaDetails.getNombreCandidato());
-            existingOferta.setCodope(ofertaDetails.getCodope());
+            existingOferta.setUsuario(ofertaDetails.getUsuario());
             // Añadir actualización de otros campos
             OfertasModel updatedOferta = ofertaRepository.save(existingOferta);
             return ResponseEntity.ok(updatedOferta);

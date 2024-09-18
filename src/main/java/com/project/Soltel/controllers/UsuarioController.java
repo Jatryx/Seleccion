@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -48,8 +49,9 @@ public class UsuarioController {
 
     @DeleteMapping("/{codope}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable("codope") String codope) {
-        if (usuarioRepository.existsById(codope)) {
-            usuarioRepository.deleteById(codope);
+        UsuarioModel usuarioOptional = usuarioRepository.findUsuarioByCodope(codope);
+        if (usuarioOptional != null) {
+            usuarioRepository.delete(usuarioOptional);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

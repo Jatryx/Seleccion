@@ -75,7 +75,138 @@ public class OfertasModel {
     
 
     // Getters y Setters
+    
 
+	
+
+	public Integer getIdOferta() {
+		return IdOferta;
+	}
+
+	public void setIdOferta(Integer idOferta) {
+		IdOferta = idOferta;
+	}
+
+	public String getNombreCandidato() {
+		return nombreCandidato;
+	}
+
+	public void setNombreCandidato(String nombreCandidato) {
+		this.nombreCandidato = nombreCandidato;
+	}
+
+	public UsuarioModel getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(UsuarioModel usuario) {
+		this.usuario = usuario;
+	}
+
+	public RecruitingModel getRecruiting() {
+		return recruiting;
+	}
+
+	public void setRecruiting(RecruitingModel recruiting) {
+		this.recruiting = recruiting;
+	}
+
+	public EmpresaModel getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(EmpresaModel empresa) {
+		this.empresa = empresa;
+	}
+
+	public UbicacionModel getUbicacion() {
+		return ubicacion;
+	}
+
+	public void setUbicacion(UbicacionModel ubicacion) {
+		this.ubicacion = ubicacion;
+	}
+
+	public PuestoModel getPuesto() {
+		return puesto;
+	}
+
+	public void setPuesto(PuestoModel puesto) {
+		this.puesto = puesto;
+	}
+
+	public String getTecnologias() {
+		return tecnologias;
+	}
+
+	public void setTecnologias(String tecnologias) {
+		this.tecnologias = tecnologias;
+	}
+
+	public BigDecimal getExperiencia() {
+		return experiencia;
+	}
+
+	public void setExperiencia(BigDecimal experiencia) {
+		this.experiencia = experiencia;
+	}
+
+	public BigDecimal getSalario() {
+		return salario;
+	}
+
+	public void setSalario(BigDecimal salario) {
+		this.salario = salario;
+	}
+
+	public EstadoModel getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoModel estado) {
+		this.estado = estado;
+	}
+
+	public LocalDate getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(LocalDate fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
+	public String getHistoricoCambioEstados() {
+		return historicoCambioEstados;
+	}
+
+	public void setHistoricoCambioEstados(String historicoCambioEstados) {
+		this.historicoCambioEstados = historicoCambioEstados;
+	}
+
+	public CandidatosModel getCandidato() {
+		return candidato;
+	}
+
+	public void setCandidato(CandidatosModel candidato) {
+		this.candidato = candidato;
+	}
+
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+	
 	public OfertasModel() {
 		super();
 	}
