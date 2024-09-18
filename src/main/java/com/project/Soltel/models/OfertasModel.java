@@ -5,6 +5,8 @@ import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,6 +17,7 @@ import jakarta.persistence.Table;
 public class OfertasModel {
 	
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer IdOferta;
 
     @Column(nullable = false, length = 100)
@@ -77,12 +80,11 @@ public class OfertasModel {
 		super();
 	}
 
-	public OfertasModel(Integer idOferta, String nombreCandidato, UsuarioModel usuario, RecruitingModel recruiting,
+	public OfertasModel(String nombreCandidato, UsuarioModel usuario, RecruitingModel recruiting,
 			EmpresaModel empresa, UbicacionModel ubicacion, PuestoModel puesto, String tecnologias,
 			BigDecimal experiencia, BigDecimal salario, EstadoModel estado, LocalDate fechaActualizacion,
 			String observaciones, String historicoCambioEstados, CandidatosModel candidato, Boolean activo) {
 		super();
-		IdOferta = idOferta;
 		this.nombreCandidato = nombreCandidato;
 		this.usuario = usuario;
 		this.recruiting = recruiting;

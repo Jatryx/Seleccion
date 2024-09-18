@@ -2,6 +2,8 @@ package com.project.Soltel.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -10,6 +12,7 @@ import jakarta.persistence.Table;
 public class EstadoModel {
 	
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer IdEstado;
 
     @Column(nullable = false, length = 50)
@@ -53,9 +56,8 @@ public class EstadoModel {
 	public EstadoModel() {
 	}
 	
-	public EstadoModel(Integer idEstado, String estado, Boolean activo) {
+	public EstadoModel( String estado, Boolean activo) {
 		super();
-		IdEstado = idEstado;
 		this.estado = estado;
 		this.activo = activo;
 	}    

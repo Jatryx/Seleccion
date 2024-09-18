@@ -1,6 +1,7 @@
 package com.project.Soltel.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ public class PuestoService {
         return puestoRepository.save(puesto);
     }
 
-    public PuestoModel consultarNombrePuesto(String nombre){
+    public Optional<PuestoModel> consultarNombrePuesto(String nombre){
         return puestoRepository.findPuestoByNombre(nombre);
     }
+    
 }

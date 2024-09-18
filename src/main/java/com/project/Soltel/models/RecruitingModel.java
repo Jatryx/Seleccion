@@ -2,6 +2,8 @@ package com.project.Soltel.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -12,6 +14,7 @@ import jakarta.persistence.Table;
 public class RecruitingModel {
 	
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer IdRecruiting;
 
     @ManyToOne
@@ -68,9 +71,8 @@ public class RecruitingModel {
 		super();
 	}
 
-	public RecruitingModel(Integer idRecruiting, EmpresaModel empresa, String nombreProyecto, Boolean activo) {
+	public RecruitingModel(EmpresaModel empresa, String nombreProyecto, Boolean activo) {
 		super();
-		IdRecruiting = idRecruiting;
 		this.empresa = empresa;
 		this.nombreProyecto = nombreProyecto;
 		this.activo = activo;

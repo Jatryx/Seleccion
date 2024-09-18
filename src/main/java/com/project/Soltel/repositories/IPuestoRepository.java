@@ -1,5 +1,7 @@
 package com.project.Soltel.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,6 @@ public interface IPuestoRepository extends JpaRepository<PuestoModel, Integer> {
     PuestoModel findPuestoInactivo();
 
     @Query("SELECT a FROM PuestoModel a WHERE a.nombrePuesto = :nombre")
-    PuestoModel findPuestoByNombre(String nombre);
+    Optional<PuestoModel>findPuestoByNombre(String nombre);
 
 }
