@@ -15,7 +15,7 @@ import com.project.Soltel.models.PuestoModel;
 import com.project.Soltel.services.PuestoService;
 
 @RestController
-@RequestMapping("/puesto")
+@RequestMapping("/api/puesto")
 public class PuestoController {
 
 		private final PuestoService puestoService;
@@ -31,7 +31,7 @@ public class PuestoController {
 		
 				//FindALL
 		
-		@GetMapping("/consultar")
+		@GetMapping("/api/consultar")
 		public ResponseEntity<List<PuestoModel>> getAllPuesto(){
 			return ResponseEntity.ok(puestoService.consultarTodosPuestos());
 					
@@ -41,7 +41,7 @@ public class PuestoController {
 		
 		// Insertar
 		
-		@PostMapping("/insertar/{nombrespuesto}")
+		@PostMapping("/api/insertar/{nombrespuesto}")
 		public ResponseEntity<?> guardarPuesto(String nombrePuesto) {
 			Optional<PuestoModel> puesto = puestoService.consultarNombrePuesto(nombrePuesto);
 			if (puesto.isPresent()) {
@@ -56,7 +56,7 @@ public class PuestoController {
 		
 		// Actualizar
 		
-		@PutMapping("/actualizar/{nombrespuesto}/{nombrepuestonuevo}/{activo}")
+		@PutMapping("/api/actualizar/{nombrespuesto}/{nombrepuestonuevo}/{activo}")
 		public ResponseEntity<?> actualizarPuesto(String nombrePuesto, String nombrePuestoNuevo, boolean activo) {
 			Optional<PuestoModel> puesto = puestoService.consultarNombrePuesto(nombrePuesto);
 			Optional<PuestoModel> puestoNuevo = puestoService.consultarNombrePuesto(nombrePuestoNuevo);
@@ -89,7 +89,7 @@ public class PuestoController {
 				}
 		}
 		
-		@PutMapping("/activar/{nombrePuesto}")
+		@PutMapping("/api/activar/{nombrePuesto}")
 		public ResponseEntity<?> activarTiposExpediente(String nombrePuesto) {
 			Optional<PuestoModel> puesto = puestoService.consultarNombrePuesto(nombrePuesto);
 			

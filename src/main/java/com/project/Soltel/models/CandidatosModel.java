@@ -56,7 +56,7 @@ public class CandidatosModel {
 		super();
 	}
 
-	public CandidatosModel( String nombreCandidato, Boolean activo) {
+	public CandidatosModel(String nombreCandidato, Boolean activo) {
 		super();
 		this.nombreCandidato = nombreCandidato;
 		this.activo = activo;

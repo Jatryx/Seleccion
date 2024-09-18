@@ -1,6 +1,12 @@
 package com.project.Soltel.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.project.Soltel.models.CandidatosModel;
+import com.project.Soltel.repositories.ICandidatosRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +17,8 @@ public class CandidatosController {
 
     // Lista en memoria para almacenar candidatos temporalmente
     private List<String> candidatos = new ArrayList<>();
+    @Autowired
+    private ICandidatosRepository candidatoRepository;
 
     // Constructor vacío
     public CandidatosController() {
@@ -26,10 +34,12 @@ public class CandidatosController {
     }
 
     // Método POST para agregar un nuevo candidato
+    
+    
     @PostMapping
-    public String agregarCandidato(@RequestBody String candidato) {
-        candidatos.add(candidato);
-        return "Candidato añadido: " + candidato;
+    public ResponseEntity<CandidatosModel> agregarCandidato(@RequestBody CandidatosModel Candidato) {
+        CandidatosModel savedCandidato = candidatoRepository.save(Candidato);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCandidato);
     }
 
     // Método DELETE para eliminar un candidato por su ID (índice)
