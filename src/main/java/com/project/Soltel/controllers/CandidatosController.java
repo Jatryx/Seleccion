@@ -86,7 +86,7 @@ public class CandidatosController {
 			}
 	}
 	
-	@PutMapping("/activar/{nombreCandidato}")
+	@PutMapping("/desactivar/{nombreCandidato}")
 	public ResponseEntity<?> activarTiposExpediente(String nombreCandidato) {
 		Optional<CandidatosModel> candidato = candidatosService.consultarNombreCandidatos(nombreCandidato);
 		

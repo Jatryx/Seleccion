@@ -46,7 +46,7 @@ public class EstadoController {
     }
 
 
-    @PutMapping("/eliminar/{nombreEstado}")
+    @PutMapping("/desactivar/{nombreEstado}")
     public ResponseEntity<?> eliminarEstado(@PathVariable String nombreEstado) {
        Optional<EstadoModel> estado = estadoService.consultarNombreEstado(nombreEstado);
          if (estado.isPresent()) {

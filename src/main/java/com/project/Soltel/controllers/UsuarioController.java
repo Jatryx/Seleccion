@@ -1,7 +1,10 @@
 package com.project.Soltel.controllers;
 
+import com.project.Soltel.models.EstadoModel;
 import com.project.Soltel.models.UsuarioModel;
 import com.project.Soltel.repositories.IUsuarioRepository;
+import com.project.Soltel.services.UsuarioService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,9 @@ public class UsuarioController {
 
     @Autowired
     private IUsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private UsuarioService usuarioService;
 
     @GetMapping
     public List<UsuarioModel> getAllUsuarios() {
@@ -47,12 +53,24 @@ public class UsuarioController {
         }
     }
     @PutMapping("/activar/{codope}")
+    public ResponseEntity<?> eliminarEstado(@PathVariable String codope) {
+        Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codope);
+          if (usuario.isPresent()) {
+               usuario.get().setActivo(false);
+               UsuarioModel usuarioEliminado = usuarioService.actualizarUsuario(usuario.get());
+               return ResponseEntity.ok(usuarioEliminado);
+          } else {
+               String mensaje = "No se encontró el codope: " + codope;
+               return ResponseEntity.status(404).body(mensaje);
+          }
+     }
 
     @DeleteMapping("/eliminar/{codope}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable("codope") String codope) {
-        UsuarioModel usuarioOptional = usuarioRepository.findUsuarioByCodope(codope);
-        if (usuarioOptional != null) {
-            usuarioRepository.delete(usuarioOptional);
+        Optional<UsuarioModel> usuarioOptional = usuarioRepository.findUsuarioByCodope(codope);
+        if (usuarioOptional.isPresent()) {
+        	UsuarioModel borrar = usuarioOptional.get();
+            usuarioRepository.delete(borrar);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

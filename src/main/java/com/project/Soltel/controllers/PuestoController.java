@@ -68,6 +68,7 @@ public class PuestoController {
 				puestoDatos = puesto.map(PuestoModel::getIdPuesto).orElse(0); // Asigna 0 si el expediente está vacío
 			    puestoNuevoDatos = puestoNuevo.map(PuestoModel::getIdPuesto).orElse(1); // Asigna 1 si el expedienteNuevo está vacío
 			}
+			
 			if (puesto.isPresent() && !puestoNuevo.isPresent() || 
 					puestoDatos == puestoNuevoDatos) {
 		
@@ -87,7 +88,7 @@ public class PuestoController {
 				}
 		}
 		
-		@PutMapping("/activar/{nombrePuesto}")
+		@PutMapping("/descativar{nombrePuesto}")
 		public ResponseEntity<?> activarTiposExpediente(String nombrePuesto) {
 			Optional<PuestoModel> puesto = puestoService.consultarNombrePuesto(nombrePuesto);
 			
@@ -95,11 +96,11 @@ public class PuestoController {
 				
 				PuestoModel puestoBorrarLogico = puesto.get();
 				puestoBorrarLogico.setActivo(false);
-				PuestoModel guardarTipo = puestoService.actualizarPuesto(puestoBorrarLogico);
-				return ResponseEntity.ok(guardarTipo);
+				PuestoModel guardarPuesto = puestoService.actualizarPuesto(puestoBorrarLogico);
+				return ResponseEntity.ok(guardarPuesto);
 				
 			}else{
-				String mensaje = "No existe un tipo de expediente con el nombre: " + nombrePuesto;
+				String mensaje = "No existe un puesto con el nombre: " + nombrePuesto;
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
 			}
 		}
