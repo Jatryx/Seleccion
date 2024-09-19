@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -24,12 +25,12 @@ public class UsuarioController {
 
     @GetMapping("/consultarCodope/{codope}")
     public ResponseEntity<UsuarioModel> getUsuarioByCodope(@PathVariable("codope") String codope) {
-        UsuarioModel usuario = usuarioService.consultarUsuarioCodope(codope);
+        Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codope);
         if (usuario != null) {
-            return ResponseEntity.ok(usuario);
-        } else {
-            return ResponseEntity.notFound().build();
-        }    
+              return ResponseEntity.ok(usuario.get());
+            } else {
+                return ResponseEntity.notFound().build();
+            }   
     }
 
     @PostMapping("/añadirUsuario")
@@ -43,10 +44,10 @@ public class UsuarioController {
 
     @PutMapping("/actualizar/{codope}")
     public ResponseEntity<UsuarioModel> updateUsuario(@PathVariable("codope") String codopeantiguo, @RequestBody UsuarioModel usuarioDetails) {
-        UsuarioModel usuario = usuarioService.consultarUsuarioCodope(codopeantiguo);
+        Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codopeantiguo);
         if (usuario != null) {
-            usuario.setContraseña(usuarioDetails.getContraseña());
-            UsuarioModel updatedUsuario = usuarioService.actualizarUsuario(usuario);
+            usuario.get().setContraseña(usuarioDetails.getContraseña());
+            UsuarioModel updatedUsuario = usuarioService.actualizarUsuario(usuario.get());
             return ResponseEntity.ok(updatedUsuario);
         } else {
             return ResponseEntity.notFound().build();
@@ -55,10 +56,10 @@ public class UsuarioController {
 
     @PutMapping("/eliminar/{codope}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable("codope") String codope) {
-        UsuarioModel usuario = usuarioService.consultarUsuarioCodope(codope);
+        Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codope);
         if (usuario != null) {
-            usuario.setActivo(false);
-            usuarioService.actualizarUsuario(usuario);
+            usuario.get().setActivo(false);
+            usuarioService.actualizarUsuario(usuario.get());
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

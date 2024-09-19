@@ -1,6 +1,7 @@
 package com.project.Soltel.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,6 @@ public interface IEmpresaRepository extends JpaRepository<EmpresaModel, Integer>
     List<EmpresaModel> findEmpresasInactivas();
 
     @Query("SELECT a FROM EmpresaModel a WHERE a.nombreEmpresa = :nombre")
-    EmpresaModel findEmpresaByNombre(String nombre);
+    Optional<EmpresaModel> findEmpresaByNombre(String nombre);
     
 }

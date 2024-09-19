@@ -1,6 +1,7 @@
 package com.project.Soltel.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,10 @@ public class CandidatosService {
 
     public CandidatosModel actualizarCandidatos(CandidatosModel candidatos){
         return candidatosRepository.save(candidatos);
+    }
+
+    public Optional<CandidatosModel> consultarCandidatosNombre(String nombre){
+        return candidatosRepository.findByNombre(nombre);
     }
     
 }
