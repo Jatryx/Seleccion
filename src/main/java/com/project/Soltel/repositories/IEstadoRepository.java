@@ -1,5 +1,7 @@
 package com.project.Soltel.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,7 +18,7 @@ public interface IEstadoRepository extends JpaRepository<EstadoModel, Integer> {
     EstadoModel findEstadoInactivo();
 
     @Query("SELECT a FROM EstadoModel a WHERE a.estado = :nombre")
-    EstadoModel findEstadoByNombre(String nombre);
+    Optional<EstadoModel> findEstadoByNombre(String nombre);
 
 
 }
