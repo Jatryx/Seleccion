@@ -1,6 +1,7 @@
 package com.project.Soltel.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,10 @@ public class CandidatosService {
 
     public List<CandidatosModel> consultarTodosCandidatos() {
         return candidatosRepository.findAll();
+    }
+    
+    public Optional<CandidatosModel> consultarNombreCandidatos(String nombre) {
+        return candidatosRepository.findCandidatoByNombre(nombre);
     }
 
     public CandidatosModel guardarCandidatos(CandidatosModel candidatos){

@@ -1,6 +1,7 @@
 package com.project.Soltel.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,6 @@ public interface ICandidatosRepository extends JpaRepository<CandidatosModel, In
     List<CandidatosModel> findCandidatosInactivos();
 
     @Query("SELECT a from CandidatosModel a WHERE a.nombreCandidato = :nombre")
-    CandidatosModel findCandidatoByNombre(String nombre);
+    Optional<CandidatosModel> findCandidatoByNombre(String nombre);
 
 }

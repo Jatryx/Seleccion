@@ -78,11 +78,11 @@ public class PuestoController {
 				return ResponseEntity.ok(guardarTipo);
 				
 			} else if (!puesto.isPresent()){
-				String mensaje = "No existe un tipo de expediente con el nombre: " + nombrePuesto;
+				String mensaje = "No existe un puesto con el nombre: " + nombrePuesto;
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
 				
 				}else{
-					String mensaje = "Ya existe un tipo de expediente con el nombre: " + Puesto.getNombrePuesto();
+					String mensaje = "Ya existe un puesto con el nombre: " + Puesto.getNombrePuesto();
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
 				}
 		}
