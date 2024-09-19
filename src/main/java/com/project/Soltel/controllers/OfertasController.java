@@ -94,7 +94,7 @@ public class OfertasController {
         Optional<EmpresaModel> empresaBuscada = empresaService.consultarNombreEmpresa(oferta.getEmpresa().getNombreEmpresa());
         Optional<EstadoModel> estadoBuscado = estadoService.consultarNombreEstado(oferta.getEstado().getEstado());
         Optional<UsuarioModel> usuarioBuscado = usuarioService.consultarUsuarioCodope(oferta.getUsuario().getCodope());
-        UbicacionModel ubicacionBuscada = ubicacionService.consultarNombreUbicacion(oferta.getUbicacion().getNombreProvincia());
+        Optional<UbicacionModel> ubicacionBuscada = ubicacionService.consultarNombreUbicacion(oferta.getUbicacion().getNombreProvincia());
         Optional<PuestoModel> puestoBuscado = puestoService.consultarNombrePuesto(oferta.getPuesto().getNombrePuesto());
         RecruitingModel recruitingBuscado = recruitingService.consultarRecruitingPorId(oferta.getRecruiting().getIdRecruiting());
 
@@ -152,7 +152,8 @@ public class OfertasController {
 
         if (ubicacionBuscada != null) {
             // La ubicación existe
-            nuevaOferta.setUbicacion(ubicacionBuscada);
+            UbicacionModel ubicacion = ubicacionBuscada.get();
+            nuevaOferta.setUbicacion(ubicacion);
         } else {
             // La ubicación no existe
             ResponseEntity<?> response = ubicacionController.createUbicacion(oferta.getUbicacion());
@@ -167,7 +168,7 @@ public class OfertasController {
             nuevaOferta.setPuesto(puesto);
         } else {
             // El puesto no existe
-            ResponseEntity<?> response = puestoController.guardarPuesto(oferta.getPuesto().getNombrePuesto());
+            ResponseEntity<?> response = puestoController.guardarPuesto(oferta.getPuesto());
             if (response.getStatusCode() == HttpStatus.CREATED) {
                 nuevaOferta.setPuesto((PuestoModel) response.getBody());
             }
@@ -249,9 +250,9 @@ public class OfertasController {
 
             // Verificar y actualizar la ubicación
             if (ofertaDetails.getUbicacion() != null) {
-                UbicacionModel ubicacionBuscada = ubicacionService.consultarNombreUbicacion(ofertaDetails.getUbicacion().getNombreProvincia());
-                if (ubicacionBuscada != null) {
-                    ofertaActualizada.setUbicacion(ubicacionBuscada);
+                Optional<UbicacionModel> ubicacionBuscada = ubicacionService.consultarNombreUbicacion(ofertaDetails.getUbicacion().getNombreProvincia());
+                if (ubicacionBuscada.isPresent()) {
+                    ofertaActualizada.setUbicacion(ubicacionBuscada.get());
                 } else {
                     UbicacionModel nuevaUbicacion = ubicacionService.guardarUbicacion(ofertaDetails.getUbicacion());
                     ofertaActualizada.setUbicacion(nuevaUbicacion);
