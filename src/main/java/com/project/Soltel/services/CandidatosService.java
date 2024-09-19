@@ -18,6 +18,10 @@ public class CandidatosService {
     public List<CandidatosModel> consultarTodosCandidatos() {
         return candidatosRepository.findAll();
     }
+    
+    public Optional<CandidatosModel> consultarNombreCandidatos(String nombre) {
+        return candidatosRepository.findCandidatoByNombre(nombre);
+    }
 
     public CandidatosModel guardarCandidatos(CandidatosModel candidatos){
         return candidatosRepository.save(candidatos);

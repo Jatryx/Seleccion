@@ -19,7 +19,7 @@ public interface ICandidatosRepository extends JpaRepository<CandidatosModel, In
     List<CandidatosModel> findCandidatosInactivos();
 
     @Query("SELECT a from CandidatosModel a WHERE a.nombreCandidato = :nombre")
-    CandidatosModel findCandidatoByNombre(String nombre);
+    Optional<CandidatosModel> findCandidatoByNombre(String nombre);
 
     @Query("SELECT a from CandidatosModel a WHERE a.nombreCandidato = :nombre")
     Optional<CandidatosModel> findByNombre(String nombre);
