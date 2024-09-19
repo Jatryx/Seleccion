@@ -1,5 +1,6 @@
 package com.project.Soltel.controllers;
 
+import com.project.Soltel.models.EstadoModel;
 import com.project.Soltel.models.UsuarioModel;
 import com.project.Soltel.services.UsuarioService;
 
@@ -14,6 +15,8 @@ import java.util.List;
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
+    @Autowired
+    
     @Autowired
     private UsuarioService usuarioService;
 
@@ -32,7 +35,7 @@ public class UsuarioController {
         }    
     }
 
-    @PostMapping("/añadirUsuario")
+    @PostMapping("/insertar")
     public ResponseEntity<UsuarioModel> createUsuario(@RequestBody UsuarioModel usuario) {
         UsuarioModel nuevoUsuario = new UsuarioModel();
         nuevoUsuario.setCodope(usuario.getCodope());
@@ -52,6 +55,18 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PutMapping("/activar/{codope}")
+    public ResponseEntity<?> eliminarEstado(@PathVariable String codope) {
+        Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codope);
+          if (usuario.isPresent()) {
+               usuario.get().setActivo(false);
+               UsuarioModel usuarioEliminado = usuarioService.actualizarUsuario(usuario.get());
+               return ResponseEntity.ok(usuarioEliminado);
+          } else {
+               String mensaje = "No se encontró el codope: " + codope;
+               return ResponseEntity.status(404).body(mensaje);
+          }
+     }
 
     @PutMapping("/eliminar/{codope}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable("codope") String codope) {
@@ -59,6 +74,7 @@ public class UsuarioController {
         if (usuario != null) {
             usuario.setActivo(false);
             usuarioService.actualizarUsuario(usuario);
+
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

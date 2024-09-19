@@ -1,6 +1,7 @@
 package com.project.Soltel.controllers;
 
 import com.project.Soltel.models.UbicacionModel;
+
 import com.project.Soltel.services.UbicacionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/ubicacion")
 public class UbicacionController {
-
+	
+	@Autowired
+	private IUbicacionRepository ubicacionRepository;
     @Autowired
     private UbicacionService ubicacionService;
 
@@ -21,49 +24,53 @@ public class UbicacionController {
     public List<UbicacionModel> getAllUbicaciones() {
         return ubicacionService.consultarTodasUbicaciones();
     }
-
-    @GetMapping("/consultarUbicacionId/{nombre}")
-    public ResponseEntity<UbicacionModel> getUbicacionById(@PathVariable("nombre") String nombre) {
-       UbicacionModel ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
-        if (ubicacion != null) {
-            return ResponseEntity.ok(ubicacion);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+  
+    @GetMapping("/consultar")
+    public ResponseEntity<UbicacionModel> getUbicacionByNombre(String nombre) {
+        Optional<UbicacionModel> ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
+        return ubicacion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/añadirUbicacion")
-    public ResponseEntity<?> createUbicacion(@RequestBody UbicacionModel ubicacion) {
-       UbicacionModel nuevaUbicacion = new UbicacionModel();
-        nuevaUbicacion.setNombreProvincia(ubicacion.getNombreProvincia());
-        nuevaUbicacion.setActivo(ubicacion.getActivo());
-        UbicacionModel savedUbicacion = ubicacionService.guardarUbicacion(nuevaUbicacion);
+    @PostMapping("/insertar")
+    public ResponseEntity<UbicacionModel> createUbicacion(@RequestBody UbicacionModel ubicacion) {
+        UbicacionModel savedUbicacion = ubicacionRepository.save(ubicacion);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUbicacion);
     }
 
-    @PutMapping("/actualizarUbicacion/{nombre}")
+    @PutMapping("/actualizar/{provincia}")
     public ResponseEntity<?> updateUbicacion(@PathVariable("nombre") String nombre, @RequestBody UbicacionModel ubicacionDetails) {
-        UbicacionModel ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
-        if (ubicacion != null) {
-            ubicacion.setNombreProvincia(ubicacionDetails.getNombreProvincia());
-            ubicacion.setActivo(ubicacionDetails.getActivo());
-            UbicacionModel updatedUbicacion = ubicacionService.actualizarUbicacion(ubicacion);
+    	Optional<UbicacionModel> ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
+    	Optional<UbicacionModel> ubicacionNueva = ubicacionService.consultarNombreUbicacion(ubicacionDetails.getNombreProvincia());
+        if (ubicacionNueva.isPresent()) {
+        	String mensaje = "Ya existe una provincia con el nombre: " + ubicacionDetails.getNombreProvincia();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
+            
+        } else if(ubicacion.isPresent()){
+        	UbicacionModel existingUbicacion = ubicacion.get();
+            existingUbicacion.setNombreProvincia(ubicacionDetails.getNombreProvincia());
+            existingUbicacion.setActivo(ubicacionDetails.getActivo());
+            UbicacionModel updatedUbicacion = ubicacionRepository.save(existingUbicacion);
             return ResponseEntity.ok(updatedUbicacion);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        	String mensaje = "No existe una provincia con el nombre: " + nombre;
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
         }
     }
-
-    @PutMapping("/eliminarUbicacion/{id}")
-    public ResponseEntity<Void> deleteUbicacion(@PathVariable("nombre") String nombre) {
-        
-        UbicacionModel ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
-        if (ubicacion != null) {
-            ubicacion.setActivo(false);
-            ubicacionService.actualizarUbicacion(ubicacion);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    
+    @PutMapping("/desactivar/{provincia}")
+	public ResponseEntity<?> activarTiposExpediente(String ubicacion) {
+		Optional<UbicacionModel> provincia = ubicacionService.consultarNombreUbicacion(ubicacion);
+		
+		if (provincia.isPresent()) {
+			
+			UbicacionModel provinciaBorrarLogico = provincia.get();
+			provinciaBorrarLogico.setActivo(false);
+			UbicacionModel guardarProvincia = ubicacionService.actualizarUbicacion(provinciaBorrarLogico);
+			return ResponseEntity.ok(guardarProvincia);
+			
+		}else{
+			String mensaje = "No existe una provincia con el nombre: " + ubicacion;
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
+		}
+	}
 }
