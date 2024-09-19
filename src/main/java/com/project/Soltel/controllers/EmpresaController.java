@@ -42,5 +42,7 @@ public class EmpresaController {
             return "Empresa no encontrada";
         }
     }
+
+    // Método PUT para actualizar una empresa por su nombre.
 }
 
