@@ -30,5 +30,9 @@ public class CandidatosService {
     public CandidatosModel actualizarCandidatos(CandidatosModel candidatos){
         return candidatosRepository.save(candidatos);
     }
+
+    public Optional<CandidatosModel> consultarCandidatosNombre(String nombre){
+        return candidatosRepository.findByNombre(nombre);
+    }
     
 }

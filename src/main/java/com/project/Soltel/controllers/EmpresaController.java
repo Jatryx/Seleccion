@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.project.Soltel.models.EmpresaModel;
 import com.project.Soltel.services.EmpresaService;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -23,7 +24,7 @@ public class EmpresaController {
     }
 
     @GetMapping("/empresa/{nombreEmpresa}")
-    public EmpresaModel obtenerEmpresaPorNombre(@PathVariable String nombreEmpresa) {
+    public Optional<EmpresaModel> obtenerEmpresaPorNombre(@PathVariable String nombreEmpresa) {
         return empresaService.consultarNombreEmpresa(nombreEmpresa);
     }
 
@@ -38,18 +39,18 @@ public class EmpresaController {
 
     @PutMapping("/actualizar/{nombreEmpresa}")
     public ResponseEntity<?> actualizarEmpresa(@PathVariable String nombreEmpresa, @RequestBody String nuevoNombre) {
-        EmpresaModel empresaNueva = empresaService.consultarNombreEmpresa(nuevoNombre);
+        Optional<EmpresaModel> empresaNueva = empresaService.consultarNombreEmpresa(nuevoNombre);
         if (empresaNueva != null) {
             String mensaje = "Ya existe una empresa con el nombre: " + nuevoNombre;
             return ResponseEntity.status(404).body(mensaje);
         }
-        EmpresaModel empresa = empresaService.consultarNombreEmpresa(nombreEmpresa);
-        if (empresa != null) {
-            empresa.setNombreEmpresa(nuevoNombre);
-            EmpresaModel empresaActualizada = empresaService.actualizarEmpresa(empresa);
+        Optional<EmpresaModel> empresa = empresaService.consultarNombreEmpresa(nombreEmpresa);
+        if (empresa.isPresent()) {
+            empresa.get().setNombreEmpresa(nuevoNombre);
+            EmpresaModel empresaActualizada = empresaService.actualizarEmpresa(empresa.get());
             return ResponseEntity.ok(empresaActualizada);
         } else {
-            String mensaje = "No se encontró la empresa con el nombre: " + nombreEmpresa;
+            String mensaje = "Empresa no encontrada";
             return ResponseEntity.status(404).body(mensaje);
         }
     }
@@ -57,11 +58,10 @@ public class EmpresaController {
     // Método DELETE para eliminar una empresa por su ID
     @PutMapping("/eliminar/{nombreEmpresa}")
     public String eliminarempresa(@PathVariable String nombreEmpresa) {
-        EmpresaModel empresa = empresaService.consultarNombreEmpresa(nombreEmpresa);
-        if (empresa != null) {
-            empresa.setActivo(false);
-            EmpresaModel empresaEliminada = empresaService.actualizarEmpresa(empresa);
-            return "Empresa eliminada: " + nombreEmpresa;
+        Optional<EmpresaModel> empresa = empresaService.consultarNombreEmpresa(nombreEmpresa);
+        if (empresa.isPresent()) {
+            empresa.get().setActivo(false);
+            return "Empresa eliminada";
         } else {
             return "Empresa no encontrada";
         }

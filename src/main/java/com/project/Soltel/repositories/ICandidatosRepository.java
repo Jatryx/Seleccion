@@ -21,4 +21,7 @@ public interface ICandidatosRepository extends JpaRepository<CandidatosModel, In
     @Query("SELECT a from CandidatosModel a WHERE a.nombreCandidato = :nombre")
     Optional<CandidatosModel> findCandidatoByNombre(String nombre);
 
+    @Query("SELECT a from CandidatosModel a WHERE a.nombreCandidato = :nombre")
+    Optional<CandidatosModel> findByNombre(String nombre);
+
 }
