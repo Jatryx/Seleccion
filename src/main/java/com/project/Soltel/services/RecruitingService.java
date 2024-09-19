@@ -26,6 +26,10 @@ public class RecruitingService {
         return recruitingRepository.findRecruitingInactivos();
     }
 
+    public RecruitingModel consultarRecruitingPorId(int id){
+        return recruitingRepository.findById(id).orElse(null);
+    }
+
     public RecruitingModel guardarRecruiting(RecruitingModel recruiting){
         return recruitingRepository.save(recruiting);
     }

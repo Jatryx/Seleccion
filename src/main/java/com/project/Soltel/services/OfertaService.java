@@ -1,12 +1,10 @@
 package com.project.Soltel.services;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.project.Soltel.models.OfertasModel;
 import com.project.Soltel.repositories.IOfertaRepository;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OfertaService {
@@ -15,15 +13,19 @@ public class OfertaService {
     private IOfertaRepository ofertaRepository;
 
     public List<OfertasModel> consultarOfertasActivas() {
-        return ofertaRepository.findOfertaActiva();
+        return ofertaRepository.findByActivoTrue();
     }
 
     public List<OfertasModel> consultarOfertasInactivas() {
-        return ofertaRepository.findOfertaInactiva();
+        return ofertaRepository.findByActivoFalse();
     }
 
     public List<OfertasModel> consultarTodasOfertas() {
         return ofertaRepository.findAll();
+    }
+
+    public Optional<OfertasModel> consultarOfertasId(int id) {
+        return ofertaRepository.findById(id);
     }
 
     public OfertasModel guardarOferta(OfertasModel oferta){
@@ -34,6 +36,8 @@ public class OfertaService {
         return ofertaRepository.save(oferta);
     }
 
-    
+    public OfertasModel consultarPorNombreCandidatoAndIdPeticion(String nombreCandidato, Integer idPeticion) {
+        return ofertaRepository.findByNombreCandidatoAndRecruitingId(nombreCandidato, idPeticion);
+    }
 
 }

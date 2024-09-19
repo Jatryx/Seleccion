@@ -4,12 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.project.Soltel.models.CandidatosModel;
 import com.project.Soltel.models.EstadoModel;
-import com.project.Soltel.services.CandidatosService;
 import com.project.Soltel.services.EstadoService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
