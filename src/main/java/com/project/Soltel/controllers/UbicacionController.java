@@ -1,58 +1,67 @@
 package com.project.Soltel.controllers;
 
 import com.project.Soltel.models.UbicacionModel;
-import com.project.Soltel.repositories.IUbicacionRepository;
+import com.project.Soltel.services.UbicacionService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/ubicacion")
 public class UbicacionController {
 
     @Autowired
-    private IUbicacionRepository ubicacionRepository;
+    private UbicacionService ubicacionService;
 
-    @GetMapping
+    @GetMapping("/todasUbicaciones")
     public List<UbicacionModel> getAllUbicaciones() {
-        return ubicacionRepository.findAll();
+        return ubicacionService.consultarTodasUbicaciones();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UbicacionModel> getUbicacionById(@PathVariable("id") int id) {
-        Optional<UbicacionModel> ubicacion = ubicacionRepository.findById(id);
-        return ubicacion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public ResponseEntity<UbicacionModel> createUbicacion(@RequestBody UbicacionModel ubicacion) {
-        UbicacionModel savedUbicacion = ubicacionRepository.save(ubicacion);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUbicacion);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UbicacionModel> updateUbicacion(@PathVariable("id") int id, @RequestBody UbicacionModel ubicacionDetails) {
-        Optional<UbicacionModel> ubicacion = ubicacionRepository.findById(id);
-        if (ubicacion.isPresent()) {
-            UbicacionModel existingUbicacion = ubicacion.get();
-            existingUbicacion.setNombreProvincia(ubicacionDetails.getNombreProvincia());
-            existingUbicacion.setActivo(ubicacionDetails.getActivo());
-            UbicacionModel updatedUbicacion = ubicacionRepository.save(existingUbicacion);
-            return ResponseEntity.ok(updatedUbicacion);
+    @GetMapping("/consultarUbicacionId/{nombre}")
+    public ResponseEntity<UbicacionModel> getUbicacionById(@PathVariable("nombre") String nombre) {
+       UbicacionModel ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
+        if (ubicacion != null) {
+            return ResponseEntity.ok(ubicacion);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUbicacion(@PathVariable("id") int id) {
-        if (ubicacionRepository.existsById(id)) {
-            ubicacionRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+    @PostMapping("/añadirUbicacion")
+    public ResponseEntity<?> createUbicacion(@RequestBody UbicacionModel ubicacion) {
+       UbicacionModel nuevaUbicacion = new UbicacionModel();
+        nuevaUbicacion.setNombreProvincia(ubicacion.getNombreProvincia());
+        nuevaUbicacion.setActivo(ubicacion.getActivo());
+        UbicacionModel savedUbicacion = ubicacionService.guardarUbicacion(nuevaUbicacion);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUbicacion);
+    }
+
+    @PutMapping("/actualizarUbicacion/{nombre}")
+    public ResponseEntity<?> updateUbicacion(@PathVariable("nombre") String nombre, @RequestBody UbicacionModel ubicacionDetails) {
+        UbicacionModel ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
+        if (ubicacion != null) {
+            ubicacion.setNombreProvincia(ubicacionDetails.getNombreProvincia());
+            ubicacion.setActivo(ubicacionDetails.getActivo());
+            UbicacionModel updatedUbicacion = ubicacionService.actualizarUbicacion(ubicacion);
+            return ResponseEntity.ok(updatedUbicacion);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PutMapping("/eliminarUbicacion/{id}")
+    public ResponseEntity<Void> deleteUbicacion(@PathVariable("nombre") String nombre) {
+        
+        UbicacionModel ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
+        if (ubicacion != null) {
+            ubicacion.setActivo(false);
+            ubicacionService.actualizarUbicacion(ubicacion);
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }
