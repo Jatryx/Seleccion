@@ -1,5 +1,6 @@
 package com.project.Soltel.controllers;
 
+import com.project.Soltel.models.CandidatosModel;
 import com.project.Soltel.models.UsuarioModel;
 import com.project.Soltel.services.UsuarioService;
 
@@ -35,23 +36,28 @@ public class UsuarioController {
     }
 
     @PostMapping("/insertar")
-    public ResponseEntity<UsuarioModel> createUsuario(@RequestBody UsuarioModel usuario) {
-        UsuarioModel nuevoUsuario = new UsuarioModel();
-        nuevoUsuario.setCodope(usuario.getCodope());
-        nuevoUsuario.setContraseña(usuario.getContraseña());
-        UsuarioModel savedUsuario = usuarioService.guardarUsuario(nuevoUsuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUsuario);
+    public ResponseEntity<?> createUsuario(@RequestBody UsuarioModel codope) {
+    	Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codope.getCodope());
+		if (usuario.isPresent()) {
+			String mensaje = "Ya existe un usuario con el CODOPE: " + codope.getCodope();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
+		}else {
+		UsuarioModel guardarUsuario = usuarioService.guardarUsuario(codope);
+		return ResponseEntity.ok(guardarUsuario);
+		}
     }
 
     @PutMapping("/actualizar/{codope}")
-    public ResponseEntity<UsuarioModel> updateUsuario(@PathVariable("codope") String codopeantiguo, @RequestBody UsuarioModel usuarioDetails) {
-        Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codopeantiguo);
-        if (usuario != null) {
+    public ResponseEntity<?> updateUsuario(@PathVariable("codope") String codope, @RequestBody UsuarioModel usuarioDetails) {
+        Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codope);
+        if (usuario.isPresent()) {
             usuario.get().setContraseña(usuarioDetails.getContraseña());
+            usuario.get().setActivo(usuarioDetails.getActivo());
             UsuarioModel updatedUsuario = usuarioService.actualizarUsuario(usuario.get());
             return ResponseEntity.ok(updatedUsuario);
         } else {
-            return ResponseEntity.notFound().build();
+        	String mensaje = "No existe un usuario con el CODOPE: " + codope;
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
         }
     }
     @PutMapping("/activar/{codope}")
@@ -62,20 +68,8 @@ public class UsuarioController {
                UsuarioModel usuarioEliminado = usuarioService.actualizarUsuario(usuario.get());
                return ResponseEntity.ok(usuarioEliminado);
           } else {
-               String mensaje = "No se encontró el codope: " + codope;
+               String mensaje = "No existe un usuario con el CODOPE: " + codope;
                return ResponseEntity.status(404).body(mensaje);
           }
      }
-
-    @PutMapping("/eliminar/{codope}")
-    public ResponseEntity<Void> deleteUsuario(@PathVariable("codope") String codope) {
-        Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codope);
-        if (usuario != null) {
-            usuario.get().setActivo(false);
-            usuarioService.actualizarUsuario(usuario.get());
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 }

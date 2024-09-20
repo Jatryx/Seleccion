@@ -18,18 +18,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/candidatos")
 public class CandidatosController {
-
-    // Lista en memoria para almacenar candidatos temporalmente
-    private List<String> candidatos = new ArrayList<>();
+	
     @Autowired
     private CandidatosService candidatosService;
-
-    // Constructor vacío
-    public CandidatosController() {
-        // Inicialmente puedes añadir algún candidato a la lista
-        candidatos.add("Candidato 1");
-        candidatos.add("Candidato 2");
-    }
 
     // Método GET para obtener la lista de candidatos
     @GetMapping("/consultar")
@@ -103,16 +94,5 @@ public class CandidatosController {
 		}
 	}
 
-
-    // Método DELETE para eliminar un candidato por su ID (índice)
-    @DeleteMapping("/{id}")
-    public String eliminarCandidato(@PathVariable int id) {
-        if (id >= 0 && id < candidatos.size()) {
-            String eliminado = candidatos.remove(id);
-            return "Candidato eliminado: " + eliminado;
-        } else {
-            return "Candidato no encontrado";
-        }
-    }
 }
 
