@@ -1,7 +1,7 @@
 package com.project.Soltel.controllers;
 
 import com.project.Soltel.models.UbicacionModel;
-import com.project.Soltel.repositories.IUbicacionRepository;
+
 import com.project.Soltel.services.UbicacionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/ubicacion")
@@ -21,11 +20,11 @@ public class UbicacionController {
     @Autowired
     private UbicacionService ubicacionService;
 
-    @GetMapping
+    @GetMapping("/todasUbicaciones")
     public List<UbicacionModel> getAllUbicaciones() {
         return ubicacionService.consultarTodasUbicaciones();
     }
-
+  
     @GetMapping("/consultar")
     public ResponseEntity<UbicacionModel> getUbicacionByNombre(String nombre) {
         Optional<UbicacionModel> ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
@@ -74,16 +73,4 @@ public class UbicacionController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
 		}
 	}
-
-    @DeleteMapping("/{provincia}")
-    public ResponseEntity<Void> deleteUbicacion(String nombre) {
-    	Optional<UbicacionModel> ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
-        if (ubicacion.isPresent()) {
-        	UbicacionModel existingUbicacion = ubicacion.get();
-            ubicacionRepository.deleteById(existingUbicacion.getIdUbicacion());
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 }

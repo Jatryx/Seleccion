@@ -1,8 +1,6 @@
 package com.project.Soltel.controllers;
 
-import com.project.Soltel.models.EstadoModel;
 import com.project.Soltel.models.UsuarioModel;
-import com.project.Soltel.repositories.IUsuarioRepository;
 import com.project.Soltel.services.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,36 +15,40 @@ import java.util.Optional;
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
-    @Autowired
-    private IUsuarioRepository usuarioRepository;
     
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping
+    @GetMapping("/todosUsuarios")
     public List<UsuarioModel> getAllUsuarios() {
-        return usuarioRepository.findAll();
+        return usuarioService.consultarTodosUsuarios();
     }
 
-    @GetMapping("/consultar/{codope}")
+    @GetMapping("/consultarCodope/{codope}")
     public ResponseEntity<UsuarioModel> getUsuarioByCodope(@PathVariable("codope") String codope) {
-        UsuarioModel usuario = usuarioRepository.findUsuarioByCodope(codope);
-        return (usuario != null) ? ResponseEntity.ok(usuario) : ResponseEntity.notFound().build();
+        Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codope);
+        if (usuario != null) {
+              return ResponseEntity.ok(usuario.get());
+            } else {
+                return ResponseEntity.notFound().build();
+            }   
     }
 
     @PostMapping("/insertar")
     public ResponseEntity<UsuarioModel> createUsuario(@RequestBody UsuarioModel usuario) {
-        UsuarioModel savedUsuario = usuarioRepository.save(usuario);
+        UsuarioModel nuevoUsuario = new UsuarioModel();
+        nuevoUsuario.setCodope(usuario.getCodope());
+        nuevoUsuario.setContraseña(usuario.getContraseña());
+        UsuarioModel savedUsuario = usuarioService.guardarUsuario(nuevoUsuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUsuario);
     }
 
     @PutMapping("/actualizar/{codope}")
-    public ResponseEntity<UsuarioModel> updateUsuario(@PathVariable("codope") String codope, @RequestBody UsuarioModel usuarioDetails) {
-        UsuarioModel existingUsuario = usuarioRepository.findUsuarioByCodope(codope);
-        if (existingUsuario != null) {
-            existingUsuario.setContraseña(usuarioDetails.getContraseña());
-            existingUsuario.setActivo(usuarioDetails.getActivo());
-            UsuarioModel updatedUsuario = usuarioRepository.save(existingUsuario);
+    public ResponseEntity<UsuarioModel> updateUsuario(@PathVariable("codope") String codopeantiguo, @RequestBody UsuarioModel usuarioDetails) {
+        Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codopeantiguo);
+        if (usuario != null) {
+            usuario.get().setContraseña(usuarioDetails.getContraseña());
+            UsuarioModel updatedUsuario = usuarioService.actualizarUsuario(usuario.get());
             return ResponseEntity.ok(updatedUsuario);
         } else {
             return ResponseEntity.notFound().build();
@@ -65,12 +67,12 @@ public class UsuarioController {
           }
      }
 
-    @DeleteMapping("/eliminar/{codope}")
+    @PutMapping("/eliminar/{codope}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable("codope") String codope) {
-        Optional<UsuarioModel> usuarioOptional = usuarioRepository.findUsuarioByCodope(codope);
-        if (usuarioOptional.isPresent()) {
-        	UsuarioModel borrar = usuarioOptional.get();
-            usuarioRepository.delete(borrar);
+        Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codope);
+        if (usuario != null) {
+            usuario.get().setActivo(false);
+            usuarioService.actualizarUsuario(usuario.get());
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
