@@ -58,19 +58,18 @@ public class EstadoController {
 
     // Método PUT para actualizar el estado de un candidato
     @PutMapping("/actualizar/{nombreEstado}")
-    public String actualizarEstadoCandidato(@PathVariable String nombreEstado, @RequestBody String nuevoEstado) {
+    public String actualizarEstadoCandidato(@PathVariable String nombreEstado, @RequestBody EstadoModel nuevoEstado) {
         Optional<EstadoModel> estado = estadoService.consultarNombreEstado(nombreEstado);
-        Optional<EstadoModel> estadoNuevo = estadoService.consultarNombreEstado(nuevoEstado);
-        System.out.println(nuevoEstado);
+        Optional<EstadoModel> estadoNuevo = estadoService.consultarNombreEstado(nuevoEstado.getEstado());
         if (estadoNuevo.isPresent()) {
-            return "Ya existe un estado con el nombre: " + nuevoEstado;
+            return "Ya existe un estado con el nombre: " + nuevoEstado.getEstado();
         } else
         if (estado.isPresent()) {
-            estado.get().setEstado(nuevoEstado);
+            estado.get().setEstado(nuevoEstado.getEstado());
             estadoService.actualizarEstado(estado.get());
-            return "Estado actualizado: " + nuevoEstado;
+            return "Estado actualizado: " + nuevoEstado.getEstado();
         } else {
-            return "Estado no encontrado";
+            return "No existe un estado con nombre" + nombreEstado;
         }
     }
 }

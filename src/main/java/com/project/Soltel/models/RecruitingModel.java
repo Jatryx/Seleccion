@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 public class RecruitingModel {
 	
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer IdRecruiting;
 
     @ManyToOne

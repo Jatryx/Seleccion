@@ -1,5 +1,6 @@
 package com.project.Soltel.controllers;
 
+import com.project.Soltel.models.CandidatosModel;
 import com.project.Soltel.models.UbicacionModel;
 import com.project.Soltel.repositories.IUbicacionRepository;
 import com.project.Soltel.services.UbicacionService;
@@ -26,20 +27,26 @@ public class UbicacionController {
         return ubicacionService.consultarTodasUbicaciones();
     }
   
-    @GetMapping("/consultar")
+    @GetMapping("/consultar/{provincia}")
     public ResponseEntity<UbicacionModel> getUbicacionByNombre(String nombre) {
         Optional<UbicacionModel> ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
         return ubicacion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/insertar")
-    public ResponseEntity<UbicacionModel> createUbicacion(@RequestBody UbicacionModel ubicacion) {
-        UbicacionModel savedUbicacion = ubicacionRepository.save(ubicacion);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUbicacion);
+    public ResponseEntity<?> agregarProvincia(@RequestBody UbicacionModel provincia) {
+		Optional<UbicacionModel> ubicacion = ubicacionService.consultarNombreUbicacion(provincia.getNombreProvincia());
+		if (ubicacion.isPresent()) {
+			String mensaje = "Ya existe un candidato con el nombre: " + provincia.getNombreProvincia();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
+		}else {
+		UbicacionModel guardarUbicacion = ubicacionService.guardarUbicacion(provincia);
+		return ResponseEntity.ok(guardarUbicacion);
+		}
     }
 
     @PutMapping("/actualizar/{provincia}")
-    public ResponseEntity<?> updateUbicacion(@PathVariable("nombre") String nombre, @RequestBody UbicacionModel ubicacionDetails) {
+    public ResponseEntity<?> updateUbicacion(@PathVariable("provincia") String nombre, @RequestBody UbicacionModel ubicacionDetails) {
     	Optional<UbicacionModel> ubicacion = ubicacionService.consultarNombreUbicacion(nombre);
     	Optional<UbicacionModel> ubicacionNueva = ubicacionService.consultarNombreUbicacion(ubicacionDetails.getNombreProvincia());
         if (ubicacionNueva.isPresent()) {
