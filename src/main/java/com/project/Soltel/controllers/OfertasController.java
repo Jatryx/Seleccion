@@ -22,6 +22,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,9 +73,9 @@ public class OfertasController {
         return ofertaService.consultarTodasOfertas();
     }
 
-    @GetMapping("/consultarOferta/{id}")
-    public ResponseEntity<OfertasModel> getOfertaById(@PathVariable("id") int id) {
-        Optional<OfertasModel> oferta = ofertaService.consultarOfertasId(id);
+    @GetMapping("/consultarOferta/{nombreCandidato}/{idRecruiting}")
+    public ResponseEntity<OfertasModel> getOfertaById(@PathVariable("nombreCandidato") String nombreCandidato, @PathVariable("idRecruiting") int idRecruiting) {
+        Optional<OfertasModel> oferta = ofertaService.consultarPorNombreCandidatoAndIdPeticion(nombreCandidato, idRecruiting);
         if (oferta.isPresent()) {
             return ResponseEntity.ok(oferta.get());
         } else {
@@ -84,19 +89,18 @@ public class OfertasController {
         String nombreCandidato = oferta.getCandidato().getNombreCandidato();
         Integer idPeticion = oferta.getRecruiting().getIdRecruiting();
 
-        OfertasModel ofertaAcoparar = ofertaService.consultarPorNombreCandidatoAndIdPeticion(nombreCandidato, idPeticion);
+        Optional<OfertasModel> ofertaAcoparar = ofertaService.consultarPorNombreCandidatoAndIdPeticion(nombreCandidato, idPeticion);
 
-        if (ofertaAcoparar != null && nombreCandidato.equals(ofertaAcoparar.getNombreCandidato()) && idPeticion.equals(ofertaAcoparar.getRecruiting().getIdRecruiting())) {
+        if (ofertaAcoparar.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe una oferta con el nombre del candidato: " + nombreCandidato + " y el id de la petición: " + idPeticion);
         }
 
         Optional<CandidatosModel> candidatoBuscado = candidatosService.consultarCandidatosNombre(nombreCandidato);
-        Optional<EmpresaModel> empresaBuscada = empresaService.consultarNombreEmpresa(oferta.getEmpresa().getNombreEmpresa());
         Optional<EstadoModel> estadoBuscado = estadoService.consultarNombreEstado(oferta.getEstado().getEstado());
         Optional<UsuarioModel> usuarioBuscado = usuarioService.consultarUsuarioCodope(oferta.getUsuario().getCodope());
         Optional<UbicacionModel> ubicacionBuscada = ubicacionService.consultarNombreUbicacion(oferta.getUbicacion().getNombreProvincia());
         Optional<PuestoModel> puestoBuscado = puestoService.consultarNombrePuesto(oferta.getPuesto().getNombrePuesto());
-        RecruitingModel recruitingBuscado = recruitingService.consultarRecruitingPorId(oferta.getRecruiting().getIdRecruiting());
+        Optional<RecruitingModel> recruitingBuscado = recruitingService.consultarRecruitingPorId(idPeticion);
 
         OfertasModel nuevaOferta = new OfertasModel();
 
@@ -104,26 +108,12 @@ public class OfertasController {
             // El candidato existe
             CandidatosModel candidato = candidatoBuscado.get();
             nuevaOferta.setCandidato(candidato);
-            nuevaOferta.setNombreCandidato(candidato.getNombreCandidato());
+            /*nuevaOferta.setNombreCandidato(candidato.getNombreCandidato());*/
         } else {
             
             // El candidato no existe
-            ResponseEntity<?> response = candidatoController.agregarCandidato(oferta.getCandidato());
-            if (response.getStatusCode() == HttpStatus.CREATED) {
-                nuevaOferta.setCandidato((CandidatosModel) response.getBody());
-            }
-        }
-
-        if (empresaBuscada.isPresent()) {
-            // La empresa existe
-            EmpresaModel empresa = empresaBuscada.get();
-            nuevaOferta.setEmpresa(empresa);
-        } else {
-            // La empresa no existe
-            ResponseEntity<?> response = empresaController.agregarEmpresa(oferta.getEmpresa().getNombreEmpresa());
-            if (response.getStatusCode() == HttpStatus.CREATED) {
-                nuevaOferta.setEmpresa((EmpresaModel) response.getBody());
-            }
+            CandidatosModel candidato = candidatosService.guardarCandidatos(oferta.getCandidato());
+            nuevaOferta.setCandidato(candidato);
         }
 
         if (estadoBuscado.isPresent()) {
@@ -132,10 +122,8 @@ public class OfertasController {
             nuevaOferta.setEstado(estado);
         } else {
             // El estado no existe
-            ResponseEntity<?> response = estadoController.agregarEstado(oferta.getEstado());
-            if (response.getStatusCode() == HttpStatus.CREATED) {
-                nuevaOferta.setEstado((EstadoModel) response.getBody());
-            }
+            EstadoModel estado = estadoService.guardarEstado(oferta.getEstado());
+            nuevaOferta.setEstado(estado);
         }
 
         if (usuarioBuscado.isPresent()) {
@@ -144,22 +132,19 @@ public class OfertasController {
             nuevaOferta.setUsuario(usuario);
         } else {
             // El usuario no existe
-            ResponseEntity<?> response = usuarioController.createUsuario(oferta.getUsuario());
-            if (response.getStatusCode() == HttpStatus.CREATED) {
-                nuevaOferta.setUsuario((UsuarioModel) response.getBody());
-            }
+            UsuarioModel usuario = usuarioService.guardarUsuario(oferta.getUsuario());
+            nuevaOferta.setUsuario(usuario);
         }
 
-        if (ubicacionBuscada != null) {
+        if (ubicacionBuscada.isPresent()) {
             // La ubicación existe
             UbicacionModel ubicacion = ubicacionBuscada.get();
             nuevaOferta.setUbicacion(ubicacion);
         } else {
             // La ubicación no existe
-            ResponseEntity<?> response = ubicacionController.createUbicacion(oferta.getUbicacion());
-            if (response.getStatusCode() == HttpStatus.CREATED) {
-                nuevaOferta.setUbicacion((UbicacionModel) response.getBody());
-            }
+            UbicacionModel ubicacion = ubicacionService.guardarUbicacion(oferta.getUbicacion());
+            nuevaOferta.setUbicacion(ubicacion);
+
         }
 
         if (puestoBuscado.isPresent()) {
@@ -168,11 +153,22 @@ public class OfertasController {
             nuevaOferta.setPuesto(puesto);
         } else {
             // El puesto no existe
-            ResponseEntity<?> response = puestoController.guardarPuesto(oferta.getPuesto());
-            if (response.getStatusCode() == HttpStatus.CREATED) {
-                nuevaOferta.setPuesto((PuestoModel) response.getBody());
-            }
+            PuestoModel puesto = puestoService.guardarPuesto(oferta.getPuesto());
+            nuevaOferta.setPuesto(puesto);
         }
+        
+        if (recruitingBuscado.isPresent()) {
+        	// Proceso existe
+        	RecruitingModel recruiting = recruitingBuscado.get();
+        	nuevaOferta.setRecruiting(recruiting);
+        } else {
+        	// Proceso no existe
+        	EmpresaModel empresa = empresaService.guardarEmpresa(oferta.getRecruiting().getEmpresa());
+        	oferta.getRecruiting().setEmpresa(empresa); 
+        	RecruitingModel recruiting = recruitingService.guardarRecruiting(oferta.getRecruiting());
+        	nuevaOferta.setRecruiting(recruiting);
+        }
+        
 
         nuevaOferta.setExperiencia(oferta.getExperiencia());
         nuevaOferta.setFechaActualizacion(oferta.getFechaActualizacion());
@@ -188,125 +184,137 @@ public class OfertasController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOferta);
     }
 
-    @PutMapping("/actualizarOferta/{id}")
-    public ResponseEntity<?> updateOferta(@PathVariable("id") int id, @RequestBody OfertasModel ofertaDetails) {
-        Optional<OfertasModel> oferta = ofertaService.consultarOfertasId(id);
-        if (oferta.isPresent()) {
-            OfertasModel ofertaActualizada = oferta.get();
+    @PutMapping("/actualizarOferta/{nombreCandidato}/{idRecruiting}")
+    public ResponseEntity<?> updateOferta(@PathVariable("nombreCandidato") String nombreCandadito,
+    		@PathVariable("idRecruiting") int idRecruiting, @RequestBody OfertasModel ofertaDetails) {
+    	
+    	Optional<OfertasModel> oferta = ofertaService.consultarPorNombreCandidatoAndIdPeticion(nombreCandadito, idRecruiting);
+		Optional<OfertasModel> ofertaNueva = ofertaService.consultarPorNombreCandidatoAndIdPeticion(ofertaDetails.getCandidato().getNombreCandidato(), ofertaDetails.getRecruiting().getIdRecruiting());
+		int ofertaDatos;
+		int ofertaNuevaDatos;
+		
+		if (oferta.isPresent() && ofertaNueva.isPresent()) {
+			ofertaDatos = oferta.get().getIdOferta();
+			ofertaNuevaDatos = ofertaNueva.get().getIdOferta();
+		}else {
+			ofertaDatos = oferta.map(OfertasModel::getIdOferta).orElse(0); // Asigna 0 si el expediente está vacío
+		    ofertaNuevaDatos = ofertaNueva.map(OfertasModel::getIdOferta).orElse(1); // Asigna 1 si el expedienteNuevo está vacío
+		}
+		if (oferta.isPresent() && !ofertaNueva.isPresent() || 
+				ofertaDatos == ofertaNuevaDatos) {
+	
+			
+	        
+			
+	        Optional<CandidatosModel> candidatoBuscado = candidatosService.consultarCandidatosNombre(ofertaDetails.getCandidato().getNombreCandidato());
+	        Optional<EstadoModel> estadoBuscado = estadoService.consultarNombreEstado(ofertaDetails.getEstado().getEstado());
+	        Optional<UsuarioModel> usuarioBuscado = usuarioService.consultarUsuarioCodope(ofertaDetails.getUsuario().getCodope());
+	        Optional<UbicacionModel> ubicacionBuscada = ubicacionService.consultarNombreUbicacion(ofertaDetails.getUbicacion().getNombreProvincia());
+	        Optional<PuestoModel> puestoBuscado = puestoService.consultarNombrePuesto(ofertaDetails.getPuesto().getNombrePuesto());
+	        Optional<RecruitingModel> recruitingBuscado = recruitingService.consultarRecruitingPorId(ofertaDetails.getRecruiting().getIdRecruiting());
 
-            // Verificar y actualizar el candidato
-            if (ofertaDetails.getCandidato() != null) {
-                Optional<CandidatosModel> candidatoBuscado = candidatosService.consultarCandidatosNombre(ofertaDetails.getCandidato().getNombreCandidato());
-                if (candidatoBuscado.isPresent()) {
-                    ofertaActualizada.setCandidato(candidatoBuscado.get());
-                } else {
-                    CandidatosModel nuevoCandidato = candidatosService.guardarCandidatos(ofertaDetails.getCandidato());
-                    ofertaActualizada.setCandidato(nuevoCandidato);
-                }
-            }
+	        OfertasModel ofertaActualizada = oferta.get();
 
-            // Verificar y actualizar la empresa
-            if (ofertaDetails.getEmpresa() != null) {
-                Optional<EmpresaModel> empresaBuscada = empresaService.consultarNombreEmpresa(ofertaDetails.getEmpresa().getNombreEmpresa());
-                if (empresaBuscada.isPresent()) {
-                    ofertaActualizada.setEmpresa(empresaBuscada.get());
-                } else {
-                    EmpresaModel nuevaEmpresa = empresaService.guardarEmpresa(ofertaDetails.getEmpresa());
-                    ofertaActualizada.setEmpresa(nuevaEmpresa);
-                }
-            }
+	        if (candidatoBuscado.isPresent()) {
+	            // El candidato existe
+	            CandidatosModel candidato = candidatoBuscado.get();
+	            ofertaActualizada.setCandidato(candidato);
+	            /*nuevaOferta.setNombreCandidato(candidato.getNombreCandidato());*/
+	        } else {
+	            
+	            // El candidato no existe
+	            CandidatosModel candidato = candidatosService.guardarCandidatos(ofertaDetails.getCandidato());
+	            ofertaActualizada.setCandidato(candidato);
+	        }
 
-            // Verificar y actualizar el estado
-            if (ofertaDetails.getEstado() != null) {
-                Optional<EstadoModel> estadoBuscado = estadoService.consultarNombreEstado(ofertaDetails.getEstado().getEstado());
-                if (estadoBuscado.isPresent()) {
-                    ofertaActualizada.setEstado(estadoBuscado.get());
-                } else {
-                    EstadoModel nuevoEstado = estadoService.guardarEstado(ofertaDetails.getEstado());
-                    ofertaActualizada.setEstado(nuevoEstado);
-                }
-            }
+	        if (usuarioBuscado.isPresent()) {
+	            // El usuario existe
+	            UsuarioModel usuario = usuarioBuscado.get();
+	            ofertaActualizada.setUsuario(usuario);
+	        } else {
+	            // El usuario no existe
+	            UsuarioModel usuario = usuarioService.guardarUsuario(ofertaDetails.getUsuario());
+	            ofertaActualizada.setUsuario(usuario);
+	        }
 
-            // Verificar y actualizar el usuario
-            if (ofertaDetails.getUsuario() != null) {
-                Optional<UsuarioModel> usuarioBuscado = usuarioService.consultarUsuarioCodope(ofertaDetails.getUsuario().getCodope());
-                if (usuarioBuscado.isPresent()) {
-                    ofertaActualizada.setUsuario(usuarioBuscado.get());
-                } else {
-                    UsuarioModel nuevoUsuario = usuarioService.guardarUsuario(ofertaDetails.getUsuario());
-                    ofertaActualizada.setUsuario(nuevoUsuario);
-                }
-            }
+	        if (ubicacionBuscada.isPresent()) {
+	            // La ubicación existe
+	            UbicacionModel ubicacion = ubicacionBuscada.get();
+	            ofertaActualizada.setUbicacion(ubicacion);
+	        } else {
+	            // La ubicación no existe
+	            UbicacionModel ubicacion = ubicacionService.guardarUbicacion(ofertaDetails.getUbicacion());
+	            ofertaActualizada.setUbicacion(ubicacion);
 
-            // Verificar y actualizar el recruiting
-            if (ofertaDetails.getRecruiting() != null) {
-                RecruitingModel recruitingBuscado = recruitingService.consultarRecruitingPorId(ofertaDetails.getRecruiting().getIdRecruiting());
-                if (recruitingBuscado != null) {
-                    ofertaActualizada.setRecruiting(recruitingBuscado);
-                } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se ha encontrado la petición con el id: " + ofertaDetails.getRecruiting().getIdRecruiting());
-                }
-            }
+	        }
 
-            // Verificar y actualizar la ubicación
-            if (ofertaDetails.getUbicacion() != null) {
-                Optional<UbicacionModel> ubicacionBuscada = ubicacionService.consultarNombreUbicacion(ofertaDetails.getUbicacion().getNombreProvincia());
-                if (ubicacionBuscada.isPresent()) {
-                    ofertaActualizada.setUbicacion(ubicacionBuscada.get());
-                } else {
-                    UbicacionModel nuevaUbicacion = ubicacionService.guardarUbicacion(ofertaDetails.getUbicacion());
-                    ofertaActualizada.setUbicacion(nuevaUbicacion);
-                }
-            }
+	        if (puestoBuscado.isPresent()) {
+	            // El puesto existe
+	            PuestoModel puesto = puestoBuscado.get();
+	            ofertaActualizada.setPuesto(puesto);
+	        } else {
+	            // El puesto no existe
+	            PuestoModel puesto = puestoService.guardarPuesto(ofertaDetails.getPuesto());
+	            ofertaActualizada.setPuesto(puesto);
+	        }
+	        
+	        if (recruitingBuscado.isPresent()) {
+	        	// Proceso existe
+	        	RecruitingModel recruiting = recruitingBuscado.get();
+	        	ofertaActualizada.setRecruiting(recruiting);
+	        } else {
+	        	// Proceso no existe
+	        	EmpresaModel empresa = empresaService.guardarEmpresa(ofertaDetails.getRecruiting().getEmpresa());
+	        	ofertaDetails.getRecruiting().setEmpresa(empresa); 
+	        	RecruitingModel recruiting = recruitingService.guardarRecruiting(ofertaDetails.getRecruiting());
+	        	ofertaActualizada.setRecruiting(recruiting);
+	        }
+	        
 
-            // Verificar y actualizar el puesto
-            if (ofertaDetails.getPuesto() != null) {
-                Optional<PuestoModel> puestoBuscado = puestoService.consultarNombrePuesto(ofertaDetails.getPuesto().getNombrePuesto());
-                if (puestoBuscado.isPresent()) {
-                    ofertaActualizada.setPuesto(puestoBuscado.get());
-                } else {
-                    PuestoModel nuevoPuesto = puestoService.guardarPuesto(ofertaDetails.getPuesto());
-                    ofertaActualizada.setPuesto(nuevoPuesto);
-                }
-            }
+	        ofertaActualizada.setExperiencia(ofertaDetails.getExperiencia());
+	        ofertaActualizada.setFechaActualizacion(ofertaDetails.getFechaActualizacion());
+	        ofertaActualizada.setObservaciones(ofertaDetails.getObservaciones());
+	        ofertaActualizada.setTecnologias(ofertaDetails.getTecnologias());
+	        ofertaActualizada.setSalario(ofertaDetails.getSalario());
+	        ofertaActualizada.setActivo(true);
+	        
+	        
+	        String estadoAntiguo = oferta.get().getEstado().getEstado();
+	        String estadoAComprobar = ofertaDetails.getEstado().getEstado();
+	        
+	        if (estadoBuscado.isPresent()) {
+	            // El estado existe
+	            EstadoModel estadoNuevo = estadoBuscado.get();
+	            ofertaActualizada.setEstado(estadoNuevo);
+	        } else {
+	            // El estado no existe
+	            EstadoModel estadoNuevo = estadoService.guardarEstado(ofertaDetails.getEstado());
+	            ofertaActualizada.setEstado(estadoNuevo);
+	        }
+	        
+	        if (!estadoAntiguo.equals(estadoAComprobar)) {
+	     // Formatear la fecha
+	        String estado = ofertaDetails.getEstado().getEstado();
+	        LocalDate fechaActualizacion = ofertaDetails.getFechaActualizacion(); // Es LocalDate
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	        String fechaFormateada = fechaActualizacion.format(formatter);
+	        
+	        // Actualizar el historial
+	        String historial = oferta.get().getHistoricoCambioEstados();
+	        historial += System.lineSeparator() + " Fue " + estado + " el " + fechaFormateada;
+	        ofertaActualizada.setHistoricoCambioEstados(historial);
+	        }
+	        OfertasModel savedOferta = ofertaService.guardarOferta(ofertaActualizada);
+	        return ResponseEntity.status(HttpStatus.CREATED).body(savedOferta);
+	        
+		} else if (!oferta.isPresent()){
+			String mensaje = "No existe una oferta del candidato: "  + nombreCandadito + " para el proceso: " + idRecruiting;
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
+			
+			}else{
+				String mensaje = "Ya existe una oferta del candidato: "  + ofertaDetails.getCandidato().getNombreCandidato() + " para el proceso: " + ofertaDetails.getRecruiting().getIdRecruiting();
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
+			}
+	}
 
-            // Actualizar otros campos
-            ofertaActualizada.setExperiencia(ofertaDetails.getExperiencia());
-            ofertaActualizada.setFechaActualizacion(ofertaDetails.getFechaActualizacion());
-            ofertaActualizada.setObservaciones(ofertaDetails.getObservaciones());
-            ofertaActualizada.setNombreCandidato(ofertaDetails.getNombreCandidato());
-            ofertaActualizada.setTecnologias(ofertaDetails.getTecnologias());
-            ofertaActualizada.setSalario(ofertaDetails.getSalario());
-
-            // Obtener la información existente en historicoCambioEstados
-            String historicoActual = ofertaActualizada.getHistoricoCambioEstados();
-
-            // Crear la nueva información a añadir
-            String nuevaInformacion = "Se ha actualizado la oferta el dia " + ofertaDetails.getFechaActualizacion() + " con el estado " + ofertaDetails.getEstado().getEstado();
-
-            // Concatenar la nueva información con la existente
-            String informacionActualizada = (historicoActual != null ? historicoActual + "\n" : "") + nuevaInformacion;
-
-            // Actualizar el campo historicoCambioEstados con la información acumulada
-            ofertaActualizada.setHistoricoCambioEstados(informacionActualizada);
-
-            OfertasModel updatedOferta = ofertaService.actualizarOferta(ofertaActualizada);
-            return ResponseEntity.ok(updatedOferta);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se ha encontrado la oferta con el id: " + id);
-        }
-    }
-
-    @PutMapping("/eliminarOferta/{id}")
-    public ResponseEntity<?> deleteOferta(@PathVariable("id") int id) {
-        Optional<OfertasModel> oferta = ofertaService.consultarOfertasId(id);
-        if (oferta.isPresent()) {
-            OfertasModel ofertaEliminada = oferta.get();
-            ofertaEliminada.setActivo(false);
-            OfertasModel updatedOferta = ofertaService.actualizarOferta(ofertaEliminada);
-            return ResponseEntity.ok(updatedOferta);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se ha encontrado la oferta con el id: " + id);
-        }
-    }
 }

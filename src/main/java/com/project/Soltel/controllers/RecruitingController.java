@@ -66,7 +66,7 @@ public class RecruitingController {
     			recruiting.get().setEmpresa(empresaExistente.get());
     			RecruitingModel guardarRecruiting = recruitingService.guardarRecruiting(recruiting.get());
     			return ResponseEntity.ok(guardarRecruiting);
-    		}else {
+    		} else {
     			EmpresaModel empresa = empresaService.guardarEmpresa(recruitingDetails.getEmpresa());
     			recruitingDetails.setEmpresa(empresa);
     			RecruitingModel guardarRecruiting = recruitingService.guardarRecruiting(recruiting.get());
@@ -77,12 +77,12 @@ public class RecruitingController {
 
     @PutMapping("/eliminarRecruiting/{id}")
     public String eliminarRecruiting(@PathVariable int id) {
-        RecruitingModel recruiting = recruitingservice.consultarRecruitingPorId(id);
-        if (recruiting != null) {
-            recruitingservice.actualizarRecruiting(recruiting);
+    	Optional<RecruitingModel> recruiting = recruitingService.consultarRecruitingPorId(id);
+        if (recruiting.isPresent()) {
+            recruiting.get().setActivo(false);
             return "Recruiting eliminado";
         } else {
             return "Recruiting no encontrado";
         }
-    }
+   } 
 }

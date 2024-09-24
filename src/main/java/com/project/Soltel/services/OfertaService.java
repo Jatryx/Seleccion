@@ -36,7 +36,7 @@ public class OfertaService {
         return ofertaRepository.save(oferta);
     }
 
-    public OfertasModel consultarPorNombreCandidatoAndIdPeticion(String nombreCandidato, Integer idPeticion) {
+    public Optional<OfertasModel> consultarPorNombreCandidatoAndIdPeticion(String nombreCandidato, Integer idPeticion) {
         return ofertaRepository.findByNombreCandidatoAndRecruitingId(nombreCandidato, idPeticion);
     }
 
