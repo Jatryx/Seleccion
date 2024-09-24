@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.Soltel.models.PuestoModel;
-import com.project.Soltel.models.UbicacionModel;
 import com.project.Soltel.services.PuestoService;
 
 @RestController
