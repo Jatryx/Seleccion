@@ -1,0 +1,60 @@
+<form [formGroup]="candidatoForm" (ngSubmit)="onSubmit()">
+  <h2>Candidatos Ofertados</h2>
+  <div>
+    <label for="candidato">Candidato</label>
+    <input id="candidato" formControlName="candidato" />
+  </div>
+
+  <div>
+    <label for="proyecto">Proyecto</label>
+    <input id="proyecto" formControlName="proyecto" />
+  </div>
+
+  <div>
+    <label for="cliente">Cliente</label>
+    <input id="cliente" formControlName="cliente" />
+  </div>
+
+  <div>
+    <label for="ubicacion">Ubicación</label>
+    <input id="ubicacion" formControlName="ubicacion" />
+  </div>
+
+  <div>
+    <label for="perfil">Perfil</label>
+    <input id="perfil" formControlName="perfil" />
+  </div>
+
+  <div>
+    <label for="tecnologia">Tecnología</label>
+    <input id="tecnologia" formControlName="tecnologia" />
+  </div>
+
+  <div>
+    <label for="experiencia">Años de experiencia</label>
+    <input id="experiencia" formControlName="experiencia" type="number" />
+  </div>
+
+  <div>
+    <label for="salario">Salario</label>
+    <input id="salario" formControlName="salario" type="number" />
+  </div>
+
+  <div>
+    <label for="estado">Estado</label>
+    <input id="estado" formControlName="estado" />
+  </div>
+
+  <div>
+    <label for="fechaActualizacion">Fecha de Actualización</label>
+    <input id="fechaActualizacion" formControlName="fechaActualizacion" type="date" />
+  </div>
+
+  <div>
+    <label for="resumen">Resumen</label>
+    <textarea id="resumen" formControlName="resumen"></textarea>
+  </div>
+
+  <button type="submit">Enviar</button>
+</form>
+
