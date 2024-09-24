@@ -1,7 +1,7 @@
 package com.project.Soltel.controllers;
 
 import com.project.Soltel.models.UbicacionModel;
-
+import com.project.Soltel.repositories.IUbicacionRepository;
 import com.project.Soltel.services.UbicacionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/ubicacion")

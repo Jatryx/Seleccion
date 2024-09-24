@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.project.Soltel.models.UsuarioModel;
 
 @Repository
-public interface IUsuarioRepository extends JpaRepository<UsuarioModel, Integer> {
+public interface IUsuarioRepository extends JpaRepository<UsuarioModel, String> {
 
     @Query("SELECT a FROM UsuarioModel a WHERE a.activo = true")
     List<UsuarioModel> findUsuarioActivo();
