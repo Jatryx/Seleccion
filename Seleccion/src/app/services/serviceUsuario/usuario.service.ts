@@ -12,22 +12,22 @@ export class UsuarioService {
   constructor(private http: HttpClient) { }
 
   getUsuarios(){
-    return this.http.get<Usuario[]>(this.apiRoot);
+    return this.http.get<Usuario[]>(this.apiRoot + '/consultar');
   }
 
   getUsarioCodope(codope: string){
-    return this.http.get<Usuario>(this.apiRoot + '/' + codope);
+    return this.http.get<Usuario>(this.apiRoot + '/consultar/' + codope);
   }
 
   postUsuario(usuario: Usuario){
-    return this.http.post<Usuario>(this.apiRoot, usuario);
+    return this.http.post<Usuario>(this.apiRoot + '/insertar', usuario);
   }
 
   putUsuario(codope: string, usuario: Usuario){
-    return this.http.put<Usuario>(this.apiRoot + '/' + codope, usuario);
+    return this.http.put<Usuario>(this.apiRoot + '/actualizar/' + codope, usuario);
   }
 
   deleteUsuario(codope: string){
-    return this.http.delete(this.apiRoot + '/' + codope);
+    return this.http.delete(this.apiRoot + '/desactivar/' + codope);
   }
 }

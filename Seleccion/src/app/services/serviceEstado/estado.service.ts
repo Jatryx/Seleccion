@@ -12,19 +12,19 @@ export class EstadoService {
   constructor(private http: HttpClient) { }
 
   getEstados(){
-    return this.http.get<Estado[]>(this.apiRoot);
+    return this.http.get<Estado[]>(this.apiRoot + '/consultar');
   }
 
   postEstado(estado: any){
-    return this.http.post(this.apiRoot, estado);
+    return this.http.post(this.apiRoot + '/insertar', estado);
   }
 
-  putEstado(idestado: number){
-    return this.http.put(this.apiRoot + '/' + idestado, idestado);
+  putEstado(nombreEstado: string, estado: Estado){
+    return this.http.put(this.apiRoot + '/actualizar/' + nombreEstado, estado);
   }
 
-  deleteEstado(idestado: number){
-    return this.http.delete(this.apiRoot + '/' + idestado);
+  deleteEstado(nombreEstado: string){
+    return this.http.delete(this.apiRoot + '/desactivar/' + nombreEstado);
   }
 
 }

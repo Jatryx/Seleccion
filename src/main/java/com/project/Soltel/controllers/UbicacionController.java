@@ -22,7 +22,7 @@ public class UbicacionController {
     @Autowired
     private UbicacionService ubicacionService;
 
-    @GetMapping("/todasUbicaciones")
+    @GetMapping("/consultar")
     public List<UbicacionModel> getAllUbicaciones() {
         return ubicacionService.consultarTodasUbicaciones();
     }

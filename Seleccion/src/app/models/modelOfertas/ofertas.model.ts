@@ -11,7 +11,6 @@ export interface Ofertas {
     nombreCandidato: string,
     usuario:Usuario,
     recruiting:Recruiting,
-    empresa:Empresa,
     ubicacion:Ubicacion,
     puesto:Puesto,
     tecnologias: string,

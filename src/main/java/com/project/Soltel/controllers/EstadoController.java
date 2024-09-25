@@ -18,7 +18,7 @@ public class EstadoController {
     private EstadoService estadoService;
 
     // Método GET para obtener la lista de candidatos
-    @GetMapping("/consultarTodos")
+    @GetMapping("/consultar")
     public List<EstadoModel> obtenerTodosEstados() {
         return estadoService.consultarTodosEstados();
     }
@@ -48,10 +48,11 @@ public class EstadoController {
        Optional<EstadoModel> estado = estadoService.consultarNombreEstado(nombreEstado);
          if (estado.isPresent()) {
               estado.get().setActivo(false);
-              EstadoModel estadoEliminado = estadoService.actualizarEstado(estado.get());
-              return ResponseEntity.ok(estadoEliminado);
+              estadoService.actualizarEstado(estado.get());
+              String mensaje = "Se desactivo el estado: " + nombreEstado;
+              return ResponseEntity.ok(mensaje);
          } else {
-              String mensaje = "No se encontró el estado con el nombre: " + nombreEstado;
+              String mensaje = "No se encontró el estado: " + nombreEstado;
               return ResponseEntity.status(404).body(mensaje);
          }
     }

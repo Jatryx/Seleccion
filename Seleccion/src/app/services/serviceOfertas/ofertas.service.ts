@@ -12,23 +12,23 @@ export class OfertasService {
   constructor(private http: HttpClient) { }
 
   getOfertas(){
-    return this.http.get<Ofertas[]>(this.apiRoot);
+    return this.http.get<Ofertas[]>(this.apiRoot + '/consultar');
   }
 
-  getIdoferta(idoferta: number){
-    return this.http.get<Ofertas>(this.apiRoot + '/' + idoferta);
+  getOfertaPorNombreCandidatoEIdRecruiting(nombreCandidato: string, idRecruiting: number){
+    return this.http.get<Ofertas>(this.apiRoot + '/consultar/' + nombreCandidato + '/' + idRecruiting);
   }
 
   postOferta(oferta: Ofertas){
-    return this.http.post<Ofertas>(this.apiRoot, oferta);
+    return this.http.post<Ofertas>(this.apiRoot + '/insertar', oferta);
   }
 
-  putOferta(idoferta: number, oferta: Ofertas){
-    return this.http.put<Ofertas>(this.apiRoot + '/' + idoferta, oferta);
+  putOferta(nombreCandidato: string, idRecruiting: number, oferta: Ofertas){
+    return this.http.put<Ofertas>(this.apiRoot + '/actualizar/' + nombreCandidato + '/' + idRecruiting, oferta);
   }
 
-  deleteOferta(idoferta: number){
-    return this.http.delete(this.apiRoot + '/' + idoferta);
+  deleteOferta(nombreCandidato: string, idRecruiting: number){
+    return this.http.delete(this.apiRoot + '/desactivar/' + nombreCandidato + '/' + idRecruiting);
   }
 
 }

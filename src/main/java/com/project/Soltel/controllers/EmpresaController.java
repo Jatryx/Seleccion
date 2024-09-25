@@ -20,7 +20,7 @@ public class EmpresaController {
     private EmpresaService empresaService;
 
     // Método GET para obtener la lista de empresas
-    @GetMapping("/consultarTodasEmpresa")
+    @GetMapping("/consultar")
     public List<EmpresaModel> obtenerTodasEmpresa() {
         return empresaService.consultarTodasEmpresas();
     }
@@ -62,12 +62,12 @@ public class EmpresaController {
     
 
     // Método DELETE para eliminar una empresa por su ID
-    @PutMapping("/eliminar/{nombreEmpresa}")
+    @PutMapping("/desactivar/{nombreEmpresa}")
     public String eliminarempresa(@PathVariable String nombreEmpresa) {
         Optional<EmpresaModel> empresa = empresaService.consultarNombreEmpresa(nombreEmpresa);
         if (empresa.isPresent()) {
             empresa.get().setActivo(false);
-            return "Empresa eliminada";
+            return "Empresa desactivada";
         } else {
             return "Empresa no encontrada";
         }

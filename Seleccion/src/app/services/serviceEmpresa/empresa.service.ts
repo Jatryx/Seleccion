@@ -12,18 +12,22 @@ export class EmpresaService {
   constructor(private http: HttpClient) { }
 
   getEmpresas(){
-    return this.http.get<Empresa[]>(this.apiRoot);
+    return this.http.get<Empresa[]>(this.apiRoot + '/consultar');
   }
+  
+  getEmpresaPorNombre(nombreEmpresa: string){
+      return this.http.get<Empresa>(this.apiRoot + '/consultar/' + nombreEmpresa);
+    }
 
   postEmpresa(empresa: any){
-    return this.http.post(this.apiRoot, empresa);
+    return this.http.post(this.apiRoot + '/insertar', empresa);
   }
 
-  putEmpresa(idempresa: number){
-    return this.http.put(this.apiRoot + '/' + idempresa, idempresa);
+  putEmpresa(nombreEmpresa: string, empresa: Empresa){
+    return this.http.put(this.apiRoot + '/actualizar/' + nombreEmpresa, empresa);
   }
 
-  deleteEmpresa(idempresa: number){
-    return this.http.delete(this.apiRoot + '/' + idempresa);
+  deleteEmpresa(nombreEmpresa: string){
+    return this.http.delete(this.apiRoot + '/desactivar/' + nombreEmpresa);
   }
 }
