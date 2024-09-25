@@ -12,18 +12,18 @@ export class PuestoService {
   constructor(private http: HttpClient) { }
 
   getPuestos(){
-    return this.http.get<Puesto[]>(this.apiRoot + '/consultar');
+    return this.http.get<Puesto[]>(this.apiRoot + '/consultar/');
   }
 
   postPuestos(nombrePuesto :string){
-    return this.http.post<Puesto>(this.apiRoot + '/insertar', nombrePuesto);
+    return this.http.post<Puesto>(this.apiRoot + '/insertar/', nombrePuesto);
   }
 
-  putPuestos(nombrePuesto :string){
-    return this.http.put<Puesto>(this.apiRoot + '/actualizar', nombrePuesto);
+  putPuestos(nombrePuesto :string, puesto: Puesto){
+    return this.http.put<Puesto>(this.apiRoot + '/actualizar/' + nombrePuesto, puesto);
   }
 
   borradoLógicoPuesto(nombrePuesto :string){
-    return this.http.put<Puesto>(this.apiRoot + '/activar', nombrePuesto);
+    return this.http.put<Puesto>(this.apiRoot + '/activar/', nombrePuesto);
   }
 }

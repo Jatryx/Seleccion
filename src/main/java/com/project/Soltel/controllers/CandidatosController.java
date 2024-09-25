@@ -25,6 +25,17 @@ public class CandidatosController {
 		return ResponseEntity.ok(candidatosService.consultarTodosCandidatos());
 				
 	}
+    
+    @GetMapping("/consultar/{nombreCandidato}")
+	public ResponseEntity<?> getCandidatoPorNombre(@PathVariable String nombreCandidato){
+    	Optional<CandidatosModel> candidatoABuscar = candidatosService.consultarNombreCandidatos(nombreCandidato);
+    	if (candidatoABuscar.isPresent()) {
+		return ResponseEntity.ok(candidatosService.consultarNombreCandidatos(nombreCandidato));			
+    	} else {
+    		String mensaje = "No se ha encontrado a: " + nombreCandidato;
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
+    	} 	
+    }
 
     // Método POST para agregar un nuevo candidato
     

@@ -14,16 +14,18 @@ export class CandidatosService {
   getCandidatos(){
     return this.http.get<Candidatos[]>(this.apiRoot);
   }
-
+  getCandidatoPorNombre(nombreCandidato: string){
+      return this.http.get<Candidatos>(this.apiRoot + '/consultar/' + nombreCandidato);
+    }
   postCandidato(candidato: any){
-    return this.http.post(this.apiRoot, candidato);
+    return this.http.post(this.apiRoot + '/insertar', candidato);
   }
 
-  putCandidato(idcandidato: number){
-    return this.http.put(this.apiRoot + '/' + idcandidato, idcandidato);
+  putCandidato(nombreCandidato: string, candidato: Candidatos){
+    return this.http.put(this.apiRoot + '/actualizar/' + nombreCandidato, candidato);
   }
 
-  deleteCandidato(idcandidato: number){
-    return this.http.delete(this.apiRoot + '/' + idcandidato);
+  deleteCandidato(nombreCandidato: string){
+    return this.http.delete(this.apiRoot + '/desactivar/' + nombreCandidato);
   }
 }

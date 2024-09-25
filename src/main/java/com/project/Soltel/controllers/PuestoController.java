@@ -39,7 +39,7 @@ public class PuestoController {
 		}
 		
 		
-		@PostMapping("insertar")
+		@PostMapping("/insertar")
 		public ResponseEntity<?> guardarPuesto(@RequestBody PuestoModel nombrePuesto) {
 			Optional<PuestoModel> puesto = puestoService.consultarNombrePuesto(nombrePuesto.getNombrePuesto());
 			if (puesto.isPresent()) {
@@ -87,7 +87,7 @@ public class PuestoController {
 				}
 		}
 		
-		@PutMapping("/descativar{nombrePuesto}")
+		@PutMapping("/descativar/{nombrePuesto}")
 		public ResponseEntity<?> activarTiposExpediente(String nombrePuesto) {
 			Optional<PuestoModel> puesto = puestoService.consultarNombrePuesto(nombrePuesto);
 			

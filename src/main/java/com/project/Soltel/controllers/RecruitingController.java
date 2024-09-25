@@ -23,17 +23,17 @@ public class RecruitingController {
     @Autowired
     private EmpresaService empresaService;
 
-    @GetMapping("/todosRecruitings")
+    @GetMapping("/consultar")
     public List<RecruitingModel> getAllRecruitings() {
         return recruitingService.consultarTodosRecruiting();
     }
 
-    @GetMapping("/idRecruiting/{id}")
+    @GetMapping("/consultar/{id}")
     public Optional<RecruitingModel> getRecruitingById(@PathVariable("id") int id) {
         return recruitingService.consultarRecruitingPorId(id);
     }
 
-    @PostMapping("/añadirRecruiting")
+    @PostMapping("/insertar")
     public ResponseEntity<?> createRecruiting(@RequestBody RecruitingModel recruiting) {
     	Optional<RecruitingModel> recruitingExistente = recruitingService.consultarRecruitingPorId(recruiting.getIdRecruiting());
 		if (recruitingExistente.isPresent()) {
@@ -54,7 +54,7 @@ public class RecruitingController {
 		}
     }
 
-    @PutMapping("/actualizarRecruiting/{id}")
+    @PutMapping("/actualizar/{id}")
     public ResponseEntity<?> updateRecruiting(@PathVariable("id") int id, @RequestBody RecruitingModel recruitingDetails) {
         Optional<RecruitingModel> recruiting = recruitingService.consultarRecruitingPorId(id);
         if (!recruiting.isPresent()) {
@@ -75,14 +75,14 @@ public class RecruitingController {
         }
     }
 
-    @PutMapping("/eliminarRecruiting/{id}")
+    @PutMapping("/desactivar/{id}")
     public String eliminarRecruiting(@PathVariable int id) {
     	Optional<RecruitingModel> recruiting = recruitingService.consultarRecruitingPorId(id);
         if (recruiting.isPresent()) {
             recruiting.get().setActivo(false);
-            return "Recruiting eliminado";
+            return "Proceso: " + id + " desactivado";
         } else {
-            return "Recruiting no encontrado";
+            return "Proceso: " + id + " no encontrado";
         }
    } 
 }

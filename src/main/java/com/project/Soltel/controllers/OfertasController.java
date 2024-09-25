@@ -68,12 +68,12 @@ public class OfertasController {
     UsuarioController usuarioController = new UsuarioController();
     
 
-    @GetMapping("/todasOfertas")
+    @GetMapping("/consultar")
     public List<OfertasModel> getAllOfertas() {
         return ofertaService.consultarTodasOfertas();
     }
 
-    @GetMapping("/consultarOferta/{nombreCandidato}/{idRecruiting}")
+    @GetMapping("/consultar/{nombreCandidato}/{idRecruiting}")
     public ResponseEntity<OfertasModel> getOfertaById(@PathVariable("nombreCandidato") String nombreCandidato, @PathVariable("idRecruiting") int idRecruiting) {
         Optional<OfertasModel> oferta = ofertaService.consultarPorNombreCandidatoAndIdPeticion(nombreCandidato, idRecruiting);
         if (oferta.isPresent()) {

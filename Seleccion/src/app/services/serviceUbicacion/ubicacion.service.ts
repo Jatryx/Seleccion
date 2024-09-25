@@ -12,23 +12,23 @@ export class UbicacionService {
   constructor(private http: HttpClient) { }
 
   getUbicaciones(){
-    return this.http.get<Ubicacion[]>(this.apiRoot);
+    return this.http.get<Ubicacion[]>(this.apiRoot + '/consultar');
   }
 
-  getUbicacionIdubicacion(idubicacion: number){
-    return this.http.get<Ubicacion>(this.apiRoot + '/' + idubicacion);
+  getUbicacionPorNombre(nombreUbicacion: string){
+    return this.http.get<Ubicacion>(this.apiRoot + '/consultar/' + nombreUbicacion);
   }
 
   postUbicacion(ubicacion: Ubicacion){
-    return this.http.post<Ubicacion>(this.apiRoot, ubicacion);
+    return this.http.post<Ubicacion>(this.apiRoot + '/insertar', ubicacion);
   }
 
-  putUbicacion(idubicacion: number, ubicacion: Ubicacion){
-    return this.http.put<Ubicacion>(this.apiRoot + '/' + idubicacion, ubicacion);
+  putUbicacion(nombreUbicacion: string, ubicacion: Ubicacion){
+    return this.http.put<Ubicacion>(this.apiRoot + '/actualizar/' + nombreUbicacion, ubicacion);
   }
 
-  deleteUbicacion(idubicacion: number){
-    return this.http.delete(this.apiRoot + '/' + idubicacion);
+  deleteUbicacion(nombreUbicacion: string){
+    return this.http.delete(this.apiRoot + '/desactivar/' + nombreUbicacion);
   }
   
 }

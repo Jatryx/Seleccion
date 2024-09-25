@@ -12,22 +12,22 @@ export class RecruitingService {
   constructor(private http: HttpClient) { }
 
   getRecruitings(){
-    return this.http.get<Recruiting[]>(this.apiRoot);
+    return this.http.get<Recruiting[]>(this.apiRoot + '/consultar');
   }
 
   getRecruitingIdrecruiting(idrecruiting: number){
-    return this.http.get<Recruiting>(this.apiRoot + '/' + idrecruiting);
+    return this.http.get<Recruiting>(this.apiRoot + '/consultar/' + idrecruiting);
   }
 
   postRecruiting(recruiting: Recruiting){
-    return this.http.post<Recruiting>(this.apiRoot, recruiting);
+    return this.http.post<Recruiting>(this.apiRoot + '/insertar', recruiting);
   }
 
   putRecruiting(idrecruiting: number, recruiting: Recruiting){
-    return this.http.put<Recruiting>(this.apiRoot + '/' + idrecruiting, recruiting);
+    return this.http.put<Recruiting>(this.apiRoot + '/actualizar/' + idrecruiting, recruiting);
   }
 
   deleteRecruiting(idrecruiting: number){
-    return this.http.delete(this.apiRoot + '/' + idrecruiting);
+    return this.http.delete(this.apiRoot + '/desactivar/' + idrecruiting);
   }
 }

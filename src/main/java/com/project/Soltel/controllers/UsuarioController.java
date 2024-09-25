@@ -20,12 +20,12 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping("/todosUsuarios")
+    @GetMapping("/consultar")
     public List<UsuarioModel> getAllUsuarios() {
         return usuarioService.consultarTodosUsuarios();
     }
 
-    @GetMapping("/consultarCodope/{codope}")
+    @GetMapping("/consultar/{codope}")
     public ResponseEntity<UsuarioModel> getUsuarioByCodope(@PathVariable("codope") String codope) {
         Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codope);
         if (usuario != null) {
@@ -60,7 +60,7 @@ public class UsuarioController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
         }
     }
-    @PutMapping("/activar/{codope}")
+    @PutMapping("/desactivar/{codope}")
     public ResponseEntity<?> eliminarEstado(@PathVariable String codope) {
         Optional<UsuarioModel> usuario = usuarioService.consultarUsuarioCodope(codope);
           if (usuario.isPresent()) {
