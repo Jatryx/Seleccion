@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Ofertas } from '../models/modelOfertas/ofertas.model';
+import { OfertasService } from '../services/serviceOfertas/ofertas.service';
+
 
 @Component({
   selector: 'app-candidatos-ofertados',
@@ -10,9 +13,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   imports: [ReactiveFormsModule, CommonModule]
 })
 export class CandidatosOfertadosComponent {
-  candidatoForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+ 
+
+  constructor(private fb: FormBuilder, private ofertaService : OfertasService) {
     this.candidatoForm = this.fb.group({
       candidato: ['', Validators.required],
       proyecto: ['', Validators.required],
@@ -28,6 +32,21 @@ export class CandidatosOfertadosComponent {
     });
   }
 
+  ofertaLista:Ofertas[] = [];
+
+	candidatoForm: FormGroup;
+
+  /*ngOnInit(){
+      this.cargarOfertas();
+  }
+
+  cargarOfertas(){
+    this.ofertaService.getOfertas.subscribe(data => {
+      this.tipos = data;
+      this.tipoBuscar = data;
+    })
+    this.cambiarMensajeActivos()
+  }*/
   onSubmit() {
     if (this.candidatoForm.valid) {
       console.log(this.candidatoForm.value);
