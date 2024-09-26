@@ -1,49 +1,59 @@
 /* src/app/candidatos-ofertados/candidatos-ofertados.component.css */
 form {
-  max-width: 600px;
+  max-width: 900px;
   margin: 2rem auto;
   padding: 2rem;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
+  background: #ffffff;
+  box-shadow: 10px 10px 20px #c4c4c4, -10px -10px 20px #ffffff;
 }
 
 h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-    color: #333;
-  }
-
-form div {
+  text-align: center;
   margin-bottom: 1.5rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
+  font-size: 1.5rem;
   color: #333;
 }
 
-input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
-  transition: border-color 0.3s;
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-input:focus {
-  border-color: #007bff;
-  outline: none;
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* Espacio entre los campos */
+}
+
+.form-group mat-form-field {
+  flex: 1 1 calc(25% - 16px); /* Cada campo ocupa el 25% del ancho, o sea, 4 columnas */
+  min-width: 200px;
+}
+
+.full-width {
+  flex: 1 1 75%; /* Resumen ocupará 75% */
+}
+
+.half-width {
+  flex: 1 1 calc(25% - 16px); /* Experiencia y Salario ocupan juntos el 25% */
+}
+
+.wide-full {
+  flex: 1 1 100%; /* Tecnologías y resumen ocuparán todo el ancho */
+}
+
+.experience-salary-group {
+  display: flex;
+  gap: 16px;
+  flex: 1 1 25%; /* Agrupa experiencia y salario dentro de una columna */
 }
 
 button {
-  display: inline-block;
   width: 100%;
   padding: 0.75rem;
   border: none;
@@ -53,13 +63,71 @@ button {
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 button:hover {
   background-color: #0056b3;
+  transform: scale(1.01);
 }
 
-button:active {
-  background-color: #004494;
+
+.table-container {
+  width: 90%; /* Puedes mantener esto en 90% o ajustarlo a un tamaño que funcione para ti */
+  margin: 0 auto; /* Centra el contenedor */
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow:  10px 10px 20px #c4c4c4,
+               -10px -10px 20px #ffffff;
+  overflow: hidden; /* Asegúrate de que se apliquen los bordes redondeados */
+}
+
+table {
+  width: 100%; /* Asegúrate de que la tabla ocupa todo el ancho del contenedor */
+  table-layout: fixed; /* Fija el diseño de la tabla para que las columnas respeten el ancho definido */
+}
+
+th.mat-header-cell, 
+td.mat-cell {
+  padding: 4px; /* Reduce el padding para compactar la tabla */
+  text-align: center; /* Centra el contenido de las celdas */
+}
+
+th.mat-header-cell:nth-child(9),
+td.mat-cell:nth-child(9), /* Columna Experiencia */
+th.mat-header-cell:nth-child(10),
+td.mat-cell:nth-child(10) { /* Columna Salario */
+  width: 60px; /* Ajusta el ancho como desees */
+}
+
+td.mat-cell {
+  overflow: hidden; /* Evita que el texto se desborde */
+  white-space: nowrap; /* Evita que el texto se divida en múltiples líneas */
+  text-overflow: ellipsis; /* Muestra "..." si el texto es demasiado largo */
+}
+
+@media (max-width: 768px) {
+  th.mat-header-cell, 
+  td.mat-cell {
+      padding: 2px; /* Reduce el padding en pantallas más pequeñas */
+  }
+
+  th.mat-header-cell:nth-child(9),
+  td.mat-cell:nth-child(9),
+  th.mat-header-cell:nth-child(10),
+  td.mat-cell:nth-child(10) {
+      width: 50px; /* Ajusta el ancho en pantallas más pequeñas */
+  }
+}
+
+.resumen-button {
+  background-color: #007bff; /* Color de fondo */
+  padding: 6px 12px; /* Espaciado interno ajustado */
+  font-size: 1rem; /* Tamaño de fuente */
+  font-weight: 500; /* Normaliza el peso de la fuente */
+  text-align: center; /* Alinea el texto al centro */
+  transition: background-color 0.3s, transform 0.2s; /* Efectos de transición */
+  display: inline-block; /* Asegura que el botón se comporte correctamente */
+  border-radius: 20px;
+  background: #007bff;
 }

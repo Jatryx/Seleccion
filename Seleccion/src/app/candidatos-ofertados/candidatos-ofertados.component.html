@@ -1,60 +1,149 @@
-<form [formGroup]="candidatoForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="candidatoForm" (ngSubmit)="onSubmit()" class="form-container">
   <h2>Candidatos Ofertados</h2>
-  <div>
-    <label for="candidato">Candidato</label>
-    <input id="candidato" formControlName="candidato" />
+
+  <div class="form-group">
+    <mat-form-field appearance="fill">
+      <mat-label>Candidato</mat-label>
+      <input matInput formControlName="candidato" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Proyecto</mat-label>
+      <input matInput formControlName="proyecto" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Cliente</mat-label>
+      <input matInput formControlName="cliente" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Ubicación</mat-label>
+      <mat-select formControlName="ubicacion">
+        <mat-option *ngFor="let provincia of provinciaLista" [value]="provincia.nombreProvincia">
+          {{ provincia.nombreProvincia }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Perfil</mat-label>
+      <input matInput formControlName="perfil" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Tecnología</mat-label>
+      <input matInput formControlName="tecnologia" />
+    </mat-form-field>
+
+    
+    <mat-form-field appearance="fill">
+      <mat-label>Estado</mat-label>
+      <input matInput formControlName="estado" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Fecha de Actualización</mat-label>
+      <input matInput formControlName="fechaActualizacion" type="date" />
+    </mat-form-field>
+    
+    <div class="experience-salary-group">
+      <mat-form-field appearance="fill">
+        <mat-label>Años de experiencia</mat-label>
+        <input matInput formControlName="experiencia" type="number" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Salario</mat-label>
+        <input matInput formControlName="salario" type="number" />
+      </mat-form-field>
+    </div>
+
+    <!-- Resumen ocupa todo el ancho -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Resumen</mat-label>
+      <textarea matInput formControlName="resumen"></textarea>
+    </mat-form-field>
   </div>
 
-  <div>
-    <label for="proyecto">Proyecto</label>
-    <input id="proyecto" formControlName="proyecto" />
-  </div>
-
-  <div>
-    <label for="cliente">Cliente</label>
-    <input id="cliente" formControlName="cliente" />
-  </div>
-
-  <div>
-    <label for="ubicacion">Ubicación</label>
-    <input id="ubicacion" formControlName="ubicacion" />
-  </div>
-
-  <div>
-    <label for="perfil">Perfil</label>
-    <input id="perfil" formControlName="perfil" />
-  </div>
-
-  <div>
-    <label for="tecnologia">Tecnología</label>
-    <input id="tecnologia" formControlName="tecnologia" />
-  </div>
-
-  <div>
-    <label for="experiencia">Años de experiencia</label>
-    <input id="experiencia" formControlName="experiencia" type="number" />
-  </div>
-
-  <div>
-    <label for="salario">Salario</label>
-    <input id="salario" formControlName="salario" type="number" />
-  </div>
-
-  <div>
-    <label for="estado">Estado</label>
-    <input id="estado" formControlName="estado" />
-  </div>
-
-  <div>
-    <label for="fechaActualizacion">Fecha de Actualización</label>
-    <input id="fechaActualizacion" formControlName="fechaActualizacion" type="date" />
-  </div>
-
-  <div>
-    <label for="resumen">Resumen</label>
-    <textarea id="resumen" formControlName="resumen"></textarea>
-  </div>
-
-  <button type="submit">Enviar</button>
+  <button mat-raised-button color="primary" type="submit">Enviar</button>
 </form>
+
+
+<div class="table-container">
+  <table mat-table [dataSource]="ofertaLista" matSort class="mat-elevation-z8">
+    <!-- Candidato Column -->
+    <ng-container matColumnDef="candidato">
+      <th mat-header-cell *matHeaderCellDef>Candidato</th>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.candidato.nombreCandidato }}</td>
+    </ng-container>
+
+    <!-- Codope Column -->
+    <ng-container matColumnDef="codope">
+      <th mat-header-cell *matHeaderCellDef>Codope</th>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.usuario.codope }}</td>
+    </ng-container>
+
+    <!-- ID Petición Column -->
+    <ng-container matColumnDef="idPeticion">
+      <th mat-header-cell *matHeaderCellDef>ID Petición</th>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.recruiting.idRecruiting }}</td>
+    </ng-container>
+
+    <!-- Proyecto Column -->
+    <ng-container matColumnDef="proyecto">
+      <th mat-header-cell *matHeaderCellDef>Proyecto</th>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.recruiting.nombreProyecto }}</td>
+    </ng-container>
+
+    <!-- Cliente Column -->
+    <ng-container matColumnDef="cliente">
+      <th mat-header-cell *matHeaderCellDef>Cliente</th>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.recruiting.empresa.nombreEmpresa }}</td>
+    </ng-container>
+
+    <!-- Ubicación Column -->
+    <ng-container matColumnDef="ubicacion">
+      <th mat-header-cell *matHeaderCellDef>Ubicación</th>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.ubicacion.nombreProvincia }}</td>
+    </ng-container>
+
+    <!-- Perfil Column -->
+    <ng-container matColumnDef="perfil">
+      <th mat-header-cell *matHeaderCellDef>Perfil</th>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.puesto.nombrePuesto }}</td>
+    </ng-container>
+
+    <!-- Tecnología Column -->
+    <ng-container matColumnDef="tecnologia" >
+      <th mat-header-cell *matHeaderCellDef>Tecnología</th>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.tecnologias }}</td>
+    </ng-container>
+
+    <!-- Estado Column -->
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.estado.estado }}</td>
+    </ng-container>
+
+    <!-- Fecha Actualización Column -->
+    <ng-container matColumnDef="fechaActualizacion">
+      <th mat-header-cell *matHeaderCellDef>Fecha Actualización</th>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.fechaActualizacion | date: 'dd/MM/yyyy' }}</td>
+    </ng-container>
+
+    <!-- Resumen Column -->
+<!-- Resumen Column -->
+    <ng-container matColumnDef="resumen">
+      <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+      <td mat-cell *matCellDef="let oferta">
+        <button mat-button (click)="openPopup(oferta)" class="resumen-button" style="color: whitesmoke;">Ver</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['candidato', 'codope', 'idPeticion', 'proyecto', 'cliente', 'ubicacion', 'perfil', 'tecnologia', 'estado', 'fechaActualizacion', 'resumen']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['candidato', 'codope', 'idPeticion', 'proyecto', 'cliente', 'ubicacion', 'perfil', 'tecnologia', 'estado', 'fechaActualizacion', 'resumen']"></tr>
+  </table>
+</div>
+
 

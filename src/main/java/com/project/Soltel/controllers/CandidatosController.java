@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.project.Soltel.models.CandidatosModel;
 import com.project.Soltel.services.CandidatosService;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 

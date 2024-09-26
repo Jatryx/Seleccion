@@ -1,6 +1,5 @@
 package com.project.Soltel.controllers;
 
-import com.project.Soltel.models.CandidatosModel;
 import com.project.Soltel.models.UbicacionModel;
 import com.project.Soltel.repositories.IUbicacionRepository;
 import com.project.Soltel.services.UbicacionService;

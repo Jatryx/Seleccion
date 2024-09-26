@@ -3,8 +3,6 @@ package com.project.Soltel.models;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,9 +20,6 @@ public class OfertasModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer IdOferta;
 
-    /*@Column(nullable = false, length = 100)
-    private String nombreCandidato;
- 	*/
     @ManyToOne
     @JoinColumn(name = "codope", referencedColumnName = "codope")
     private UsuarioModel usuario;
@@ -32,10 +27,6 @@ public class OfertasModel {
     @ManyToOne
     @JoinColumn(name = "recruitingId", referencedColumnName = "IdRecruiting")
     private RecruitingModel recruiting;
-
-    /*@ManyToOne
-    @JoinColumn(name = "empresaId", referencedColumnName = "IdEmpresa")
-    private EmpresaModel empresa;*/
 
     @ManyToOne
     @JoinColumn(name = "ubicacionId", referencedColumnName = "IdUbicacion")

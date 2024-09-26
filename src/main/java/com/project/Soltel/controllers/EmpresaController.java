@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.project.Soltel.models.EmpresaModel;
-import com.project.Soltel.models.UbicacionModel;
+
 import com.project.Soltel.services.EmpresaService;
 import java.util.List;
 import java.util.Optional;

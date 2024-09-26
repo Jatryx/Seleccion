@@ -1,6 +1,5 @@
 package com.project.Soltel.controllers;
 
-import com.project.Soltel.models.CandidatosModel;
 import com.project.Soltel.models.EmpresaModel;
 import com.project.Soltel.models.RecruitingModel;
 import com.project.Soltel.services.EmpresaService;

@@ -1,6 +1,5 @@
 package com.project.Soltel.controllers;
 
-import com.project.Soltel.models.CandidatosModel;
 import com.project.Soltel.models.UsuarioModel;
 import com.project.Soltel.services.UsuarioService;
 

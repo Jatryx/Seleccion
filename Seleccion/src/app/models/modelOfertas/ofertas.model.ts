@@ -8,7 +8,6 @@ import { Usuario } from "../modelUsuario/usuario.model";
 
 export interface Ofertas {
     idOferta: number,
-    nombreCandidato: string,
     usuario:Usuario,
     recruiting:Recruiting,
     ubicacion:Ubicacion,
@@ -20,6 +19,6 @@ export interface Ofertas {
     fechaActualizacion: Date,
     observaciones: string,
     historicoCambiosEstado: string,
-    candidato: Candidatos
+    candidato: Candidatos,
     activo: boolean,
 }
