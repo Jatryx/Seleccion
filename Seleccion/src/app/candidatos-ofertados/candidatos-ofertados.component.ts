@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OfertasService } from '../services/serviceOfertas/ofertas.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Ofertas } from '../models/modelOfertas/ofertas.model';
@@ -9,7 +9,6 @@ import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Ubicacion } from '../models/modelUbicacion/ubicacion.model';
 import { UbicacionService } from '../services/serviceUbicacion/ubicacion.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +17,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { PuestoService } from '../services/servicePuesto/puesto.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { map, Observable, startWith } from 'rxjs';
+import { EstadoService } from '../services/serviceEstado/estado.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 @Component({
@@ -37,19 +39,24 @@ import { map, Observable, startWith } from 'rxjs';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatAutocompleteModule 
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
-  providers: [OfertasService, UbicacionService, PuestoService]
+  providers: [OfertasService, UbicacionService, PuestoService, EstadoService]
 })
 export class CandidatosOfertadosComponent implements OnInit {
   candidatoForm: FormGroup;
   ofertaLista = new MatTableDataSource<Ofertas>([]);
   provinciaLista: string[];
   perfilesLista: string[];
+  estadoLista: string[];
+  tecnologiaLista: string[];
   mostrarCampoOtro = false;
   filtroProvincias!: Observable<string[]>;  // Observable para el autocomp letado
   filtroPerfiles!: Observable<string[]>;  // Observable para el autocompletado
-
+  filtroTecnologias!: Observable<string[]>; 
+  fecha: Date = new Date();
   displayedColumns: string[] = [
     'candidato', 
     'codope', 
@@ -69,11 +76,11 @@ export class CandidatosOfertadosComponent implements OnInit {
     private ofertaService: OfertasService, 
     private ubicacionService: UbicacionService,
     private puestoService: PuestoService,
+    private estadoService: EstadoService,
     private dialog: MatDialog
   ) {
     this.candidatoForm = this.fb.group({
       candidato: ['', Validators.required],
-      codope: ['', Validators.required],
       proyecto: ['', Validators.required],
       cliente: ['', Validators.required],
       ubicacion: ['', Validators.required],
@@ -81,7 +88,7 @@ export class CandidatosOfertadosComponent implements OnInit {
       tecnologia: ['', Validators.required],
       experiencia: ['', [Validators.required, Validators.min(0)]],
       salario: ['', [Validators.required, Validators.min(0)]],
-      estado: ['', Validators.required],
+      estado: [new Date(), Validators.required],
       fechaActualizacion: ['', Validators.required],
       resumen: ['']
     });
@@ -92,12 +99,24 @@ export class CandidatosOfertadosComponent implements OnInit {
     this.cargarOfertas();
     this.cargarProvincias();
     this.cargarPerfiles();   
+    this.cargarEstados(); 
   }
+
+  // -------------------------------------------------------------------------------------------------------------
+
+  //      Carga de datos
+
+  // -------------------------------------------------------------------------------------------------------------
+
+  
 
   cargarOfertas() {
     this.ofertaService.getOfertas().subscribe(
       data => {
         this.ofertaLista.data = data;
+
+        this.tecnologiaLista = data.flatMap(oferta => oferta.tecnologias.split(',').map(t => t.trim()));
+        this.tecnologiaLista = Array.from(new Set(this.tecnologiaLista)); // Elimina duplicados
       },
       error => {
         console.error('Error al cargar las ofertas:', error);
@@ -130,25 +149,33 @@ export class CandidatosOfertadosComponent implements OnInit {
       }
     );
   }
-
-  onSubmit() {
-    if (this.candidatoForm.valid) {
-      const nuevoCandidato = this.candidatoForm.value;
-      this.ofertaLista.data = [...this.ofertaLista.data, nuevoCandidato];
-      this.candidatoForm.reset();
-    } else {
-      console.log('Formulario no válido');
-    }
+  cargarEstados() {
+    this.estadoService.getEstados().subscribe(
+      data => {
+        this.estadoLista = data.map(estado => estado.estado);
+        // Llama a filtrado aquí después de cargar perfiles
+        this.filtradoPerfiles();
+      },
+      error => {
+        console.error('Error al cargar los perfiles:', error);
+      }
+    );
   }
 
+  // -------------------------------------------------------------------------------------------------------------
+
+  //      Filtro Selects
+
+  // -------------------------------------------------------------------------------------------------------------ç
+
   filtroProvincia(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.provinciaLista.filter(option => option.toLowerCase().includes(filterValue));
+    const filtroProvincia = value.toLowerCase();
+    return this.provinciaLista.filter(option => option.toLowerCase().includes(filtroProvincia));
   }
 
   filtroPerfil(value: string): string[] {
-    const filterValue2 = value.toLowerCase();
-    return this.perfilesLista.filter(option => option.toLowerCase().includes(filterValue2));
+    const filtroPerfil = value.toLowerCase();
+    return this.perfilesLista.filter(option => option.toLowerCase().includes(filtroPerfil));
   }
 
   filtradoProvincias() {
@@ -164,6 +191,28 @@ export class CandidatosOfertadosComponent implements OnInit {
       map(value => this.filtroPerfil(value || ''))
     );
   }
+  
+
+
+
+  
+
+  onSubmit() {
+    if (this.candidatoForm.valid) {
+      const nuevoCandidato = this.candidatoForm.value;
+      this.ofertaLista.data = [...this.ofertaLista.data, nuevoCandidato];
+      this.candidatoForm.reset();
+    } else {
+      console.log('Formulario no válido');
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------------------------
+
+  //     PopUP obeservaciones
+
+  // -------------------------------------------------------------------------------------------------------------
+
   openPopup(prueba: Ofertas): void {
     const dialogRef = this.dialog.open(DialogContent, {
       width: '400px',
@@ -174,19 +223,6 @@ export class CandidatosOfertadosComponent implements OnInit {
       }
     });
   }
-  ubicacionOtro(event: any) {
-    if (event.value === 'otro') {
-      this.mostrarCampoOtro = true;
-      this.candidatoForm.get('otraUbicacion')?.setValidators([Validators.required]);
-    } else {
-      this.mostrarCampoOtro = false;
-      this.candidatoForm.get('otraUbicacion')?.clearValidators();
-      this.candidatoForm.get('otraUbicacion')?.setValue('');
-    }
-    this.candidatoForm.get('otraUbicacion')?.updateValueAndValidity();
-  }
-
-
   
 }
 

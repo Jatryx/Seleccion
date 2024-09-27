@@ -8,11 +8,6 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Codope</mat-label>
-      <input matInput formControlName="codope" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
       <mat-label>Proyecto</mat-label>
       <input matInput formControlName="proyecto" />
     </mat-form-field>
@@ -52,31 +47,50 @@
 
 
     <mat-form-field appearance="fill">
-      <mat-label>Tecnología</mat-label>
+      <mat-label>Tecnoligias</mat-label>
       <input matInput formControlName="tecnologia" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Estado</mat-label>
-      <input matInput formControlName="estado" />
+      <mat-select formControlName="estado">
+        <mat-option *ngFor="let estado of estadoLista" [value]="estado">
+          {{ estado }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Fecha de Actualización</mat-label>
-      <input matInput formControlName="fechaActualizacion" type="date" />
-    </mat-form-field>
-    
-    <div class="experience-salary-group">
-      <mat-form-field appearance="fill">
-        <mat-label>Años de experiencia</mat-label>
-        <input matInput formControlName="experiencia" type="number" />
-      </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Salario</mat-label>
-        <input matInput formControlName="salario" type="number" />
-      </mat-form-field>
-    </div>
+<mat-form-field appearance="fill">
+  <mat-label>Fecha Creación</mat-label>
+  <input 
+    matInput 
+    [matDatepicker]="picker" 
+    formControlName="fechaActualizacion" 
+    placeholder="dd/mm/aaaa" />
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+
+
+<div class="experience-salary-group">
+  <mat-form-field appearance="fill">
+    <mat-label>Años de experiencia</mat-label>
+    <input matInput formControlName="experiencia" type="number" />
+    <mat-error *ngIf="candidatoForm.get('experiencia')?.hasError('min')">
+      No se permiten valores negativos.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Salario</mat-label>
+    <input matInput formControlName="salario" type="number" />
+    <mat-error *ngIf="candidatoForm.get('salario')?.hasError('min')">
+      No se permiten valores negativos.
+    </mat-error>
+  </mat-form-field>
+</div>
+
 
     <!-- Resumen ocupa todo el ancho -->
     <mat-form-field appearance="fill" class="full-width">
@@ -154,7 +168,7 @@
     <ng-container matColumnDef="resumen">
       <th mat-header-cell *matHeaderCellDef>Observaciones</th>
       <td mat-cell *matCellDef="let oferta">
-        <button mat-button (click)="openPopup(oferta)" class="resumen-button" style="color: whitesmoke;">Ver</button>
+        <button mat-raised-button color="primary" (click)="openPopup(oferta)" class="resumen-button" style="color: whitesmoke;">Ver</button>
       </td>
     </ng-container>
 
