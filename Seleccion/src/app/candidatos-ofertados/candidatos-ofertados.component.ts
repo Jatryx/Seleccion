@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OfertasService } from '../services/serviceOfertas/ofertas.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Ofertas } from '../models/modelOfertas/ofertas.model';
@@ -15,6 +15,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { PuestoService } from '../services/servicePuesto/puesto.service';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { map, Observable, startWith } from 'rxjs';
+
 
 @Component({
   selector: 'app-candidatos-ofertados',
@@ -32,14 +36,19 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatToolbarModule, 
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatAutocompleteModule 
   ],
-  providers: [OfertasService, UbicacionService]
+  providers: [OfertasService, UbicacionService, PuestoService]
 })
 export class CandidatosOfertadosComponent implements OnInit {
   candidatoForm: FormGroup;
   ofertaLista = new MatTableDataSource<Ofertas>([]);
-  provinciaLista: Ubicacion[];
+  provinciaLista: string[];
+  perfilesLista: string[];
+  mostrarCampoOtro = false;
+  filtroProvincias!: Observable<string[]>;  // Observable para el autocomp letado
+  filtroPerfiles!: Observable<string[]>;  // Observable para el autocompletado
 
   displayedColumns: string[] = [
     'candidato', 
@@ -59,6 +68,7 @@ export class CandidatosOfertadosComponent implements OnInit {
     private fb: FormBuilder, 
     private ofertaService: OfertasService, 
     private ubicacionService: UbicacionService,
+    private puestoService: PuestoService,
     private dialog: MatDialog
   ) {
     this.candidatoForm = this.fb.group({
@@ -77,9 +87,11 @@ export class CandidatosOfertadosComponent implements OnInit {
     });
   }
 
+
   ngOnInit() {
     this.cargarOfertas();
     this.cargarProvincias();
+    this.cargarPerfiles();   
   }
 
   cargarOfertas() {
@@ -96,10 +108,25 @@ export class CandidatosOfertadosComponent implements OnInit {
   cargarProvincias() {
     this.ubicacionService.getUbicaciones().subscribe(
       data => {
-        this.provinciaLista = data;
+        this.provinciaLista = data.map(provincia => provincia.nombreProvincia);
+        //Llam a filtado aquí luego de cargar provincias
+        this.filtradoProvincias();
       },
       error => {
         console.error('Error al cargar las provincias:', error);
+      }
+    );
+  }
+
+  cargarPerfiles() {
+    this.puestoService.getPuestos().subscribe(
+      data => {
+        this.perfilesLista = data.map(puesto => puesto.nombrePuesto);
+        // Llama a filtrado aquí después de cargar perfiles
+        this.filtradoPerfiles();
+      },
+      error => {
+        console.error('Error al cargar los perfiles:', error);
       }
     );
   }
@@ -114,6 +141,29 @@ export class CandidatosOfertadosComponent implements OnInit {
     }
   }
 
+  filtroProvincia(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.provinciaLista.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  filtroPerfil(value: string): string[] {
+    const filterValue2 = value.toLowerCase();
+    return this.perfilesLista.filter(option => option.toLowerCase().includes(filterValue2));
+  }
+
+  filtradoProvincias() {
+    this.filtroProvincias = this.candidatoForm.get('ubicacion')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filtroProvincia(value || ''))
+    );
+  }
+
+  filtradoPerfiles() {
+    this.filtroPerfiles = this.candidatoForm.get('perfil')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filtroPerfil(value || ''))
+    );
+  }
   openPopup(prueba: Ofertas): void {
     const dialogRef = this.dialog.open(DialogContent, {
       width: '400px',
@@ -124,7 +174,23 @@ export class CandidatosOfertadosComponent implements OnInit {
       }
     });
   }
+  ubicacionOtro(event: any) {
+    if (event.value === 'otro') {
+      this.mostrarCampoOtro = true;
+      this.candidatoForm.get('otraUbicacion')?.setValidators([Validators.required]);
+    } else {
+      this.mostrarCampoOtro = false;
+      this.candidatoForm.get('otraUbicacion')?.clearValidators();
+      this.candidatoForm.get('otraUbicacion')?.setValue('');
+    }
+    this.candidatoForm.get('otraUbicacion')?.updateValueAndValidity();
+  }
+
+
+  
 }
+
+
 
 // Componente del diálogo
 @Component({

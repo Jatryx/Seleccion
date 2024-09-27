@@ -23,18 +23,33 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Ubicación</mat-label>
-      <mat-select formControlName="ubicacion">
-        <mat-option *ngFor="let provincia of provinciaLista" [value]="provincia.nombreProvincia">
-          {{ provincia.nombreProvincia }}
+      <mat-label>Ubicacion</mat-label>
+      <input 
+        type="text" 
+        matInput 
+        formControlName="ubicacion"
+        [matAutocomplete]="autoUbiciacion">
+      <mat-autocomplete #autoUbiciacion="matAutocomplete">
+        <mat-option *ngFor="let option of filtroProvincias | async" [value]="option">
+          {{ option }}
         </mat-option>
-      </mat-select>
+      </mat-autocomplete>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Perfil</mat-label>
-      <input matInput formControlName="perfil" />
+      <input 
+        type="text" 
+        matInput 
+        formControlName="perfil"
+        [matAutocomplete]="autoPerfil">
+      <mat-autocomplete #autoPerfil="matAutocomplete">
+        <mat-option *ngFor="let option of filtroPerfiles | async" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
+
 
     <mat-form-field appearance="fill">
       <mat-label>Tecnología</mat-label>
@@ -78,55 +93,55 @@
     <!-- Candidato Column -->
     <ng-container matColumnDef="candidato">
       <th mat-header-cell *matHeaderCellDef>Candidato</th>
-      <td mat-cell *matCellDef="let oferta">{{ oferta.candidato }}</td>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.candidato.nombreCandidato }}</td>
     </ng-container>
 
     <!-- Codope Column -->
     <ng-container matColumnDef="codope">
       <th mat-header-cell *matHeaderCellDef>Codope</th>
-      <td mat-cell *matCellDef="let oferta">{{ oferta.codope }}</td>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.usuario.codope }}</td>
     </ng-container>
 
     <!-- ID Petición Column -->
     <ng-container matColumnDef="idPeticion">
       <th mat-header-cell *matHeaderCellDef>ID Petición</th>
-      <td mat-cell *matCellDef="let oferta">{{ oferta.idPeticion }}</td>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.recruiting.idRecruiting }}</td>
     </ng-container>
 
     <!-- Proyecto Column -->
     <ng-container matColumnDef="proyecto">
       <th mat-header-cell *matHeaderCellDef>Proyecto</th>
-      <td mat-cell *matCellDef="let oferta">{{ oferta.proyecto }}</td>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.recruiting.nombreProyecto }}</td>
     </ng-container>
 
     <!-- Cliente Column -->
     <ng-container matColumnDef="cliente">
       <th mat-header-cell *matHeaderCellDef>Cliente</th>
-      <td mat-cell *matCellDef="let oferta">{{ oferta.cliente }}</td>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.recruiting.empresa.nombreEmpresa }}</td>
     </ng-container>
 
     <!-- Ubicación Column -->
     <ng-container matColumnDef="ubicacion">
       <th mat-header-cell *matHeaderCellDef>Ubicación</th>
-      <td mat-cell *matCellDef="let oferta">{{ oferta.ubicacion }}</td>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.ubicacion.nombreProvincia }}</td>
     </ng-container>
 
     <!-- Perfil Column -->
     <ng-container matColumnDef="perfil">
       <th mat-header-cell *matHeaderCellDef>Perfil</th>
-      <td mat-cell *matCellDef="let oferta">{{ oferta.perfil }}</td>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.puesto.nombrePuesto }}</td>
     </ng-container>
 
     <!-- Tecnología Column -->
     <ng-container matColumnDef="tecnologia">
       <th mat-header-cell *matHeaderCellDef>Tecnología</th>
-      <td mat-cell *matCellDef="let oferta">{{ oferta.tecnologia }}</td>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.tecnologias }}</td>
     </ng-container>
 
     <!-- Estado Column -->
     <ng-container matColumnDef="estado">
       <th mat-header-cell *matHeaderCellDef>Estado</th>
-      <td mat-cell *matCellDef="let oferta">{{ oferta.estado }}</td>
+      <td mat-cell *matCellDef="let oferta">{{ oferta.estado.estado }}</td>
     </ng-container>
 
     <!-- Fecha Actualización Column -->
