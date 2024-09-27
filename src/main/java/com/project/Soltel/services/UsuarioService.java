@@ -1,4 +1,4 @@
-.package com.project.Soltel.services;
+package com.project.Soltel.services;
 
 import java.util.List;
 import java.util.Optional;

@@ -12,7 +12,7 @@ export class PuestoService {
   constructor(private http: HttpClient) { }
 
   getPuestos(){
-    return this.http.get<Puesto[]>(this.apiRoot + '/consultar/');
+    return this.http.get<Puesto[]>(this.apiRoot + '/consultar');
   }
 
   postPuestos(nombrePuesto :string){
