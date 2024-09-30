@@ -1,4 +1,3 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { CandidatosOfertadosComponent } from './candidatos-ofertados/candidatos-ofertados.component';
 

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OfertasService } from '../services/serviceOfertas/ofertas.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Ofertas } from '../models/modelOfertas/ofertas.model';
@@ -20,7 +20,9 @@ import { map, Observable, startWith } from 'rxjs';
 import { EstadoService } from '../services/serviceEstado/estado.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-
+import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-candidatos-ofertados',
@@ -42,10 +44,13 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatAutocompleteModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatIconModule,
+    MatMenuModule
   ],
   providers: [OfertasService, UbicacionService, PuestoService, EstadoService]
 })
 export class CandidatosOfertadosComponent implements OnInit {
+  faHome = faHome;
   candidatoForm: FormGroup;
   ofertaLista = new MatTableDataSource<Ofertas>([]);
   provinciaLista: string[];
@@ -53,10 +58,11 @@ export class CandidatosOfertadosComponent implements OnInit {
   estadoLista: string[];
   tecnologiaLista: string[];
   mostrarCampoOtro = false;
-  filtroProvincias!: Observable<string[]>;  // Observable para el autocomp letado
+  filtroProvincias!: Observable<string[]>;  // Observable para el autocompletado
   filtroPerfiles!: Observable<string[]>;  // Observable para el autocompletado
   filtroTecnologias!: Observable<string[]>; 
   fecha: Date = new Date();
+  filtroEstados!: Observable<string[]>;
   displayedColumns: string[] = [
     'candidato', 
     'codope', 
@@ -94,7 +100,6 @@ export class CandidatosOfertadosComponent implements OnInit {
     });
   }
 
-
   ngOnInit() {
     this.cargarOfertas();
     this.cargarProvincias();
@@ -107,8 +112,6 @@ export class CandidatosOfertadosComponent implements OnInit {
   //      Carga de datos
 
   // -------------------------------------------------------------------------------------------------------------
-
-  
 
   cargarOfertas() {
     this.ofertaService.getOfertas().subscribe(
@@ -128,7 +131,7 @@ export class CandidatosOfertadosComponent implements OnInit {
     this.ubicacionService.getUbicaciones().subscribe(
       data => {
         this.provinciaLista = data.map(provincia => provincia.nombreProvincia);
-        //Llam a filtado aquí luego de cargar provincias
+        // Llama a filtrado aquí luego de cargar provincias
         this.filtradoProvincias();
       },
       error => {
@@ -149,15 +152,16 @@ export class CandidatosOfertadosComponent implements OnInit {
       }
     );
   }
+
   cargarEstados() {
     this.estadoService.getEstados().subscribe(
       data => {
         this.estadoLista = data.map(estado => estado.estado);
-        // Llama a filtrado aquí después de cargar perfiles
-        this.filtradoPerfiles();
+        // Llama a filtrado aquí después de cargar estados
+        this.filtradoEstados();
       },
       error => {
-        console.error('Error al cargar los perfiles:', error);
+        console.error('Error al cargar los estados:', error);
       }
     );
   }
@@ -166,7 +170,7 @@ export class CandidatosOfertadosComponent implements OnInit {
 
   //      Filtro Selects
 
-  // -------------------------------------------------------------------------------------------------------------ç
+  // -------------------------------------------------------------------------------------------------------------
 
   filtroProvincia(value: string): string[] {
     const filtroProvincia = value.toLowerCase();
@@ -191,11 +195,18 @@ export class CandidatosOfertadosComponent implements OnInit {
       map(value => this.filtroPerfil(value || ''))
     );
   }
-  
 
+  filtradoEstados() {
+    this.filtroEstados = this.candidatoForm.get('estado')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filtroEstado(value || ''))
+    );
+  }
 
-
-  
+  filtroEstado(value: string): string[] {
+    const filtroEstado = value.toLowerCase();
+    return this.estadoLista.filter(option => option.toLowerCase().includes(filtroEstado));
+  }
 
   onSubmit() {
     if (this.candidatoForm.valid) {
@@ -209,7 +220,7 @@ export class CandidatosOfertadosComponent implements OnInit {
 
   // -------------------------------------------------------------------------------------------------------------
 
-  //     PopUP obeservaciones
+  //     PopUP observaciones
 
   // -------------------------------------------------------------------------------------------------------------
 
@@ -223,10 +234,7 @@ export class CandidatosOfertadosComponent implements OnInit {
       }
     });
   }
-  
 }
-
-
 
 // Componente del diálogo
 @Component({

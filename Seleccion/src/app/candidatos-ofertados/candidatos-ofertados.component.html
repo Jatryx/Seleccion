@@ -1,5 +1,26 @@
+<div class="header">
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
+    <mat-icon class="header-icon">menu</mat-icon>
+  </button>
+  <img class="header-title" src="assets/3.png" alt="Recruiting Home">
+    <mat-menu #menu="matMenu">
+    <button mat-menu-item class="custom-menu-item">
+      <mat-icon class="custom-menu-icon">home</mat-icon>
+      <span class="custom-menu-text">Inicio</span>
+    </button>
+    <button mat-menu-item class="custom-menu-item">
+      <mat-icon class="custom-menu-icon">person</mat-icon>
+      <span class="custom-menu-text">Perfil</span>
+    </button>
+    <button mat-menu-item class="custom-menu-item">
+      <mat-icon class="custom-menu-icon">exit_to_app</mat-icon>
+      <span class="custom-menu-text">Cerrar sesión</span>
+    </button>
+  </mat-menu>
+</div>
+
 <form [formGroup]="candidatoForm" (ngSubmit)="onSubmit()" class="form-container">
-  <h2>Candidatos Ofertados</h2>
+  <h2>Añadir candidato</h2>
 
   <div class="form-group">
     <mat-form-field appearance="fill">
@@ -94,7 +115,7 @@
 
     <!-- Resumen ocupa todo el ancho -->
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Resumen</mat-label>
+      <mat-label>Observaciones</mat-label>
       <textarea matInput formControlName="resumen"></textarea>
     </mat-form-field>
   </div>
@@ -176,3 +197,15 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-content">
+    <p>&copy; 2024 Soltel Group. Todos los derechos reservados.</p>
+    <div class="footer-links">
+      <a href="#">Política de Privacidad</a>
+      <a href="#">Términos de Servicio</a>
+      <a href="#">Contacto</a>
+    </div>
+  </div>
+</footer>
