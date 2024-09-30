@@ -25,30 +25,7 @@
   <div class="form-group">
     <mat-form-field appearance="fill">
       <mat-label>Candidato</mat-label>
-      <input 
-        type="text" 
-        matInput 
-        formControlName="candidato"
-        [matAutocomplete]="autoCandidato">
-      <mat-autocomplete #autoCandidato="matAutocomplete">
-        <mat-option *ngFor="let option of filtroCandidatos | async" [value]="option">
-          {{ option }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>ID Recruiting</mat-label>
-      <input 
-        type="number" 
-        matInput 
-        formControlName="idPeticion"
-        [matAutocomplete]="autoPeticion">
-      <mat-autocomplete #autoPeticion="matAutocomplete">
-        <mat-option *ngFor="let option of filtroRecruitings | async" [value]="option">
-          {{ option }}
-        </mat-option>
-      </mat-autocomplete>
+      <input matInput formControlName="candidato" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
