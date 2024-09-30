@@ -71,6 +71,7 @@ export class CandidatosOfertadosComponent implements OnInit {
   mostrarCampoOtro = false;
   displayedColumns: string[] = [
     'candidato', 
+    'telefono',
     'codope', 
     'idPeticion', 
     'proyecto', 
@@ -95,7 +96,11 @@ export class CandidatosOfertadosComponent implements OnInit {
   ) {
     this.candidatoForm = this.fb.group({
       candidato: ['', Validators.required],
+
+      telefono: ['', [Validators.required, Validators.pattern('[0-9]{9}')]],
+
       idPeticion: ['', [Validators.required, Validators.min(0)]],
+
       proyecto: ['', Validators.required],
       cliente: ['', Validators.required],
       ubicacion: ['', Validators.required],

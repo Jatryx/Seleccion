@@ -12,12 +12,12 @@ form {
 h2 {
   text-align: center;
   margin-bottom: 1.5rem;
-  font-size: 1.5rem; /* Tamaño de fuente más grande */
-  color: #424141; /* Color azul */
-  font-weight: bold; /* Negrita */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Sombra de texto */
-  padding: 10px; /* Espaciado interno */
-  border-bottom: 2px solid #e0e0e0; /* Línea inferior */
+  font-size: 1.5rem; 
+  color: #424141; 
+  font-weight: bold; 
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); 
+  padding: 10px; 
+  border-bottom: 2px solid #e0e0e0; 
 }
 
 .form-container {
@@ -29,30 +29,29 @@ h2 {
 .form-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px; /* Espacio entre los campos */
+  gap: 16px; 
 }
 
 .form-group mat-form-field {
-  flex: 1 1 calc(25% - 16px); /* Cada campo ocupa el 25% del ancho, o sea, 4 columnas */
-  min-width: 200px;
+  flex: 1 1 calc(25% - 16px);
 }
 
 .full-width {
-  flex: 1 1 75%; /* Resumen ocupará 75% */
+  flex: 1 1 75%; 
 }
 
 .half-width {
-  flex: 1 1 calc(25% - 16px); /* Experiencia y Salario ocupan juntos el 25% */
+  flex: 1 1 calc(25% - 16px); 
 }
 
 .wide-full {
-  flex: 1 1 100%; /* Tecnologías y resumen ocuparán todo el ancho */
+  flex: 1 1 100%; 
 }
 
 .experience-salary-group {
   display: flex;
   gap: 16px;
-  flex: 1 1 25%; /* Agrupa experiencia y salario dentro de una columna */
+  flex: 1 1 25%; 
 }
 
 button {
@@ -74,143 +73,145 @@ button:hover {
 }
 
 .table-container {
-  width: 90%; /* Puedes mantener esto en 90% o ajustarlo a un tamaño que funcione para ti */
-  margin: 0 auto; /* Centra el contenedor */
+  width: 90%; 
+  margin: 0 auto; 
   border-radius: 8px;
   background: #ffffff;
   box-shadow: 10px 10px 20px #c4c4c4, -10px -10px 20px #ffffff;
-  overflow: hidden; /* Asegúrate de que se apliquen los bordes redondeados */
+  overflow: hidden; 
 }
 
 table {
-  width: 100%; /* Asegúrate de que la tabla ocupa todo el ancho del contenedor */
-  table-layout: fixed; /* Fija el diseño de la tabla para que las columnas respeten el ancho definido */
+  width: 100%; 
+  table-layout: fixed; 
 }
 
 th.mat-header-cell, 
 td.mat-cell {
-  padding: 4px; /* Reduce el padding para compactar la tabla */
-  text-align: center; /* Centra el contenido de las celdas */
+  padding: 4px; 
+  text-align: center; 
 }
 
 th.mat-header-cell:nth-child(9),
-td.mat-cell:nth-child(9), /* Columna Experiencia */
+td.mat-cell:nth-child(9), 
 th.mat-header-cell:nth-child(10),
-td.mat-cell:nth-child(10) { /* Columna Salario */
-  width: 60px; /* Ajusta el ancho como desees */
+td.mat-cell:nth-child(10) { 
+  width: 60px; 
 }
 
 td.mat-cell {
-  overflow: hidden; /* Evita que el texto se desborde */
-  white-space: nowrap; /* Evita que el texto se divida en múltiples líneas */
-  text-overflow: ellipsis; /* Muestra "..." si el texto es demasiado largo */
+  overflow: hidden;
+  white-space: nowrap; 
+  text-overflow: ellipsis; 
 }
 
 @media (max-width: 768px) {
   th.mat-header-cell, 
   td.mat-cell {
-    padding: 2px; /* Reduce el padding en pantallas más pequeñas */
+    padding: 2px; 
   }
 
   th.mat-header-cell:nth-child(9),
   td.mat-cell:nth-child(9),
   th.mat-header-cell:nth-child(10),
   td.mat-cell:nth-child(10) {
-    width: 50px; /* Ajusta el ancho en pantallas más pequeñas */
+    width: 50px; 
   }
 }
 
 .header {
   display: flex;
   align-items: center;
-  background-color: #90caf9; /* Color pastel */
+  background-color: #90caf9; 
   padding: 10px 20px;
-  width: 100%; /* Ancho del 100% del contenedor padre */
-  height: 30px; /* Alto fijo */
+  width: 100%;
+  height: 30px; 
+ 
+  overflow-x: hidden; 
 }
 
 .header-icon {
-  color: #ffffff; /* Color pastel */
-  margin-right: 0; /* Espacio de 2 espacios (20px) entre el icono y el título */
+  color: #ffffff; 
+  margin-right: 0; 
 }
 
 .header-title {
   font-size: 24px;
-  color: #343a40; /* Color pastel */
+  color: #343a40; 
   margin: 10px;
 }
 
 .menu-button {
-  background-color: #90caf9; /* Color de fondo azul claro */
-  color: #ffffff; /* Color del icono */
-  border: none; /* Elimina el borde del botón */
-  padding: 10px; /* Espaciado interno del botón */
-  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  background-color: #90caf9; 
+  color: #ffffff; 
+  border: none; 
+  padding: 10px; 
+  cursor: pointer; 
 }
 
 .menu-button:hover {
-  background-color: #64b5f6; /* Color de fondo azul más oscuro al pasar el ratón */
+  background-color: #64b5f6; 
 }
 
 mat-menu {
-  background-color: #e1bee7 !important; /* Fondo violeta claro */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; /* Sombra */
-  border-radius: 5px !important; /* Bordes redondeados */
-  width: 500px !important; /* Ancho mínimo del menú */
-  overflow-x: hidden !important; /* Oculta la barra horizontal */
+  background-color: #e1bee7 !important; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; 
+  border-radius: 5px !important; 
+  width: 500px !important; 
+  overflow-x: hidden !important; 
 }
 
 .custom-menu-item {
   display: flex !important;
   align-items: center !important;
-  padding: 10px 20px !important; /* Espaciado interno */
-  color: #262626 !important; /* Color del texto */
-  font-size: 16px !important; /* Tamaño de fuente */
-  background-color: #fbfbfb !important; /* Fondo claro */
-  white-space: nowrap !important; /* Evita que el texto se divida en múltiples líneas */
+  padding: 10px 20px !important; 
+  color: #262626 !important; 
+  font-size: 16px !important; 
+  background-color: #fbfbfb !important;
+  white-space: nowrap !important; 
 }
 
 .custom-menu-item:hover {
-  background-color: #d1c4e9 !important; /* Fondo violeta más oscuro al pasar el ratón */
+  background-color: #d1c4e9 !important; 
 }
 
 .custom-menu-icon {
-  margin-right: 10px !important; /* Espacio entre el icono y el texto */
-  color: #242424 !important; /* Color del icono */
+  margin-right: 10px !important; 
+  color: #242424 !important; 
 }
 
 .custom-menu-text {
-  font-size: 16px !important; /* Tamaño de fuente */
-  color: #030303 !important; /* Color del texto */
+  font-size: 16px !important; 
+  color: #030303 !important; 
 }
 
 .footer {
-  background-color: #f8f9fa; /* Color de fondo claro */
-  padding: 1rem 0; /* Espaciado interno */
-  text-align: center; /* Centra el texto */
-  border-top: 1px solid #e0e0e0; /* Línea superior */
-  margin-top: 2rem; /* Espaciado superior */
+  background-color: #f8f9fa; 
+  padding: 1rem 0; 
+  text-align: center; 
+  border-top: 1px solid #e0e0e0; 
+  margin-top: 2rem; 
 }
 
 .footer-content {
-  max-width: 900px; /* Ancho máximo */
-  margin: 0 auto; /* Centra el contenido */
-  display: flex; /* Flexbox para alinear elementos */
-  flex-direction: column; /* Dirección de los elementos en columna */
-  align-items: center; /* Alinea los elementos al centro */
+  max-width: 900px; 
+  margin: 0 auto; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
 }
 
 .footer-links {
-  display: flex; /* Flexbox para los enlaces */
-  gap: 1rem; /* Espacio entre los enlaces */
-  margin-top: 0.5rem; /* Espaciado superior */
+  display: flex; 
+  gap: 1rem;
+  margin-top: 0.5rem; 
 }
 
 .footer-links a {
-  color: #007bff; /* Color de los enlaces */
-  text-decoration: none; /* Sin subrayado */
+  color: #007bff; 
+  text-decoration: none; 
 }
 
 .footer-links a:hover {
-  text-decoration: underline; /* Subrayado al pasar el ratón */
+  text-decoration: underline; 
 }
