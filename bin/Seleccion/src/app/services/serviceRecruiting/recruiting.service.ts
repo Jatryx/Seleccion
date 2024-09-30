@@ -7,7 +7,7 @@ import { Recruiting } from '../../models/modelRecruiting/recruiting.model';
 })
 export class RecruitingService {
 
-  private apiRoot = "http://localhost:8080/api/recruitings";
+  private apiRoot = "http://localhost:8080/api/recruiting";
 
   constructor(private http: HttpClient) { }
 

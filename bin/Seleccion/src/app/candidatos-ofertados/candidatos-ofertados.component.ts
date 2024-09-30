@@ -23,8 +23,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { CandidatosService } from '../services/serviceCandidatos/candidatos.service';
-import { RecruitingService } from '../services/serviceRecruiting/recruiting.service';
 
 @Component({
   selector: 'app-candidatos-ofertados',
@@ -49,7 +47,7 @@ import { RecruitingService } from '../services/serviceRecruiting/recruiting.serv
     MatIconModule,
     MatMenuModule
   ],
-  providers: [OfertasService, UbicacionService, PuestoService, EstadoService, CandidatosService, RecruitingService]
+  providers: [OfertasService, UbicacionService, PuestoService, EstadoService]
 })
 export class CandidatosOfertadosComponent implements OnInit {
   faHome = faHome;
@@ -59,19 +57,14 @@ export class CandidatosOfertadosComponent implements OnInit {
   perfilesLista: string[];
   estadoLista: string[];
   tecnologiaLista: string[];
-  candidatoLista: string[];
-  recruitingLista: number[];
+  mostrarCampoOtro = false;
   filtroProvincias!: Observable<string[]>;  // Observable para el autocompletado
   filtroPerfiles!: Observable<string[]>;  // Observable para el autocompletado
   filtroTecnologias!: Observable<string[]>; 
-  filtroCandidatos!: Observable<string[]>;
-  filtroRecruitings!: Observable<number[]>;
+  fecha: Date = new Date();
   filtroEstados!: Observable<string[]>;
-  fecha: Date = new Date();  
-  mostrarCampoOtro = false;
   displayedColumns: string[] = [
     'candidato', 
-    'telefono',
     'codope', 
     'idPeticion', 
     'proyecto', 
@@ -90,17 +83,10 @@ export class CandidatosOfertadosComponent implements OnInit {
     private ubicacionService: UbicacionService,
     private puestoService: PuestoService,
     private estadoService: EstadoService,
-    private candidatoService: CandidatosService,
-    private recruitingService: RecruitingService,
     private dialog: MatDialog
   ) {
     this.candidatoForm = this.fb.group({
       candidato: ['', Validators.required],
-
-      telefono: ['', [Validators.required, Validators.pattern('[0-9]{9}')]],
-
-      idPeticion: ['', [Validators.required, Validators.min(0)]],
-
       proyecto: ['', Validators.required],
       cliente: ['', Validators.required],
       ubicacion: ['', Validators.required],
@@ -119,8 +105,6 @@ export class CandidatosOfertadosComponent implements OnInit {
     this.cargarProvincias();
     this.cargarPerfiles();   
     this.cargarEstados(); 
-    this.cargarCandidato();
-    this.cargarRecruiting();
   }
 
   // -------------------------------------------------------------------------------------------------------------
@@ -182,68 +166,20 @@ export class CandidatosOfertadosComponent implements OnInit {
     );
   }
 
-  cargarCandidato() {
-    this.candidatoService.getCandidatos().subscribe(
-      data => {
-        this.candidatoLista = data.map(candidato => candidato.nombreCandidato);
-        // Llama a filtrado aquí después de cargar estados
-        this.filtradoCandidato();
-      },
-      error => {
-        console.error('Error al cargar los estados:', error);
-      }
-    );
-  }
-
-  cargarRecruiting() {
-    this.recruitingService.getRecruitings().subscribe(
-      data => {
-        this.recruitingLista = data.map(recruiting => recruiting.idRecruiting);
-        // Llama a filtrado aquí después de cargar estados
-        this.filtradoRecruiting();
-      },
-      error => {
-        console.error('Error al cargar los estados:', error);
-      }
-    );
-  }
-
-
   // -------------------------------------------------------------------------------------------------------------
 
   //      Filtro Selects
 
   // -------------------------------------------------------------------------------------------------------------
 
-  filtroCandidato(value: string): string[] {
-    const filtroCandidato = value.toLowerCase();
-    return this.candidatoLista.filter(option => option.toLowerCase().includes(filtroCandidato));
-  }
-
-  filtradoCandidato() {
-    this.filtroCandidatos = this.candidatoForm.get('candidato')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filtroCandidato(value || ''))
-    );
-  }
-
-  filtroRecruiting(value: number): number[] {
-    return this.recruitingLista.filter(option => option === value);
-  }
-  
-  filtradoRecruiting() {
-    this.filtroRecruitings = this.candidatoForm.get('idPeticion')!.valueChanges.pipe(
-      startWith(null), 
-      map(value => {
-        const recruitingValue = Number(value);
-        return this.filtroRecruiting(recruitingValue);
-      })
-    );
-  }
-  
   filtroProvincia(value: string): string[] {
     const filtroProvincia = value.toLowerCase();
     return this.provinciaLista.filter(option => option.toLowerCase().includes(filtroProvincia));
+  }
+
+  filtroPerfil(value: string): string[] {
+    const filtroPerfil = value.toLowerCase();
+    return this.perfilesLista.filter(option => option.toLowerCase().includes(filtroPerfil));
   }
 
   filtradoProvincias() {
@@ -253,11 +189,6 @@ export class CandidatosOfertadosComponent implements OnInit {
     );
   }
 
-  filtroPerfil(value: string): string[] {
-    const filtroPerfil = value.toLowerCase();
-    return this.perfilesLista.filter(option => option.toLowerCase().includes(filtroPerfil));
-  }
-
   filtradoPerfiles() {
     this.filtroPerfiles = this.candidatoForm.get('perfil')!.valueChanges.pipe(
       startWith(''),
@@ -265,16 +196,16 @@ export class CandidatosOfertadosComponent implements OnInit {
     );
   }
 
-  filtroEstado(value: string): string[] {
-    const filtroEstado = value.toLowerCase();
-    return this.estadoLista.filter(option => option.toLowerCase().includes(filtroEstado));
-  }
-
   filtradoEstados() {
     this.filtroEstados = this.candidatoForm.get('estado')!.valueChanges.pipe(
       startWith(''),
       map(value => this.filtroEstado(value || ''))
     );
+  }
+
+  filtroEstado(value: string): string[] {
+    const filtroEstado = value.toLowerCase();
+    return this.estadoLista.filter(option => option.toLowerCase().includes(filtroEstado));
   }
 
   onSubmit() {

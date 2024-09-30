@@ -12,7 +12,7 @@ export class CandidatosService {
   constructor(private http: HttpClient) { }
 
   getCandidatos(){
-    return this.http.get<Candidatos[]>(this.apiRoot + '/consultar');
+    return this.http.get<Candidatos[]>(this.apiRoot);
   }
   getCandidatoPorNombre(nombreCandidato: string){
       return this.http.get<Candidatos>(this.apiRoot + '/consultar/' + nombreCandidato);
