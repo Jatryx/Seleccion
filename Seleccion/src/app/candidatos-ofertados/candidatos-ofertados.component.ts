@@ -241,6 +241,7 @@ export class CandidatosOfertadosComponent implements OnInit {
     );
   }
 
+
   // -------------------------------------------------------------------------------------------------------------
 
   //      Filtro Selects
