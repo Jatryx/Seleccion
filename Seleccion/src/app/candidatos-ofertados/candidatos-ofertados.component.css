@@ -1,3 +1,7 @@
+body {
+  overflow-x: hidden;
+}
+
 form {
   max-width: 900px;
   margin: 2rem auto;
@@ -190,7 +194,9 @@ mat-menu {
   padding: 1rem 0; 
   text-align: center; 
   border-top: 1px solid #e0e0e0; 
-  margin-top: 2rem; 
+  margin-top: 2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .footer-content {
@@ -205,7 +211,9 @@ mat-menu {
   display: flex; 
   gap: 1rem;
   margin-top: 0.5rem; 
+  flex-wrap: wrap; /* Añade esta línea */
 }
+
 
 .footer-links a {
   color: #007bff; 

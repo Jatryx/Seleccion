@@ -72,6 +72,7 @@ public class CandidatosController {
 			CandidatosModel candidatoActualizado = candidato.get();
 			candidatoActualizado.setNombreCandidato(nombreCandidatoNuevo.getNombreCandidato());
 			candidatoActualizado.setActivo(nombreCandidatoNuevo.getActivo());
+			candidatoActualizado.setTelefono(nombreCandidatoNuevo.getTelefono());
 			CandidatosModel guardarTipo = candidatosService.actualizarCandidatos(candidatoActualizado);
 			return ResponseEntity.ok(guardarTipo);
 			

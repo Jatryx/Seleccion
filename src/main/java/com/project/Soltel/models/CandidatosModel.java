@@ -1,5 +1,7 @@
 package com.project.Soltel.models;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +20,10 @@ public class CandidatosModel {
     @Column(nullable = false, length = 100)
     private String nombreCandidato;
     
-    @Column
+    @Column(nullable = false, precision = 9)
+    private BigDecimal telefono;
+
+	@Column
     private Boolean activo;
 
     
@@ -39,6 +44,14 @@ public class CandidatosModel {
 	public void setNombreCandidato(String nombreCandidato) {
 		this.nombreCandidato = nombreCandidato;
 	}
+	
+    public BigDecimal getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(BigDecimal telefono) {
+		this.telefono = telefono;
+	}
 
 	public Boolean getActivo() {
 		return activo;
@@ -56,9 +69,10 @@ public class CandidatosModel {
 		super();
 	}
 
-	public CandidatosModel(String nombreCandidato, Boolean activo) {
+	public CandidatosModel(String nombreCandidato,BigDecimal telefono, Boolean activo) {
 		super();
 		this.nombreCandidato = nombreCandidato;
+		this.telefono = telefono;
 		this.activo = activo;
 	}
     

@@ -61,6 +61,7 @@ export class CandidatosOfertadosComponent implements OnInit {
   tecnologiaLista: string[];
   candidatoLista: string[];
   recruitingLista: number[];
+  proyectoLista: string[];
   filtroProvincias!: Observable<string[]>;  // Observable para el autocompletado
   filtroPerfiles!: Observable<string[]>;  // Observable para el autocompletado
   filtroTecnologias!: Observable<string[]>; 
@@ -96,11 +97,8 @@ export class CandidatosOfertadosComponent implements OnInit {
   ) {
     this.candidatoForm = this.fb.group({
       candidato: ['', Validators.required],
-
       telefono: ['', [Validators.required, Validators.pattern('[0-9]{9}')]],
-
       idPeticion: ['', [Validators.required, Validators.min(0)]],
-
       proyecto: ['', Validators.required],
       cliente: ['', Validators.required],
       ubicacion: ['', Validators.required],
@@ -132,7 +130,7 @@ export class CandidatosOfertadosComponent implements OnInit {
   cargarOfertas() {
     this.ofertaService.getOfertas().subscribe(
       data => {
-        this.ofertaLista.data = data;
+        this.ofertaLista.data = data
 
         this.tecnologiaLista = data.flatMap(oferta => oferta.tecnologias.split(',').map(t => t.trim()));
         this.tecnologiaLista = Array.from(new Set(this.tecnologiaLista)); // Elimina duplicados
@@ -142,6 +140,8 @@ export class CandidatosOfertadosComponent implements OnInit {
       }
     );
   }
+
+
 
   cargarProvincias() {
     this.ubicacionService.getUbicaciones().subscribe(
@@ -208,6 +208,13 @@ export class CandidatosOfertadosComponent implements OnInit {
     );
   }
 
+  cargarProyectoPorID(id:number){
+    this.recruitingService.getRecruitingIdrecruiting(id).subscribe(
+      data => {
+        this.proyectoLista = 
+      }
+    )
+  }
 
   // -------------------------------------------------------------------------------------------------------------
 
