@@ -208,13 +208,14 @@ export class CandidatosOfertadosComponent implements OnInit {
     );
   }
 
-  cargarProyectoPorID(id:number){
+  /* cargarProyectoPorID(id:number){
     this.recruitingService.getRecruitingIdrecruiting(id).subscribe(
       data => {
         this.proyectoLista = 
+        data.map(recruiting => recruiting.proyecto);
       }
     )
-  }
+  } */
 
   // -------------------------------------------------------------------------------------------------------------
 
