@@ -2,6 +2,14 @@ body {
   overflow-x: hidden;
 }
 
+.botones-funcionalidades {
+  position: absolute; /* Posiciona el botón de forma absoluta */
+  top: 10px; /* Distancia desde la parte superior del contenedor */
+  left: 0; /* Alinear a la izquierda del contenedor */
+  margin-bottom: 10px; /* Espacio inferior para separación con la tabla */
+  padding: 6px 12px; /* Ajusta el espacio dentro del botón */
+  font-size: 14px; /* Tamaño de la fuente más pequeño */
+}
 form {
   max-width: 900px;
   margin: 2rem auto;

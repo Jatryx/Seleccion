@@ -172,9 +172,10 @@ public class OfertasController {
         nuevaOferta.setObservaciones(oferta.getObservaciones());
         nuevaOferta.setTecnologias(oferta.getTecnologias());
         nuevaOferta.setSalario(oferta.getSalario());
+        nuevaOferta.setTarifa(oferta.getTarifa());
         nuevaOferta.setActivo(true);
 
-        String informacion = "Se ha creado la oferta el dia " + oferta.getFechaActualizacion() + " con el estado " + oferta.getEstado().getEstado();
+        String informacion = "Se añadio el candidato el " + oferta.getFechaActualizacion() + " con el estado " + oferta.getEstado().getEstado();
         nuevaOferta.setHistoricoCambioEstados(informacion);
 
         OfertasModel savedOferta = ofertaService.guardarOferta(nuevaOferta);
@@ -273,6 +274,7 @@ public class OfertasController {
 	        ofertaActualizada.setObservaciones(ofertaDetails.getObservaciones());
 	        ofertaActualizada.setTecnologias(ofertaDetails.getTecnologias());
 	        ofertaActualizada.setSalario(ofertaDetails.getSalario());
+	        ofertaActualizada.setTarifa(ofertaDetails.getTarifa());
 	        ofertaActualizada.setActivo(true);
 	        
 	        

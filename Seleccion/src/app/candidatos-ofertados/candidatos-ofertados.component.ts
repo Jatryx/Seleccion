@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, provideCloudinaryLoader } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OfertasService } from '../services/serviceOfertas/ofertas.service';
@@ -53,6 +53,8 @@ import { RecruitingService } from '../services/serviceRecruiting/recruiting.serv
 })
 export class CandidatosOfertadosComponent implements OnInit {
   faHome = faHome;
+  formVisible: boolean = false;
+  isReadonlyProyecto: boolean = false;
   candidatoForm: FormGroup;
   ofertaLista = new MatTableDataSource<Ofertas>([]);
   provinciaLista: string[];
@@ -60,14 +62,19 @@ export class CandidatosOfertadosComponent implements OnInit {
   estadoLista: string[];
   tecnologiaLista: string[];
   candidatoLista: string[];
+  empresaLista: string[];
   recruitingLista: number[];
   proyectoLista: string[];
+  proyecto: string = '';
+  empresa: string = '';
   filtroProvincias!: Observable<string[]>;  // Observable para el autocompletado
   filtroPerfiles!: Observable<string[]>;  // Observable para el autocompletado
   filtroTecnologias!: Observable<string[]>; 
   filtroCandidatos!: Observable<string[]>;
   filtroRecruitings!: Observable<number[]>;
   filtroEstados!: Observable<string[]>;
+  filtroEmpresas!: Observable<string[]>;
+  filtroProyectos!: Observable<string[]>;
   fecha: Date = new Date();  
   mostrarCampoOtro = false;
   displayedColumns: string[] = [
@@ -199,8 +206,12 @@ export class CandidatosOfertadosComponent implements OnInit {
     this.recruitingService.getRecruitings().subscribe(
       data => {
         this.recruitingLista = data.map(recruiting => recruiting.idRecruiting);
+        this.empresaLista = data.map(empresa => empresa.empresa.nombreEmpresa);
+        this.proyectoLista = data.map(proyecto => proyecto.nombreProyecto);
         // Llama a filtrado aquí después de cargar estados
         this.filtradoRecruiting();
+        this.filtradoEmpresas();
+        this.filtradoProyectos();
       },
       error => {
         console.error('Error al cargar los estados:', error);
@@ -208,12 +219,26 @@ export class CandidatosOfertadosComponent implements OnInit {
     );
   }
 
-  cargarProyectoPorID(id:number){
+  cargarProyectoPorID(id: number) {
     this.recruitingService.getRecruitingIdrecruiting(id).subscribe(
       data => {
-        this.proyectoLista = 
+        if (data) {
+          this.proyecto = data.nombreProyecto;
+          this.empresa = data.empresa.nombreEmpresa
+          this.isReadonlyProyecto = true; // Si existe proyecto, el campo es solo lectura
+        } else {
+          this.proyecto = ''; // Limpia el campo si no existe
+          this.empresa = '';
+          this.isReadonlyProyecto = false; // Si no hay proyecto, se puede editar
+        }
+      },
+      error => {
+        console.error('Error al cargar el proyecto:', error);
+        this.proyecto = ''; // Limpia el campo si hay error
+        this.empresa = '';
+        this.isReadonlyProyecto = false; // Si hay error, se puede editar
       }
-    )
+    );
   }
 
   // -------------------------------------------------------------------------------------------------------------
@@ -243,11 +268,38 @@ export class CandidatosOfertadosComponent implements OnInit {
       startWith(null), 
       map(value => {
         const recruitingValue = Number(value);
+        // Llama al método para verificar si el proyecto existe
+        if (!isNaN(recruitingValue)) {
+          this.cargarProyectoPorID(recruitingValue);
+        }
         return this.filtroRecruiting(recruitingValue);
       })
     );
   }
+  filtroEmpresa(value: string): string[] {
+    const filtroEmpresa = value.toLowerCase();
+    return this.empresaLista.filter(option => option.toLowerCase().includes(filtroEmpresa));
+  }
+
+  filtradoEmpresas() {
+    this.filtroEmpresas = this.candidatoForm.get('cliente')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filtroEmpresa(value || ''))
+    );
+  }
   
+  filtroProyecto(value: string): string[] {
+    const filtroProyecto = value.toLowerCase();
+    return this.proyectoLista.filter(option => option.toLowerCase().includes(filtroProyecto));
+  }
+
+  filtradoProyectos() {
+    this.filtroProyectos = this.candidatoForm.get('proyecto')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filtroProyecto(value || ''))
+    );
+  }
+
   filtroProvincia(value: string): string[] {
     const filtroProvincia = value.toLowerCase();
     return this.provinciaLista.filter(option => option.toLowerCase().includes(filtroProvincia));
@@ -296,17 +348,23 @@ export class CandidatosOfertadosComponent implements OnInit {
 
   // -------------------------------------------------------------------------------------------------------------
 
-  //     PopUP observaciones
+  //     PopUP observaciones Y Botones visibilidaes
 
   // -------------------------------------------------------------------------------------------------------------
 
-  openPopup(prueba: Ofertas): void {
+  verFormAnadir(): void {
+    this.formVisible = !this.formVisible; // Cambiar el estado de la variable
+  }
+
+  openPopup(oferta: Ofertas): void {
     const dialogRef = this.dialog.open(DialogContent, {
-      width: '400px',
+      width: '600px',
       data: {
-        observaciones: prueba.observaciones,
-        salario: prueba.salario,
-        experiencia: prueba.experiencia,
+        observaciones: oferta.observaciones,
+        salario: oferta.salario,
+        tarifa: oferta.tarifa,
+        experiencia: oferta.experiencia,
+        historico: oferta.historicoCambioEstados
       }
     });
   }
@@ -326,8 +384,14 @@ export class CandidatosOfertadosComponent implements OnInit {
   <p style="margin-bottom: 10px;">
     <strong>Salario:</strong> {{ data.salario}} €
   </p>
+  <p style="margin-bottom: 10px;">
+    <strong>Tarifa:</strong> {{ data.tarifa}} €
+  </p>
   <p style="margin-bottom: 20px;">
     <strong>Experiencia:</strong> {{ data.experiencia }}
+  </p>
+  <p style="margin-bottom: 20px;">
+    <strong>Historico:</strong> {{ data.historico }}
   </p>
 </div>
 <div mat-dialog-actions class="dialog-actions" style="display: flex; justify-content: center; padding: 10px;">

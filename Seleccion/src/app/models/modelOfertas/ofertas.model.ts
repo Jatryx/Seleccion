@@ -15,10 +15,11 @@ export interface Ofertas {
     tecnologias: string,
     experiencia: number,
     salario: number,
+    tarifa: number,
     estado: Estado,
     fechaActualizacion: Date,
     observaciones: string,
-    historicoCambiosEstado: string,
+    historicoCambioEstados: string,
     candidato: Candidatos,
     activo: boolean,
 }

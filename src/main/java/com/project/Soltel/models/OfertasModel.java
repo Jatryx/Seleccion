@@ -45,6 +45,9 @@ public class OfertasModel {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal salario;
 
+    @Column(nullable = false, precision = 5, scale = 2)
+    private BigDecimal tarifa;
+    
     @ManyToOne
     @JoinColumn(name = "estadoId", referencedColumnName = "IdEstado")
     private EstadoModel estado;
@@ -80,14 +83,6 @@ public class OfertasModel {
 		IdOferta = idOferta;
 	}
 
-	/*public String getNombreCandidato() {
-		return nombreCandidato;
-	}
-
-	public void setNombreCandidato(String nombreCandidato) {
-		this.nombreCandidato = nombreCandidato;
-	}*/
-
 	public UsuarioModel getUsuario() {
 		return usuario;
 	}
@@ -103,14 +98,6 @@ public class OfertasModel {
 	public void setRecruiting(RecruitingModel recruiting) {
 		this.recruiting = recruiting;
 	}
-
-	/*public EmpresaModel getEmpresa() {
-		return empresa;
-	}
-
-	public void setEmpresa(EmpresaModel empresa) {
-		this.empresa = empresa;
-	}*/
 
 	public UbicacionModel getUbicacion() {
 		return ubicacion;
@@ -146,6 +133,14 @@ public class OfertasModel {
 
 	public BigDecimal getSalario() {
 		return salario;
+	}
+
+	public BigDecimal getTarifa() {
+		return tarifa;
+	}
+
+	public void setTarifa(BigDecimal tarifa) {
+		this.tarifa = tarifa;
 	}
 
 	public void setSalario(BigDecimal salario) {
@@ -204,20 +199,18 @@ public class OfertasModel {
 		super();
 	}
 
-	public OfertasModel(/*String nombreCandidato,*/ UsuarioModel usuario, RecruitingModel recruiting,
-			/*EmpresaModel empresa,*/ UbicacionModel ubicacion, PuestoModel puesto, String tecnologias,
-			BigDecimal experiencia, BigDecimal salario, EstadoModel estado, LocalDate fechaActualizacion,
+	public OfertasModel(UsuarioModel usuario, RecruitingModel recruiting, UbicacionModel ubicacion, PuestoModel puesto, String tecnologias,
+			BigDecimal experiencia, BigDecimal salario, BigDecimal tarifa, EstadoModel estado, LocalDate fechaActualizacion,
 			String observaciones, String historicoCambioEstados, CandidatosModel candidato, Boolean activo) {
 		super();
-		/*this.nombreCandidato = nombreCandidato;*/
 		this.usuario = usuario;
 		this.recruiting = recruiting;
-		/*this.empresa = empresa;*/
 		this.ubicacion = ubicacion;
 		this.puesto = puesto;
 		this.tecnologias = tecnologias;
 		this.experiencia = experiencia;
 		this.salario = salario;
+		this.tarifa = tarifa;
 		this.estado = estado;
 		this.fechaActualizacion = fechaActualizacion;
 		this.observaciones = observaciones;

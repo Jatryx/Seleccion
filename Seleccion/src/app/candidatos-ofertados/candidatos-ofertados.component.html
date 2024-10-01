@@ -19,6 +19,7 @@
   </mat-menu>
 </div>
 
+<div *ngIf="formVisible">
 <form [formGroup]="candidatoForm" (ngSubmit)="onSubmit()" class="form-container">
   <h2>Añadir candidato</h2>
 
@@ -52,18 +53,40 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
+      <mat-label>Proyecto</mat-label>
+      <input 
+        matInput 
+        formControlName="proyecto"
+        [value]="proyecto" 
+        [readonly]="isReadonlyProyecto" 
+        [matAutocomplete]="autoProyecto">
+        <mat-autocomplete #autoProyecto="matAutocomplete">
+          <mat-option *ngFor="let option of filtroProyectos | async" [value]="option">
+            {{ option }}
+          </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
       <mat-label>Teléfono</mat-label>
       <input matInput formControlName="telefono" maxlength="9" pattern="[0-9]{9}" />
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Proyecto</mat-label>
-      <input matInput formControlName="proyecto" />
-    </mat-form-field>
+
 
     <mat-form-field appearance="fill">
       <mat-label>Cliente</mat-label>
-      <input matInput formControlName="cliente" />
+      <input 
+        matInput 
+        formControlName="cliente"
+        [value]="empresa" 
+        [readonly]="isReadonlyProyecto"
+        [matAutocomplete]="autoCliente">
+    <mat-autocomplete #autoCliente="matAutocomplete">
+    <mat-option *ngFor="let option of filtroEmpresas | async" [value]="option">
+      {{ option }}
+    </mat-option>
+  </mat-autocomplete>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -96,7 +119,7 @@
 
 
     <mat-form-field appearance="fill">
-      <mat-label>Tecnoligias</mat-label>
+      <mat-label>Tecnologias</mat-label>
       <input matInput formControlName="tecnologia" />
     </mat-form-field>
 
@@ -110,35 +133,33 @@
     </mat-form-field>
 
 
-<mat-form-field appearance="fill">
-  <mat-label>Fecha Creación</mat-label>
-  <input 
-    matInput 
-    [matDatepicker]="picker" 
-    formControlName="fechaActualizacion" 
-    placeholder="dd/mm/aaaa" />
-  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-  <mat-datepicker #picker></mat-datepicker>
-</mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Fecha Creación</mat-label>
+      <input 
+        matInput 
+        [matDatepicker]="picker" 
+        formControlName="fechaActualizacion" 
+        placeholder="dd/mm/aaaa" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
 
 
-<div class="experience-salary-group">
-  <mat-form-field appearance="fill">
-    <mat-label>Años de experiencia</mat-label>
-    <input matInput formControlName="experiencia" type="number" />
-    <mat-error *ngIf="candidatoForm.get('experiencia')?.hasError('min')">
+    <mat-form-field appearance="fill">
+      <mat-label>Años de experiencia</mat-label>
+      <input matInput formControlName="experiencia" type="number" />
+      <mat-error *ngIf="candidatoForm.get('experiencia')?.hasError('min')">
+        No se permiten valores negativos.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Salario</mat-label>
+      <input matInput formControlName="salario" type="number" />
+      <mat-error *ngIf="candidatoForm.get('salario')?.hasError('min')">
       No se permiten valores negativos.
-    </mat-error>
+      </mat-error>
   </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Salario</mat-label>
-    <input matInput formControlName="salario" type="number" />
-    <mat-error *ngIf="candidatoForm.get('salario')?.hasError('min')">
-      No se permiten valores negativos.
-    </mat-error>
-  </mat-form-field>
-</div>
 
 
     <!-- Resumen ocupa todo el ancho -->
@@ -148,10 +169,14 @@
     </mat-form-field>
   </div>
 
-  <button mat-raised-button color="primary" type="submit">Enviar</button>
+  <button mat-raised-button color="primary" type="submit">Añadir</button>
 </form>
+</div>
 
 <div class="table-container">
+  <div class="botones-funcionalidades">
+    <button mat-raised-button color="primary"(click)="verFormAnadir()">Añadir Candidato</button>
+    </div>
   <table mat-table [dataSource]="ofertaLista" matSort class="mat-elevation-z8">
     <!-- Candidato Column -->
     <ng-container matColumnDef="candidato">
