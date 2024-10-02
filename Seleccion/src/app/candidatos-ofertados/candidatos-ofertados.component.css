@@ -39,7 +39,7 @@ form {
   border-radius: 10px;
   background-color: #ffffff;
   font-family: 'Arial', sans-serif;
-  box-shadow: 10px 10px 20px #c4c4c4, -10px -10px 20px #ffffff;
+  box-shadow: 2px 2px 2px #c4c4c4, -2px -2px 2px #ffffff;
 }
 
 h2 {
@@ -110,7 +110,7 @@ button:hover {
   margin: 1rem auto; 
   border-radius: 8px;
   background: #ffffff;
-  box-shadow: 10px 10px 20px #c4c4c4, -10px -10px 20px #ffffff;
+  box-shadow: 2px 2px 2px #c4c4c4, -2px -2px 2px #ffffff;
 }
 
 table {
