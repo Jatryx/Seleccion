@@ -19,6 +19,12 @@
   </mat-menu>
 </div>
 
+<h1 class="title">Candidatos Ofertados</h1>
+
+<div class="botones-funcionalidades">
+  <button mat-raised-button color="primary"(click)="verFormAnadir()">Añadir Candidato</button>
+</div>
+
 <div *ngIf="formVisible">
 <form [formGroup]="candidatoForm" (ngSubmit)="onSubmit()" class="form-container">
   <h2>Añadir candidato</h2>
@@ -78,8 +84,6 @@
       <input matInput formControlName="telefono" maxlength="9" pattern="[0-9]{9}" />
     </mat-form-field>
 
-
-
     <mat-form-field appearance="fill">
       <mat-label>Cliente</mat-label>
       <input 
@@ -123,7 +127,6 @@
       </mat-autocomplete>
     </mat-form-field>
 
-
     <mat-form-field appearance="fill">
       <mat-label>Tecnologias</mat-label>
       <input matInput formControlName="tecnologia" />
@@ -138,7 +141,6 @@
       </mat-select>
     </mat-form-field>
 
-
     <mat-form-field appearance="fill">
       <mat-label>Fecha Creación</mat-label>
       <input 
@@ -149,7 +151,6 @@
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-
 
     <mat-form-field appearance="fill">
       <mat-label>Años de experiencia</mat-label>
@@ -165,10 +166,8 @@
       <mat-error *ngIf="candidatoForm.get('salario')?.hasError('min')">
       No se permiten valores negativos.
       </mat-error>
-  </mat-form-field>
+    </mat-form-field>
 
-
-    <!-- Resumen ocupa todo el ancho -->
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Observaciones</mat-label>
       <textarea matInput formControlName="resumen"></textarea>
@@ -182,6 +181,7 @@
 </form>
 </div>
 
+<!-- TABLA CANDIDATOS OFERTADOS -->
 <div class="table-container">
   <div class="botones-funcionalidades" *ngIf="!formVisible">
     <button mat-raised-button color="primary"(click)="verFormAnadir()">Añadir Candidato</button>

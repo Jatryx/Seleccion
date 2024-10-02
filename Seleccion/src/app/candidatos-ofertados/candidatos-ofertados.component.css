@@ -1,5 +1,19 @@
-body {
-  overflow-x: hidden;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow-x: auto; /* Permitir scroll horizontal */
+  overflow-y: hidden;
+}
+
+.title {
+  font-size: 2.5em;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 5vh; /* Ajustar el margen superior */
+  color: #5781ab;
+  font-family: 'Montserrat', sans-serif; /* Aplicar la fuente a todo el cuerpo */
 }
 
 
@@ -92,12 +106,10 @@ button:hover {
 }
 .table-container {
   width: 90%; 
-  margin: 0 auto; 
+  margin: 1rem auto; 
   border-radius: 8px;
   background: #ffffff;
   box-shadow: 10px 10px 20px #c4c4c4, -10px -10px 20px #ffffff;
-  overflow: hidden; 
-  display: flex;
 }
 
 table {
@@ -136,17 +148,48 @@ td.mat-cell {
   td.mat-cell:nth-child(10) {
     width: 50px; 
   }
+
+  .title {
+    font-size: 2.5em; /* Ajustar el tamaño de la fuente para pantallas más pequeñas */
+    margin-top: 120px; /* Ajustar el margen superior */
+  }
+
+  .botones-funcionalidades {
+    margin-top: 3rem; /* Ajustar el margen superior */
+  }
+
+  button {
+    font-size: 0.9em; /* Ajustar el tamaño de la fuente del botón */
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2em; /* Ajustar el tamaño de la fuente para pantallas más pequeñas */
+    margin-top: 140px; /* Ajustar el margen superior */
+  }
+
+  .botones-funcionalidades {
+    margin-top: 4rem; /* Ajustar el margen superior */
+  }
+
+  button {
+    font-size: 0.8em; /* Ajustar el tamaño de la fuente del botón */
+  }
 }
 
 .header {
   display: flex;
   align-items: center;
   background-color: #90caf9; 
-  padding: 10px 20px;
+  padding: 10px 0;
   width: 100%;
-  height: 30px; 
- 
-  overflow-x: hidden; 
+  height: 50px; /* Ajustar la altura del header */
+  position: relative;
+  top: 0; 
+  overflow-x: hidden;
+  overflow-y: hidden;
+  z-index: 1000; /* Asegurar que el header esté siempre en la parte superior */
 }
 
 .header-icon {
@@ -206,12 +249,15 @@ mat-menu {
 
 .footer {
   background-color: #f8f9fa; 
-  padding: 1rem 0; 
+  padding: 10px 0; 
   text-align: center; 
   border-top: 1px solid #e0e0e0; 
-  margin-top: 2rem;
+  margin-top: 1rem;
   width: 100%;
   box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }
 
 .footer-content {
@@ -226,9 +272,8 @@ mat-menu {
   display: flex; 
   gap: 1rem;
   margin-top: 0.5rem; 
-  flex-wrap: wrap; /* Añade esta línea */
+  flex-wrap: wrap; 
 }
-
 
 .footer-links a {
   color: #007bff; 
