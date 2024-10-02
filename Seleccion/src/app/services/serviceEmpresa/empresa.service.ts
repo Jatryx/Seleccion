@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Empresa } from '../../models/modelEmpresa/empresa.model';
 
 @Injectable({
@@ -11,23 +12,23 @@ export class EmpresaService {
 
   constructor(private http: HttpClient) { }
 
-  getEmpresas(){
+  getEmpresas(): Observable<Empresa[]>{
     return this.http.get<Empresa[]>(this.apiRoot + '/consultar');
   }
   
-  getEmpresaPorNombre(nombreEmpresa: string){
+  getEmpresaPorNombre(nombreEmpresa: string): Observable<Empresa>{
       return this.http.get<Empresa>(this.apiRoot + '/consultar/' + nombreEmpresa);
     }
 
-  postEmpresa(empresa: any){
+  postEmpresa(empresa: Empresa): Observable<Object>{
     return this.http.post(this.apiRoot + '/insertar', empresa);
   }
 
-  putEmpresa(nombreEmpresa: string, empresa: Empresa){
+  putEmpresa(nombreEmpresa: string, empresa: Empresa): Observable<Object>{
     return this.http.put(this.apiRoot + '/actualizar/' + nombreEmpresa, empresa);
   }
 
-  deleteEmpresa(nombreEmpresa: string){
+  deleteEmpresa(nombreEmpresa: string): Observable<Object>{
     return this.http.delete(this.apiRoot + '/desactivar/' + nombreEmpresa);
   }
 }
