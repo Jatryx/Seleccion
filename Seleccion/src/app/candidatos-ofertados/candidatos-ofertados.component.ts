@@ -25,6 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { CandidatosService } from '../services/serviceCandidatos/candidatos.service';
 import { RecruitingService } from '../services/serviceRecruiting/recruiting.service';
+import { EmpresaService } from '../services/serviceEmpresa/empresa.service';
 
 @Component({
   selector: 'app-candidatos-ofertados',
@@ -49,7 +50,7 @@ import { RecruitingService } from '../services/serviceRecruiting/recruiting.serv
     MatIconModule,
     MatMenuModule
   ],
-  providers: [OfertasService, UbicacionService, PuestoService, EstadoService, CandidatosService, RecruitingService]
+  providers: [OfertasService, UbicacionService, PuestoService, EstadoService, CandidatosService, RecruitingService, EmpresaService]
 })
 export class CandidatosOfertadosComponent implements OnInit {
   faHome = faHome;
@@ -67,6 +68,7 @@ export class CandidatosOfertadosComponent implements OnInit {
   proyectoLista: string[];
   proyecto: string = '';
   empresa: string = '';
+  codope: string = 'IACA';
   filtroProvincias!: Observable<string[]>;  // Observable para el autocompletado
   filtroPerfiles!: Observable<string[]>;  // Observable para el autocompletado
   filtroTecnologias!: Observable<string[]>; 
@@ -100,10 +102,12 @@ export class CandidatosOfertadosComponent implements OnInit {
     private estadoService: EstadoService,
     private candidatoService: CandidatosService,
     private recruitingService: RecruitingService,
+    private empresaService: EmpresaService,
     private dialog: MatDialog
   ) {
     this.candidatoForm = this.fb.group({
       candidato: ['', Validators.required],
+      codope: [''],
       telefono: ['', [Validators.required, Validators.pattern('[0-9]{9}')]],
       idPeticion: ['', [Validators.required, Validators.min(0)]],
       proyecto: ['', Validators.required],
@@ -126,7 +130,10 @@ export class CandidatosOfertadosComponent implements OnInit {
     this.cargarEstados(); 
     this.cargarCandidato();
     this.cargarRecruiting();
+    this.cargarEmpresas();
   }
+
+  
 
   // -------------------------------------------------------------------------------------------------------------
 
@@ -206,11 +213,9 @@ export class CandidatosOfertadosComponent implements OnInit {
     this.recruitingService.getRecruitings().subscribe(
       data => {
         this.recruitingLista = data.map(recruiting => recruiting.idRecruiting);
-        this.empresaLista = data.map(empresa => empresa.empresa.nombreEmpresa);
         this.proyectoLista = data.map(proyecto => proyecto.nombreProyecto);
         // Llama a filtrado aquí después de cargar estados
         this.filtradoRecruiting();
-        this.filtradoEmpresas();
         this.filtradoProyectos();
       },
       error => {
@@ -223,23 +228,42 @@ export class CandidatosOfertadosComponent implements OnInit {
     this.recruitingService.getRecruitingIdrecruiting(id).subscribe(
       data => {
         if (data) {
-          this.proyecto = data.nombreProyecto;
-          this.empresa = data.empresa.nombreEmpresa
-          this.isReadonlyProyecto = true; // Si existe proyecto, el campo es solo lectura
+          this.candidatoForm.patchValue({
+            proyecto: data.nombreProyecto,
+            cliente: data.empresa.nombreEmpresa,
+          });
+          this.isReadonlyProyecto = true; // Hacer que el campo sea solo lectura si existe proyecto
         } else {
-          this.proyecto = ''; // Limpia el campo si no existe
-          this.empresa = '';
-          this.isReadonlyProyecto = false; // Si no hay proyecto, se puede editar
+          this.candidatoForm.patchValue({
+            proyecto: '',
+            cliente: '',
+          });
+          this.isReadonlyProyecto = false; // Permitir edición si no hay proyecto
         }
       },
       error => {
         console.error('Error al cargar el proyecto:', error);
-        this.proyecto = ''; // Limpia el campo si hay error
-        this.empresa = '';
-        this.isReadonlyProyecto = false; // Si hay error, se puede editar
+        this.candidatoForm.patchValue({
+          proyecto: '',
+          cliente: '',
+        });
+        this.isReadonlyProyecto = false; // Permitir edición si hay error
       }
     );
   }
+  
+
+  cargarEmpresas() {
+    this.empresaService.getEmpresas().subscribe(
+      data => {
+        this.empresaLista = data.map(empresa => empresa.nombreEmpresa);
+        this.filtradoEmpresas();
+        console.log(this.empresaLista)
+      }
+    )
+  }
+
+
 
 
   // -------------------------------------------------------------------------------------------------------------
@@ -279,6 +303,7 @@ export class CandidatosOfertadosComponent implements OnInit {
   }
   filtroEmpresa(value: string): string[] {
     const filtroEmpresa = value.toLowerCase();
+    console.log(this.empresaLista)
     return this.empresaLista.filter(option => option.toLowerCase().includes(filtroEmpresa));
   }
 
@@ -339,13 +364,79 @@ export class CandidatosOfertadosComponent implements OnInit {
 
   onSubmit() {
     if (this.candidatoForm.valid) {
-      const nuevoCandidato = this.candidatoForm.value;
-      this.ofertaLista.data = [...this.ofertaLista.data, nuevoCandidato];
+      const formValues = this.candidatoForm.value;
+  
+      // Construir el objeto en el formato deseado
+      const nuevoCandidato = {
+        usuario: {
+          codope: formValues.codope,
+          contraseña: "contraseña_default", // Ajusta según sea necesario
+          activo: true
+        },
+        recruiting: {
+          empresa: {
+            nombreEmpresa: formValues.cliente, // Asumiendo que 'cliente' corresponde a 'nombreEmpresa'
+            activo: true,
+            idEmpresa: 0 // Autocompletado o manejado en el backend
+          },
+          nombreProyecto: formValues.proyecto,
+          activo: true,
+          idRecruiting: formValues.idPeticion // Autocompletado o manejado en el backend
+        },
+        ubicacion: {
+          nombreProvincia: formValues.ubicacion,
+          activo: true,
+          idUbicacion: 0 // Autocompletado o manejado en el backend
+        },
+        puesto: {
+          nombrePuesto: formValues.perfil,
+          activo: true,
+          idPuesto: 0 // Autocompletado o manejado en el backend
+        },
+        tecnologias: formValues.tecnologia,
+        experiencia: formValues.experiencia,
+        salario: formValues.salario,
+        tarifa: 0, // Ajusta según sea necesario
+        rentabilidadCliente: 12, // Ajusta según sea necesario
+        rentabilidadClienteIncorpor: 12.3, // Ajusta según sea necesario
+        estado: {
+          estado: formValues.estado,
+          activo: true,
+          idEstado: 0 // Autocompletado o manejado en el backend
+        },
+        fechaActualizacion: new Date().toISOString(), // Establecer la fecha actual
+        observaciones: formValues.resumen, // Ajusta según sea necesario
+        historicoCambioEstados: "", // Ajusta según sea necesario
+        candidato: {
+          nombreCandidato: formValues.candidato,
+          telefono: formValues.telefono,
+          activo: true,
+          idCandidato: 0 // Autocompletado o manejado en el backend
+        },
+        activo: true,
+        idOferta: 0 // Autocompletado o manejado en el backend
+      };
+  
+      // Aquí puedes enviar 'nuevoCandidato' al servidor
+      this.ofertaService.postOferta(nuevoCandidato).subscribe(
+        response => {
+          console.log('Oferta enviada con éxito:', response);
+          location.reload();
+        },
+        error => {
+          console.error('Error al enviar la oferta:', error);
+          if (error.error) {
+            console.error('Detalles del error:', error.error); // Detalles adicionales del error
+          }
+        }
+      );
+      // Resetear el formulario
       this.candidatoForm.reset();
     } else {
       console.log('Formulario no válido');
     }
   }
+  
 
   // -------------------------------------------------------------------------------------------------------------
 
@@ -365,7 +456,9 @@ export class CandidatosOfertadosComponent implements OnInit {
         salario: oferta.salario,
         tarifa: oferta.tarifa,
         experiencia: oferta.experiencia,
-        historico: oferta.historicoCambioEstados
+        historico: oferta.historicoCambioEstados,
+        rentabilidadCliente: oferta.rentabilidadCliente,
+        rentabilidadClienteIncorpor: oferta.rentabilidadClienteIncorpor,
       }
     });
   }
@@ -388,11 +481,17 @@ export class CandidatosOfertadosComponent implements OnInit {
   <p style="margin-bottom: 10px;">
     <strong>Tarifa:</strong> {{ data.tarifa}} €
   </p>
-  <p style="margin-bottom: 20px;">
+  <p style="margin-bottom: 10px;">
+    <strong>Rentabilidad Cliente:</strong> {{ data.rentabilidadCliente}} %
+  </p>
+  <p style="margin-bottom: 10px;">
+    <strong>Rentabilidad Aplicada al cliente en la incorporacion:</strong> {{ data.rentabilidadClienteIncorpor}} %
+  </p>
+  <p style="margin-bottom: 10px;">
     <strong>Experiencia:</strong> {{ data.experiencia }}
   </p>
   <p style="margin-bottom: 20px;">
-    <strong>Historico:</strong> {{ data.historico }}
+    <strong>Histórico:</strong> <span [innerHTML]="data.historico"></span>
   </p>
 </div>
 <div mat-dialog-actions class="dialog-actions" style="display: flex; justify-content: center; padding: 10px;">

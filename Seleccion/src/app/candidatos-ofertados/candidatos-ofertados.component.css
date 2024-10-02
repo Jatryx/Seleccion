@@ -2,14 +2,7 @@ body {
   overflow-x: hidden;
 }
 
-.botones-funcionalidades {
-  position: absolute; /* Posiciona el botón de forma absoluta */
-  top: 10px; /* Distancia desde la parte superior del contenedor */
-  left: 0; /* Alinear a la izquierda del contenedor */
-  margin-bottom: 10px; /* Espacio inferior para separación con la tabla */
-  padding: 6px 12px; /* Ajusta el espacio dentro del botón */
-  font-size: 14px; /* Tamaño de la fuente más pequeño */
-}
+
 form {
   max-width: 900px;
   margin: 2rem auto;
@@ -31,7 +24,9 @@ h2 {
   padding: 10px; 
   border-bottom: 2px solid #e0e0e0; 
 }
-
+.codope {
+  display: none;
+}
 .form-container {
   display: flex;
   flex-direction: column;
@@ -60,10 +55,9 @@ h2 {
   flex: 1 1 100%; 
 }
 
-.experience-salary-group {
+.anadir-cancelar {
   display: flex;
-  gap: 16px;
-  flex: 1 1 25%; 
+  gap: 10px; /* Espaciado entre los botones */
 }
 
 button {
@@ -80,10 +74,22 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #3a13c5;
   transform: scale(1.01);
 }
 
+.cancelar:hover {
+  background-color: #d3a305;
+  transform: scale(1.01);
+}
+.botones-funcionalidades {
+  position: absolute; /* Posiciona el botón de forma absoluta */
+  top: 10px; /* Distancia desde la parte superior del contenedor */
+  left: 0; /* Alinear a la izquierda del contenedor */
+  margin-bottom: 10px; /* Espacio inferior para separación con la tabla */
+  padding: 6px 12px; /* Ajusta el espacio dentro del botón */
+  font-size: 14px; /* Tamaño de la fuente más pequeño */
+}
 .table-container {
   width: 90%; 
   margin: 0 auto; 

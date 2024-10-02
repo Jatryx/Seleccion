@@ -80,7 +80,7 @@ public class OfertasController {
         }
     }
 
-    @PostMapping("/añadirOferta")
+    @PostMapping("/insertar")
     public ResponseEntity<?> createOferta(@RequestBody OfertasModel oferta) {
 
         String nombreCandidato = oferta.getCandidato().getNombreCandidato();
@@ -173,6 +173,8 @@ public class OfertasController {
         nuevaOferta.setTecnologias(oferta.getTecnologias());
         nuevaOferta.setSalario(oferta.getSalario());
         nuevaOferta.setTarifa(oferta.getTarifa());
+        nuevaOferta.setRentabilidadCliente(oferta.getRentabilidadCliente());
+        nuevaOferta.setRentabilidadClienteIncorpor(oferta.getRentabilidadClienteIncorpor());
         nuevaOferta.setActivo(true);
 
         String informacion = "Se añadio el candidato el " + oferta.getFechaActualizacion() + " con el estado " + oferta.getEstado().getEstado();
@@ -275,6 +277,8 @@ public class OfertasController {
 	        ofertaActualizada.setTecnologias(ofertaDetails.getTecnologias());
 	        ofertaActualizada.setSalario(ofertaDetails.getSalario());
 	        ofertaActualizada.setTarifa(ofertaDetails.getTarifa());
+	        ofertaActualizada.setRentabilidadCliente(ofertaDetails.getRentabilidadCliente());
+	        ofertaActualizada.setRentabilidadClienteIncorpor(ofertaDetails.getRentabilidadClienteIncorpor());
 	        ofertaActualizada.setActivo(true);
 	        
 	        
@@ -300,7 +304,7 @@ public class OfertasController {
 	        
 	        // Actualizar el historial
 	        String historial = oferta.get().getHistoricoCambioEstados();
-	        historial += System.lineSeparator() + " Fue " + estado + " el " + fechaFormateada;
+	        historial +="<br> Fue " + estado + " el " + fechaFormateada;
 	        ofertaActualizada.setHistoricoCambioEstados(historial);
 	        }
 	        OfertasModel savedOferta = ofertaService.guardarOferta(ofertaActualizada);

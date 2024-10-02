@@ -23,7 +23,13 @@
 <form [formGroup]="candidatoForm" (ngSubmit)="onSubmit()" class="form-container">
   <h2>Añadir candidato</h2>
 
+  
+
   <div class="form-group">
+    <mat-form-field appearance="fill" class="full-width codope" [hidden]="true">
+      <mat-label>Observaciones</mat-label>
+      <input matInput formControlName="codope" value="IACA">
+    </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Candidato</mat-label>
       <input 
@@ -169,14 +175,17 @@
     </mat-form-field>
   </div>
 
-  <button mat-raised-button color="primary" type="submit">Añadir</button>
+  <div class="anadir-cancelar">
+    <button mat-raised-button color="primary" type="submit">Añadir</button>
+    <button mat-raised-button color="accent" class="cancelar" type="button" (click)="verFormAnadir()">Cancelar</button>
+  </div>
 </form>
 </div>
 
 <div class="table-container">
-  <div class="botones-funcionalidades">
+  <div class="botones-funcionalidades" *ngIf="!formVisible">
     <button mat-raised-button color="primary"(click)="verFormAnadir()">Añadir Candidato</button>
-    </div>
+  </div>
   <table mat-table [dataSource]="ofertaLista" matSort class="mat-elevation-z8">
     <!-- Candidato Column -->
     <ng-container matColumnDef="candidato">

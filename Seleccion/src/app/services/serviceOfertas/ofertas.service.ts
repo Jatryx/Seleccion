@@ -19,8 +19,8 @@ export class OfertasService {
     return this.http.get<Ofertas>(this.apiRoot + '/consultar/' + nombreCandidato + '/' + idRecruiting);
   }
 
-  postOferta(oferta: Ofertas){
-    return this.http.post<Ofertas>(this.apiRoot + '/insertar', oferta);
+  postOferta(oferta: any){
+    return this.http.post<any>(this.apiRoot + '/insertar', oferta);
   }
 
   putOferta(nombreCandidato: string, idRecruiting: number, oferta: Ofertas){
