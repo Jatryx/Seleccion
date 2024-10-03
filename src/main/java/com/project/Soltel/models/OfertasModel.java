@@ -42,16 +42,16 @@ public class OfertasModel {
     @Column(precision = 3, scale = 1)
     private BigDecimal experiencia;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = true, precision = 10, scale = 2)
     private BigDecimal salario;
 
-    @Column(nullable = false, precision = 5, scale = 2)
+    @Column(nullable = true, precision = 5, scale = 2)
     private BigDecimal tarifa;
     
-    @Column(nullable = false, precision = 4, scale = 2)
+    @Column(nullable = true, precision = 4, scale = 2)
     private BigDecimal rentabilidadCliente;
     
-    @Column(nullable = false, precision = 4, scale = 2)
+    @Column(nullable = true, precision = 4, scale = 2)
     private BigDecimal rentabilidadClienteIncorpor;
     
     @ManyToOne

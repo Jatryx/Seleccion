@@ -16,7 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { PuestoService } from '../services/servicePuesto/puesto.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { map, Observable, startWith } from 'rxjs';
+import { from, map, Observable, startWith } from 'rxjs';
 import { EstadoService } from '../services/serviceEstado/estado.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -26,7 +26,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CandidatosService } from '../services/serviceCandidatos/candidatos.service';
 import { RecruitingService } from '../services/serviceRecruiting/recruiting.service';
 import { EmpresaService } from '../services/serviceEmpresa/empresa.service';
-
+import * as Papa from 'papaparse';
 interface CsvRow {
   [key: string]: string | null; // Index signature para claves dinámicas
 }
@@ -52,7 +52,7 @@ interface CsvRow {
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
   ],
   providers: [OfertasService, UbicacionService, PuestoService, EstadoService, CandidatosService, RecruitingService, EmpresaService]
 })
@@ -96,7 +96,8 @@ export class CandidatosOfertadosComponent implements OnInit {
     'tecnologia', 
     'estado', 
     'fechaActualizacion', 
-    'resumen'
+    'resumen',
+    'actu'
   ];
 
   constructor(
@@ -119,9 +120,12 @@ export class CandidatosOfertadosComponent implements OnInit {
       cliente: ['', Validators.required],
       ubicacion: ['', Validators.required],
       perfil: ['', Validators.required],
-      tecnologia: ['', Validators.required],
-      experiencia: ['', [Validators.required, Validators.min(0)]],
-      salario: ['', [Validators.required, Validators.min(0)]],
+      tecnologia: [''],
+      experiencia: ['', [Validators.min(0)]],
+      salario: ['', [Validators.min(0)]],
+      tarifa: ['', [Validators.min(0)]],
+      rentabilidadCliente: ['', [Validators.min(0)]],
+      rentabilidadPropuesta: ['', [Validators.min(0)]],
       estado: [new Date(), Validators.required],
       fechaActualizacion: ['', Validators.required],
       resumen: ['']
@@ -263,7 +267,6 @@ export class CandidatosOfertadosComponent implements OnInit {
       data => {
         this.empresaLista = data.map(empresa => empresa.nombreEmpresa);
         this.filtradoEmpresas();
-        console.log(this.empresaLista)
       }
     )
   }
@@ -308,7 +311,6 @@ export class CandidatosOfertadosComponent implements OnInit {
   }
   filtroEmpresa(value: string): string[] {
     const filtroEmpresa = value.toLowerCase();
-    console.log(this.empresaLista)
     return this.empresaLista.filter(option => option.toLowerCase().includes(filtroEmpresa));
   }
 
@@ -401,9 +403,9 @@ export class CandidatosOfertadosComponent implements OnInit {
         tecnologias: formValues.tecnologia,
         experiencia: formValues.experiencia,
         salario: formValues.salario,
-        tarifa: 0, // Ajusta según sea necesario
-        rentabilidadCliente: 12, // Ajusta según sea necesario
-        rentabilidadClienteIncorpor: 12.3, // Ajusta según sea necesario
+        tarifa: formValues.tarifa, // Ajusta según sea necesario
+        rentabilidadCliente: formValues.rentabilidadCliente, // Ajusta según sea necesario
+        rentabilidadClienteIncorpor: formValues.rentabilidadPropuesta, // Ajusta según sea necesario
         estado: {
           estado: formValues.estado,
           activo: true,
@@ -443,53 +445,108 @@ export class CandidatosOfertadosComponent implements OnInit {
   }
 
 
-  /*importCSV() {
+  importCSV() {
     const fileInput = document.getElementById('csvFile') as HTMLInputElement | null;
     if (!fileInput || !fileInput.files) {
       console.error('El archivo no ha sido seleccionado.');
       return;
     }
+
     const file = fileInput.files[0]; // Obtener el archivo seleccionado
-    const reader = new FileReader();
-  
- 
-    reader.onload = function(e) {
-      const csvContent = e.target?.result; // Verificar si result existe
-      if (!csvContent) {
-        console.error('No se pudo leer el archivo.');
-        return;
-      }
-      const lines = (csvContent as string).split('\n'); // Forzamos el tipo a string
-      
-      // Obtener encabezados
-      const headers = lines[0].split(',');
-  
-      // Convertir CSV a un array de objetos JSON
-      const jsonData = lines.slice(1).map(line => {
-        const values = line.split(',');
-        const obj = {};
-  
-        // Crear el objeto JSON personalizado
-        headers.forEach((header, index) => {
-          obj[header.trim()] = values[index]?.trim() || null;
+
+    Papa.parse(file, {
+      header: true, // Convertir las líneas en objetos usando los encabezados
+      skipEmptyLines: true, // Ignorar líneas vacías en el CSV
+      complete: (results) => {
+        const totalRegistros = results.data.length; // Contar el total de registros
+        console.log(totalRegistros)
+        let registrosEnviados = 0; // Contador de registros enviados
+        // results.data contiene el array de objetos ya parseados
+        const jsonData = results.data.map((row: any) => {
+          // Construir el objeto en el formato deseado
+          const nuevoCandidato = {
+            usuario: {
+              codope: row['CODOPE'], // Mapear codope desde el CSV
+              contraseña: "contraseña_default", // Ajusta según sea necesario
+              activo: true
+            },
+            recruiting: {
+              empresa: {
+                nombreEmpresa: row['CLIENTE'], // Asumiendo que 'CLIENTE' corresponde a 'nombreEmpresa'
+                activo: true,
+                idEmpresa: 0 // Autocompletado o manejado en el backend
+              },
+              nombreProyecto: row['PROYECTO'],
+              activo: true,
+              idRecruiting: row['ID PETICIÓN'] // Autocompletado o manejado en el backend
+            },
+            ubicacion: {
+              nombreProvincia: row['UBICACIÓN'],
+              activo: true,
+              idUbicacion: 0 // Autocompletado o manejado en el backend
+            },
+            puesto: {
+              nombrePuesto: row['PERFIL'],
+              activo: true,
+              idPuesto: 0 // Autocompletado o manejado en el backend
+            },
+            tecnologias: row['TECNOLOGÍA'], // Asumiendo que esto es una lista o un string
+            experiencia: row['AÑOS EXPERIENCIA'], // Ajusta según sea necesario
+            salario: parseFloat(row['SALARIO (SB)'].replace(',', '.')), // Convertir a número, ajustando el formato
+            tarifa: parseFloat(row['TARIFA  DE INCORPORACIÓN'].replace(',', '.')), // Convertir a número, ajustando el formato
+            rentabilidadCliente: parseFloat(row['RENTABILIDAD QUE CORRESPONDE AL CLIENTE'].replace(',', '.')), // Convertir a número, ajustando el formato
+            rentabilidadClienteIncorpor: parseFloat(row['RENTABILIDAD APLICADA AL CLIENTE EN LA INCORPORACIÓN'].replace(',', '.')), // Convertir a número, ajustando el formato
+            estado: {
+              estado: row['ESTADO'],
+              activo: true,
+              idEstado: 0 // Autocompletado o manejado en el backend
+            },
+            fechaActualizacion: new Date().toISOString(), // Establecer la fecha actual
+            observaciones: row['RESUMEN'], // Ajusta según sea necesario
+            historicoCambioEstados: "", // Ajusta según sea necesario
+            candidato: {
+              nombreCandidato: row['CANDIDATO'],
+              telefono: row['TELEFONO'] || null, // Asegúrate de que existe este campo en tu CSV
+              activo: true,
+              idCandidato: 0 // Autocompletado o manejado en el backend
+            },
+            activo: true,
+            idOferta: 0 // Autocompletado o manejado en el backend
+          };
+
+          // Aquí puedes enviar 'nuevoCandidato' al servidor
+          this.ofertaService.postOferta(nuevoCandidato).subscribe(
+            response => {
+              console.log('Oferta enviada con éxito:', response);
+              registrosEnviados++;
+              console.log(registrosEnviados)
+              /*if (registrosEnviados === totalRegistros) {
+                console.log('Todos los registros han sido enviados. Recargando la página...');
+                location.reload(); // Recargar la página
+              }*/
+            },
+            error => {
+              console.error('Error al enviar la oferta:', error);
+              if (error.error) {
+                console.error('Detalles del error:', error.error); // Detalles adicionales del error
+              }
+              registrosEnviados++;
+              console.log(registrosEnviados)
+              /*if (registrosEnviados === totalRegistros) {
+                console.log('Todos los registros han sido procesados. Recargando la página...');
+                location.reload(); // Recargar la página
+              }*/
+            }
+          );
+
+          return nuevoCandidato; // Retorna el nuevo candidato si es necesario
         });
-  
-        return {
-          id: obj['ID'], // Modificar según los campos del CSV
-          nombre: obj['Nombre'],
-          email: obj['Email'],
-          datosAdicionales: {
-            telefono: obj['Teléfono'],
-            direccion: obj['Dirección'],
-          }
-        };
-      });
-  
-      console.log(JSON.stringify(jsonData, null, 2));
-    };
-  
-    reader.readAsText(file);
-  }*/
+        console.log(JSON.stringify(jsonData, null, 2));
+      }
+    });
+  }
+
+    
   // -------------------------------------------------------------------------------------------------------------
 
   //     PopUP observaciones Y Botones visibilidaes
@@ -534,13 +591,13 @@ export class CandidatosOfertadosComponent implements OnInit {
     <strong>Tarifa:</strong> {{ data.tarifa}} €
   </p>
   <p style="margin-bottom: 10px;">
-    <strong>Rentabilidad Cliente:</strong> {{ data.rentabilidadCliente}} %
+    <strong>Rentabilidad pedida por el Cliente:</strong> {{ data.rentabilidadCliente}} %
   </p>
   <p style="margin-bottom: 10px;">
-    <strong>Rentabilidad Aplicada al cliente en la incorporacion:</strong> {{ data.rentabilidadClienteIncorpor}} %
+    <strong>Rentabilidad aplicada al cliente en la incorporacion:</strong> {{ data.rentabilidadClienteIncorpor}} %
   </p>
   <p style="margin-bottom: 10px;">
-    <strong>Experiencia:</strong> {{ data.experiencia }}
+    <strong>Experiencia:</strong> {{ data.experiencia }} año/s
   </p>
   <p style="margin-bottom: 20px;">
     <strong>Histórico:</strong> <span [innerHTML]="data.historico"></span>
