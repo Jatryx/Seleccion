@@ -5,6 +5,10 @@ html, body {
   margin: 0;
   overflow-x: auto; /* Permitir scroll horizontal */
   overflow-y: hidden;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .title {
@@ -27,7 +31,7 @@ html, body {
   color: #fff; 
   border: none; 
   cursor: pointer; 
-  margin-top: 2rem;
+  margin-top: 5rem;
   margin-left: 5vw;
 }
 
@@ -52,7 +56,9 @@ h2 {
   padding: 10px; 
   border-bottom: 2px solid #e0e0e0; 
 }
-
+.codope {
+  display: none;
+}
 .form-container {
   display: flex;
   flex-direction: column;
@@ -81,10 +87,9 @@ h2 {
   flex: 1 1 100%; 
 }
 
-.experience-salary-group {
+.anadir-cancelar {
   display: flex;
-  gap: 16px;
-  flex: 1 1 25%; 
+  gap: 10px; /* Espaciado entre los botones */
 }
 
 button {
@@ -101,13 +106,31 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #3a13c5;
   transform: scale(1.01);
 }
 
+.cancelar:hover {
+  background-color: #d3a305;
+  transform: scale(1.01);
+}
+.botones-funcionalidades {
+  display: flex;
+  justify-content: center; /* Centrar el botón */
+  width: 175px;  
+  height: 30px; 
+  font-size: 10px;
+  line-height: 1;
+  border-radius: 4px; 
+  color: #fff; 
+  border: none; 
+  cursor: pointer; 
+  margin-top: 5rem;
+  margin-left: 5vw;
+}
 .table-container {
   width: 90%; 
-  margin: 1rem auto; 
+  margin: 1rem auto;    
   border-radius: 8px;
   background: #ffffff;
   box-shadow: 2px 2px 2px #c4c4c4, -2px -2px 2px #ffffff;
@@ -154,26 +177,21 @@ td.mat-cell {
     font-size: 2.5em; /* Ajustar el tamaño de la fuente para pantallas más pequeñas */
     margin-top: 120px; /* Ajustar el margen superior */
   }
-
   .botones-funcionalidades {
     margin-top: 3rem; /* Ajustar el margen superior */
   }
-
   button {
     font-size: 0.9em; /* Ajustar el tamaño de la fuente del botón */
   }
 }
-
 @media (max-width: 480px) {
   .title {
     font-size: 2em; /* Ajustar el tamaño de la fuente para pantallas más pequeñas */
     margin-top: 140px; /* Ajustar el margen superior */
   }
-
   .botones-funcionalidades {
     margin-top: 4rem; /* Ajustar el margen superior */
   }
-
   button {
     font-size: 0.8em; /* Ajustar el tamaño de la fuente del botón */
   }
@@ -247,7 +265,13 @@ mat-menu {
   font-size: 16px !important; 
   color: #030303 !important; 
 }
-
+.contenedor-footer{
+  flex: 1; /* Ocupa todo el espacio disponible, empujando el footer hacia abajo */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Evita que el contenido se centre verticalmente */
+  overflow-y: auto; /* Permite el scroll si la lista es larga */
+}
 .footer {
   background-color: #f8f9fa; 
   padding: 10px 0; 
@@ -256,7 +280,7 @@ mat-menu {
   margin-top: 1rem;
   width: 100%;
   box-sizing: border-box;
-  position: fixed;
+  position: relative;
   bottom: 0;
   box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }

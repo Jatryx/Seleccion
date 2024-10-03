@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Candidatos } from '../../models/modelCandidato/candidatos.model';
 
 @Injectable({
@@ -14,18 +15,18 @@ export class CandidatosService {
   getCandidatos(){
     return this.http.get<Candidatos[]>(this.apiRoot + '/consultar');
   }
-  getCandidatoPorNombre(nombreCandidato: string){
+  getCandidatoPorNombre(nombreCandidato: string): Observable<Candidatos>{
       return this.http.get<Candidatos>(this.apiRoot + '/consultar/' + nombreCandidato);
     }
-  postCandidato(candidato: any){
+  postCandidato(candidato: Candidatos): Observable<Object>{
     return this.http.post(this.apiRoot + '/insertar', candidato);
   }
 
-  putCandidato(nombreCandidato: string, candidato: Candidatos){
+  putCandidato(nombreCandidato: string, candidato: Candidatos): Observable<Object>{
     return this.http.put(this.apiRoot + '/actualizar/' + nombreCandidato, candidato);
   }
 
-  deleteCandidato(nombreCandidato: string){
+  deleteCandidato(nombreCandidato: string): Observable<Object>{
     return this.http.delete(this.apiRoot + '/desactivar/' + nombreCandidato);
   }
 }

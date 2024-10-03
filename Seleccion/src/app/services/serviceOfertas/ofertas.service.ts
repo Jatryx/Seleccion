@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Ofertas } from '../../models/modelOfertas/ofertas.model';
 
 @Injectable({
@@ -11,23 +12,23 @@ export class OfertasService {
 
   constructor(private http: HttpClient) { }
 
-  getOfertas(){
+  getOfertas(): Observable<Ofertas[]>{
     return this.http.get<Ofertas[]>(this.apiRoot + '/consultar');
   }
 
-  getOfertaPorNombreCandidatoEIdRecruiting(nombreCandidato: string, idRecruiting: number){
+  getOfertaPorNombreCandidatoEIdRecruiting(nombreCandidato: string, idRecruiting: number): Observable<Ofertas>{
     return this.http.get<Ofertas>(this.apiRoot + '/consultar/' + nombreCandidato + '/' + idRecruiting);
   }
 
-  postOferta(oferta: Ofertas){
-    return this.http.post<Ofertas>(this.apiRoot + '/insertar', oferta);
+  postOferta(oferta: any){
+    return this.http.post<any>(this.apiRoot + '/insertar', oferta);
   }
 
-  putOferta(nombreCandidato: string, idRecruiting: number, oferta: Ofertas){
+  putOferta(nombreCandidato: string, idRecruiting: number, oferta: Ofertas): Observable<Object>{
     return this.http.put<Ofertas>(this.apiRoot + '/actualizar/' + nombreCandidato + '/' + idRecruiting, oferta);
   }
 
-  deleteOferta(nombreCandidato: string, idRecruiting: number){
+  deleteOferta(nombreCandidato: string, idRecruiting: number): Observable<Object>{
     return this.http.delete(this.apiRoot + '/desactivar/' + nombreCandidato + '/' + idRecruiting);
   }
 

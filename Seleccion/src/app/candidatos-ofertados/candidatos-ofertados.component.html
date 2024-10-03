@@ -21,7 +21,7 @@
 
 <h1 class="title">Candidatos Ofertados</h1>
 
-<div class="botones-funcionalidades">
+<div class="botones-funcionalidades" *ngIf="!formVisible">
   <button mat-raised-button color="primary"(click)="verFormAnadir()">Añadir Candidato</button>
 </div>
 
@@ -29,7 +29,16 @@
 <form [formGroup]="candidatoForm" (ngSubmit)="onSubmit()" class="form-container">
   <h2>Añadir candidato</h2>
 
+  
+  <!--<input type="file" id="csvFile" accept=".csv" />
+  <button onclick="importCSV()">Importar CSV</button>-->
+
+  
   <div class="form-group">
+    <mat-form-field appearance="fill" class="full-width codope" [hidden]="true">
+      <mat-label>Observaciones</mat-label>
+      <input matInput formControlName="codope" value="IACA">
+    </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Candidato</mat-label>
       <input 
@@ -168,11 +177,15 @@
     </mat-form-field>
   </div>
 
-  <button mat-raised-button color="primary" type="submit">Añadir</button>
+  <div class="anadir-cancelar">
+    <button mat-raised-button color="primary" type="submit">Añadir</button>
+    <button mat-raised-button color="accent" class="cancelar" type="button" (click)="verFormAnadir()">Cancelar</button>
+  </div>
 </form>
 </div>
 
 <!-- TABLA CANDIDATOS OFERTADOS -->
+ 
 <div class="table-container">
   <table mat-table [dataSource]="ofertaLista" matSort class="mat-elevation-z8">
     <!-- Candidato Column -->
@@ -255,6 +268,7 @@
 </div>
 
 <!-- Footer -->
+ <div class="contenedor-footer">
 <footer class="footer">
   <div class="footer-content">
     <p>&copy; 2024 Soltel Group. Todos los derechos reservados.</p>
@@ -265,3 +279,4 @@
     </div>
   </div>
 </footer>
+</div>

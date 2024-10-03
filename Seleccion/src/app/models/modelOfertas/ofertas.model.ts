@@ -16,6 +16,8 @@ export interface Ofertas {
     experiencia: number,
     salario: number,
     tarifa: number,
+    rentabilidadCliente: number,
+    rentabilidadClienteIncorpor: number,
     estado: Estado,
     fechaActualizacion: Date,
     observaciones: string,

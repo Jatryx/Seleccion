@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Estado } from '../../models/modelEstado/estado.model';
 
 @Injectable({
@@ -11,19 +12,19 @@ export class EstadoService {
 
   constructor(private http: HttpClient) { }
 
-  getEstados(){
+  getEstados(): Observable<Estado[]>{
     return this.http.get<Estado[]>(this.apiRoot + '/consultar');
   }
 
-  postEstado(estado: any){
+  postEstado(estado: Estado): Observable<Object>{
     return this.http.post(this.apiRoot + '/insertar', estado);
   }
 
-  putEstado(nombreEstado: string, estado: Estado){
+  putEstado(nombreEstado: string, estado: Estado): Observable<Object>{
     return this.http.put(this.apiRoot + '/actualizar/' + nombreEstado, estado);
   }
 
-  deleteEstado(nombreEstado: string){
+  deleteEstado(nombreEstado: string): Observable<Object>{
     return this.http.delete(this.apiRoot + '/desactivar/' + nombreEstado);
   }
 

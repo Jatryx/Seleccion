@@ -48,6 +48,12 @@ public class OfertasModel {
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal tarifa;
     
+    @Column(nullable = false, precision = 4, scale = 2)
+    private BigDecimal rentabilidadCliente;
+    
+    @Column(nullable = false, precision = 4, scale = 2)
+    private BigDecimal rentabilidadClienteIncorpor;
+    
     @ManyToOne
     @JoinColumn(name = "estadoId", referencedColumnName = "IdEstado")
     private EstadoModel estado;
@@ -134,7 +140,10 @@ public class OfertasModel {
 	public BigDecimal getSalario() {
 		return salario;
 	}
-
+	
+	public void setSalario(BigDecimal salario) {
+		this.salario = salario;
+	}
 	public BigDecimal getTarifa() {
 		return tarifa;
 	}
@@ -143,8 +152,20 @@ public class OfertasModel {
 		this.tarifa = tarifa;
 	}
 
-	public void setSalario(BigDecimal salario) {
-		this.salario = salario;
+	public BigDecimal getRentabilidadCliente() {
+		return rentabilidadCliente;
+	}
+
+	public void setRentabilidadCliente(BigDecimal rentabilidadCliente) {
+		this.rentabilidadCliente = rentabilidadCliente;
+	}
+
+	public BigDecimal getRentabilidadClienteIncorpor() {
+		return rentabilidadClienteIncorpor;
+	}
+
+	public void setRentabilidadClienteIncorpor(BigDecimal rentabilidadClienteIncorpor) {
+		this.rentabilidadClienteIncorpor = rentabilidadClienteIncorpor;
 	}
 
 	public EstadoModel getEstado() {
@@ -199,10 +220,13 @@ public class OfertasModel {
 		super();
 	}
 
-	public OfertasModel(UsuarioModel usuario, RecruitingModel recruiting, UbicacionModel ubicacion, PuestoModel puesto, String tecnologias,
-			BigDecimal experiencia, BigDecimal salario, BigDecimal tarifa, EstadoModel estado, LocalDate fechaActualizacion,
-			String observaciones, String historicoCambioEstados, CandidatosModel candidato, Boolean activo) {
+	public OfertasModel(Integer idOferta, UsuarioModel usuario, RecruitingModel recruiting, UbicacionModel ubicacion,
+			PuestoModel puesto, String tecnologias, BigDecimal experiencia, BigDecimal salario, BigDecimal tarifa,
+			BigDecimal rentabilidadCliente, BigDecimal rentabilidadClienteIncorpor, EstadoModel estado,
+			LocalDate fechaActualizacion, String observaciones, String historicoCambioEstados,
+			CandidatosModel candidato, Boolean activo) {
 		super();
+		IdOferta = idOferta;
 		this.usuario = usuario;
 		this.recruiting = recruiting;
 		this.ubicacion = ubicacion;
@@ -211,6 +235,8 @@ public class OfertasModel {
 		this.experiencia = experiencia;
 		this.salario = salario;
 		this.tarifa = tarifa;
+		this.rentabilidadCliente = rentabilidadCliente;
+		this.rentabilidadClienteIncorpor = rentabilidadClienteIncorpor;
 		this.estado = estado;
 		this.fechaActualizacion = fechaActualizacion;
 		this.observaciones = observaciones;
@@ -218,5 +244,7 @@ public class OfertasModel {
 		this.candidato = candidato;
 		this.activo = activo;
 	}
+
+
 }
 
