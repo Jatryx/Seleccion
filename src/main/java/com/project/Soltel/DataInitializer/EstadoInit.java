@@ -28,7 +28,7 @@ public class EstadoInit implements CommandLineRunner {
                 new EstadoModel("SOLICITUD ENTREVISTA", true),
                 new EstadoModel("SOLICITUD INCORPORACIÓN", true),
                 new EstadoModel("INCORPORADO", true),
-                new EstadoModel("PETICIÓN CANCELADA", true)
+                new EstadoModel("PETICIÓN CANCELADA", true)            
             );
             estadoModelRepository.saveAll(estados);
         }

@@ -20,18 +20,17 @@
 </div>
 
 <h1 class="title">Candidatos Ofertados</h1>
+  <input type="file" id="csvFile" accept=".csv" />
+  <button (click)="importCSV()">Importar CSV</button>
 
 <div class="botones-funcionalidades" *ngIf="!formVisible">
   <button mat-raised-button color="primary"(click)="verFormAnadir()">Añadir Candidato</button>
 </div>
-
 <div *ngIf="formVisible">
 <form [formGroup]="candidatoForm" (ngSubmit)="onSubmit()" class="form-container">
   <h2>Añadir candidato</h2>
 
   
-  <!--<input type="file" id="csvFile" accept=".csv" />
-  <button onclick="importCSV()">Importar CSV</button>-->
 
   
   <div class="form-group">
@@ -171,6 +170,30 @@
       </mat-error>
     </mat-form-field>
 
+    <mat-form-field appearance="fill">
+      <mat-label>Tarifa</mat-label>
+      <input matInput formControlName="tarifa" type="number" />
+      <mat-error *ngIf="candidatoForm.get('tarifa')?.hasError('min')">
+      No se permiten valores negativos.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Rentabilidad del Cliente</mat-label>
+      <input matInput formControlName="rentabilidadCliente" type="number" />
+      <mat-error *ngIf="candidatoForm.get('rentabilidadCliente')?.hasError('min')">
+      No se permiten valores negativos.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Rentabilidad por la que se sube </mat-label>
+      <input matInput formControlName="rentabilidadPropuesta" type="number" />
+      <mat-error *ngIf="candidatoForm.get('rentabilidadPropuesta')?.hasError('min')">
+      No se permiten valores negativos.
+      </mat-error>
+    </mat-form-field>
+
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Observaciones</mat-label>
       <textarea matInput formControlName="resumen"></textarea>
@@ -259,6 +282,13 @@
       <th mat-header-cell *matHeaderCellDef>Observaciones</th>
       <td mat-cell *matCellDef="let oferta">
         <button mat-raised-button color="primary" (click)="openPopup(oferta)" class="resumen-button" style="color: whitesmoke;">Ver</button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actu">
+      <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+      <td mat-cell *matCellDef="let oferta">
+        <button mat-raised-button color="primary" style="color: whitesmoke;">Ver</button>
       </td>
     </ng-container>
 

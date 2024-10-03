@@ -20,7 +20,7 @@ public class CandidatosModel {
     @Column(nullable = false, length = 100)
     private String nombreCandidato;
     
-    @Column(nullable = false, precision = 9)
+    @Column(nullable = true, precision = 9)
     private BigDecimal telefono;
 
 	@Column
