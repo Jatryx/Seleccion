@@ -5,6 +5,10 @@ html, body {
   margin: 0;
   overflow-x: auto; /* Permitir scroll horizontal */
   overflow-y: hidden;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .title {
@@ -15,7 +19,6 @@ html, body {
   color: #5781ab;
   font-family: 'Montserrat', sans-serif; /* Aplicar la fuente a todo el cuerpo */
 }
-
 
 form {
   max-width: 900px;
@@ -97,16 +100,22 @@ button:hover {
   transform: scale(1.01);
 }
 .botones-funcionalidades {
-  position: absolute; /* Posiciona el botón de forma absoluta */
-  top: 10px; /* Distancia desde la parte superior del contenedor */
-  left: 0; /* Alinear a la izquierda del contenedor */
-  margin-bottom: 10px; /* Espacio inferior para separación con la tabla */
-  padding: 6px 12px; /* Ajusta el espacio dentro del botón */
-  font-size: 14px; /* Tamaño de la fuente más pequeño */
+  display: flex;
+  justify-content: center; /* Centrar el botón */
+  width: 175px;  
+  height: 30px; 
+  font-size: 10px;
+  line-height: 1;
+  border-radius: 4px; 
+  color: #fff; 
+  border: none; 
+  cursor: pointer; 
+  margin-top: 5rem;
+  margin-left: 5vw;
 }
 .table-container {
   width: 90%; 
-  margin: 1rem auto; 
+  margin: 1rem auto;    
   border-radius: 8px;
   background: #ffffff;
   box-shadow: 10px 10px 20px #c4c4c4, -10px -10px 20px #ffffff;
@@ -153,26 +162,21 @@ td.mat-cell {
     font-size: 2.5em; /* Ajustar el tamaño de la fuente para pantallas más pequeñas */
     margin-top: 120px; /* Ajustar el margen superior */
   }
-
   .botones-funcionalidades {
     margin-top: 3rem; /* Ajustar el margen superior */
   }
-
   button {
     font-size: 0.9em; /* Ajustar el tamaño de la fuente del botón */
   }
 }
-
 @media (max-width: 480px) {
   .title {
     font-size: 2em; /* Ajustar el tamaño de la fuente para pantallas más pequeñas */
     margin-top: 140px; /* Ajustar el margen superior */
   }
-
   .botones-funcionalidades {
     margin-top: 4rem; /* Ajustar el margen superior */
   }
-
   button {
     font-size: 0.8em; /* Ajustar el tamaño de la fuente del botón */
   }
@@ -246,7 +250,13 @@ mat-menu {
   font-size: 16px !important; 
   color: #030303 !important; 
 }
-
+.contenedor-footer{
+  flex: 1; /* Ocupa todo el espacio disponible, empujando el footer hacia abajo */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Evita que el contenido se centre verticalmente */
+  overflow-y: auto; /* Permite el scroll si la lista es larga */
+}
 .footer {
   background-color: #f8f9fa; 
   padding: 10px 0; 
@@ -255,7 +265,7 @@ mat-menu {
   margin-top: 1rem;
   width: 100%;
   box-sizing: border-box;
-  position: fixed;
+  position: relative;
   bottom: 0;
   box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }

@@ -27,6 +27,10 @@ import { CandidatosService } from '../services/serviceCandidatos/candidatos.serv
 import { RecruitingService } from '../services/serviceRecruiting/recruiting.service';
 import { EmpresaService } from '../services/serviceEmpresa/empresa.service';
 
+interface CsvRow {
+  [key: string]: string | null; // Index signature para claves dinámicas
+}
+
 @Component({
   selector: 'app-candidatos-ofertados',
   templateUrl: './candidatos-ofertados.component.html',
@@ -52,6 +56,7 @@ import { EmpresaService } from '../services/serviceEmpresa/empresa.service';
   ],
   providers: [OfertasService, UbicacionService, PuestoService, EstadoService, CandidatosService, RecruitingService, EmpresaService]
 })
+
 export class CandidatosOfertadosComponent implements OnInit {
   faHome = faHome;
   formVisible: boolean = false;
@@ -436,8 +441,55 @@ export class CandidatosOfertadosComponent implements OnInit {
       console.log('Formulario no válido');
     }
   }
-  
 
+
+  /*importCSV() {
+    const fileInput = document.getElementById('csvFile') as HTMLInputElement | null;
+    if (!fileInput || !fileInput.files) {
+      console.error('El archivo no ha sido seleccionado.');
+      return;
+    }
+    const file = fileInput.files[0]; // Obtener el archivo seleccionado
+    const reader = new FileReader();
+  
+ 
+    reader.onload = function(e) {
+      const csvContent = e.target?.result; // Verificar si result existe
+      if (!csvContent) {
+        console.error('No se pudo leer el archivo.');
+        return;
+      }
+      const lines = (csvContent as string).split('\n'); // Forzamos el tipo a string
+      
+      // Obtener encabezados
+      const headers = lines[0].split(',');
+  
+      // Convertir CSV a un array de objetos JSON
+      const jsonData = lines.slice(1).map(line => {
+        const values = line.split(',');
+        const obj = {};
+  
+        // Crear el objeto JSON personalizado
+        headers.forEach((header, index) => {
+          obj[header.trim()] = values[index]?.trim() || null;
+        });
+  
+        return {
+          id: obj['ID'], // Modificar según los campos del CSV
+          nombre: obj['Nombre'],
+          email: obj['Email'],
+          datosAdicionales: {
+            telefono: obj['Teléfono'],
+            direccion: obj['Dirección'],
+          }
+        };
+      });
+  
+      console.log(JSON.stringify(jsonData, null, 2));
+    };
+  
+    reader.readAsText(file);
+  }*/
   // -------------------------------------------------------------------------------------------------------------
 
   //     PopUP observaciones Y Botones visibilidaes

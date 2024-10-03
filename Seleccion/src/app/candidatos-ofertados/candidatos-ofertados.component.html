@@ -21,7 +21,7 @@
 
 <h1 class="title">Candidatos Ofertados</h1>
 
-<div class="botones-funcionalidades">
+<div class="botones-funcionalidades" *ngIf="!formVisible">
   <button mat-raised-button color="primary"(click)="verFormAnadir()">Añadir Candidato</button>
 </div>
 
@@ -30,7 +30,10 @@
   <h2>Añadir candidato</h2>
 
   
+  <!--<input type="file" id="csvFile" accept=".csv" />
+  <button onclick="importCSV()">Importar CSV</button>-->
 
+  
   <div class="form-group">
     <mat-form-field appearance="fill" class="full-width codope" [hidden]="true">
       <mat-label>Observaciones</mat-label>
@@ -182,10 +185,8 @@
 </div>
 
 <!-- TABLA CANDIDATOS OFERTADOS -->
+ 
 <div class="table-container">
-  <div class="botones-funcionalidades" *ngIf="!formVisible">
-    <button mat-raised-button color="primary"(click)="verFormAnadir()">Añadir Candidato</button>
-  </div>
   <table mat-table [dataSource]="ofertaLista" matSort class="mat-elevation-z8">
     <!-- Candidato Column -->
     <ng-container matColumnDef="candidato">
@@ -267,6 +268,7 @@
 </div>
 
 <!-- Footer -->
+ <div class="contenedor-footer">
 <footer class="footer">
   <div class="footer-content">
     <p>&copy; 2024 Soltel Group. Todos los derechos reservados.</p>
@@ -277,3 +279,4 @@
     </div>
   </div>
 </footer>
+</div>
