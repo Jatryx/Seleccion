@@ -3,7 +3,7 @@
 html, body {
   height: 100%;
   margin: 0;
-  overflow-x: auto; /* Permitir scroll horizontal */
+  overflow-x: auto; 
   overflow-y: hidden;
   padding: 0;
   min-height: 100vh;
@@ -15,9 +15,9 @@ html, body {
   font-size: 2.5em;
   font-weight: bold;
   text-align: center;
-  margin-top: 5vh; /* Ajustar el margen superior */
+  margin-top: 5vh; 
   color: #5781ab;
-  font-family: 'Montserrat', sans-serif; /* Aplicar la fuente a todo el cuerpo */
+  font-family: 'Montserrat', sans-serif; 
 }
 
 form {
@@ -28,7 +28,7 @@ form {
   border-radius: 10px;
   background-color: #ffffff;
   font-family: 'Arial', sans-serif;
-  box-shadow: 10px 10px 20px #c4c4c4, -10px -10px 20px #ffffff;
+  box-shadow: 2px 2px 2px #c4c4c4, -2px -2px 2px #ffffff;
 }
 
 h2 {
@@ -74,7 +74,7 @@ h2 {
 
 .anadir-cancelar {
   display: flex;
-  gap: 10px; /* Espaciado entre los botones */
+  gap: 10px; 
 }
 
 button {
@@ -113,23 +113,28 @@ button:hover {
   margin-top: 5rem;
   margin-left: 5vw;
 }
+
 .table-container {
   width: 90%; 
   margin: 1rem auto;    
   border-radius: 8px;
   background: #ffffff;
-  box-shadow: 10px 10px 20px #c4c4c4, -10px -10px 20px #ffffff;
+  box-shadow: 2px 2px 2px #c4c4c4, -2px -2px 2px #ffffff;
+  overflow-x: auto;
 }
 
 table {
   width: 100%; 
-  table-layout: fixed; 
+  table-layout: auto; 
 }
 
 th.mat-header-cell, 
 td.mat-cell {
   padding: 4px; 
-  text-align: center; 
+  text-align: center;
+  white-space: nowrap; /* Evita que el contenido se divida en varias líneas */
+  overflow: visible; /* Asegura que el contenido no se recorte */
+  text-overflow: clip; 
 }
 
 th.mat-header-cell:nth-child(9),
@@ -181,6 +186,8 @@ td.mat-cell {
     font-size: 0.8em; /* Ajustar el tamaño de la fuente del botón */
   }
 }
+
+
 
 .header {
   display: flex;
@@ -251,11 +258,11 @@ mat-menu {
   color: #030303 !important; 
 }
 .contenedor-footer{
-  flex: 1; /* Ocupa todo el espacio disponible, empujando el footer hacia abajo */
+  flex: 1; 
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Evita que el contenido se centre verticalmente */
-  overflow-y: auto; /* Permite el scroll si la lista es larga */
+  justify-content: flex-start; 
+  overflow-y: auto; 
 }
 .footer {
   background-color: #f8f9fa; 
@@ -267,7 +274,8 @@ mat-menu {
   box-sizing: border-box;
   position: relative;
   bottom: 0;
-  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .footer-content {
