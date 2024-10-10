@@ -92,11 +92,11 @@ public class OfertasController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe una oferta con el nombre del candidato: " + nombreCandidato + " y el id de la petición: " + idPeticion);
         }
 
-        Optional<CandidatosModel> candidatoBuscado = candidatosService.consultarCandidatosNombre(nombreCandidato);
+        Optional<CandidatosModel> candidatoBuscado = candidatosService.consultarCandidatosNombre(nombreCandidato.trim().toUpperCase());
         Optional<EstadoModel> estadoBuscado = estadoService.consultarNombreEstado(oferta.getEstado().getEstado());
-        Optional<UsuarioModel> usuarioBuscado = usuarioService.consultarUsuarioCodope(oferta.getUsuario().getCodope());
-        Optional<UbicacionModel> ubicacionBuscada = ubicacionService.consultarNombreUbicacion(oferta.getUbicacion().getNombreProvincia());
-        Optional<PuestoModel> puestoBuscado = puestoService.consultarNombrePuesto(oferta.getPuesto().getNombrePuesto());
+        Optional<UsuarioModel> usuarioBuscado = usuarioService.consultarUsuarioCodope(oferta.getUsuario().getCodope().trim().toUpperCase());
+        Optional<UbicacionModel> ubicacionBuscada = ubicacionService.consultarNombreUbicacion(oferta.getUbicacion().getNombreProvincia().trim().toUpperCase());
+        Optional<PuestoModel> puestoBuscado = puestoService.consultarNombrePuesto(oferta.getPuesto().getNombrePuesto().trim().toUpperCase());
         Optional<RecruitingModel> recruitingBuscado = recruitingService.consultarRecruitingPorId(idPeticion);
 
         OfertasModel nuevaOferta = new OfertasModel();
@@ -155,16 +155,29 @@ public class OfertasController {
         }
         
         if (recruitingBuscado.isPresent()) {
-        	// Proceso existe
-        	RecruitingModel recruiting = recruitingBuscado.get();
-        	nuevaOferta.setRecruiting(recruiting);
+            // Proceso Recruiting existe
+            RecruitingModel recruiting = recruitingBuscado.get();
+            nuevaOferta.setRecruiting(recruiting);
         } else {
-        	// Proceso no existe
-        	EmpresaModel empresa = empresaService.guardarEmpresa(oferta.getRecruiting().getEmpresa());
-        	oferta.getRecruiting().setEmpresa(empresa); 
-        	RecruitingModel recruiting = recruitingService.guardarRecruiting(oferta.getRecruiting());
-        	nuevaOferta.setRecruiting(recruiting);
+            // Proceso Recruiting no existe
+            Optional<EmpresaModel> empresaBuscada = empresaService.consultarNombreEmpresa(oferta.getRecruiting().getEmpresa().getNombreEmpresa().trim().toUpperCase());
+
+            EmpresaModel empresa;
+            if (empresaBuscada.isPresent()) {
+                // La empresa ya existe
+                empresa = empresaBuscada.get();
+            } else {
+                // La empresa no existe, la guardamos
+                empresa = empresaService.guardarEmpresa(oferta.getRecruiting().getEmpresa());
+            }
+
+            // Ahora guarda el Recruiting con la empresa asociada
+            RecruitingModel recruiting = oferta.getRecruiting();
+            recruiting.setEmpresa(empresa);  // Asocia la empresa antes de guardar
+            recruiting = recruitingService.guardarRecruiting(recruiting);
+            nuevaOferta.setRecruiting(recruiting);
         }
+
         
 
         nuevaOferta.setExperiencia(oferta.getExperiencia());
