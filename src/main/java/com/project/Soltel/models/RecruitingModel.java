@@ -21,6 +21,9 @@ public class RecruitingModel {
     @Column(nullable = false, length = 50)
     private String nombreProyecto;
     
+    @Column(nullable = false, length = 50)
+    private String URL;
+    
     @Column
     private Boolean activo;
     
@@ -52,6 +55,14 @@ public class RecruitingModel {
 		this.nombreProyecto = nombreProyecto;
 	}
 
+	public String getURL() {
+		return URL;
+	}
+
+	public void setURL(String uRL) {
+		URL = uRL;
+	}
+
 	public Boolean getActivo() {
 		return activo;
 	}
@@ -68,11 +79,16 @@ public class RecruitingModel {
 		super();
 	}
 
-	public RecruitingModel(EmpresaModel empresa, String nombreProyecto, Boolean activo) {
+	public RecruitingModel(Integer idRecruiting, EmpresaModel empresa, String nombreProyecto, String uRL,
+			Boolean activo) {
 		super();
+		IdRecruiting = idRecruiting;
 		this.empresa = empresa;
 		this.nombreProyecto = nombreProyecto;
+		URL = uRL;
 		this.activo = activo;
 	}
+
+
     
 }

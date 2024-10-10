@@ -27,6 +27,7 @@ import { CandidatosService } from '../services/serviceCandidatos/candidatos.serv
 import { RecruitingService } from '../services/serviceRecruiting/recruiting.service';
 import { EmpresaService } from '../services/serviceEmpresa/empresa.service';
 import * as Papa from 'papaparse';
+import { LoadingComponent } from '../loading/loading.component'; // Asegúrate de importar el componente
 interface CsvRow {
   [key: string]: string | null; // Index signature para claves dinámicas
 }
@@ -53,6 +54,7 @@ interface CsvRow {
     MatNativeDateModule,
     MatIconModule,
     MatMenuModule,
+    LoadingComponent,
   ],
   providers: [OfertasService, UbicacionService, PuestoService, EstadoService, CandidatosService, RecruitingService, EmpresaService]
 })
@@ -61,6 +63,9 @@ export class CandidatosOfertadosComponent implements OnInit {
   faHome = faHome;
   formVisible: boolean = false;
   isReadonlyProyecto: boolean = false;
+  loading: boolean = false;
+  insertado: boolean = false;
+  mensajeInsertado: string = "";
   candidatoForm: FormGroup;
   ofertaLista = new MatTableDataSource<Ofertas>([]);
   provinciaLista: string[];
@@ -111,6 +116,11 @@ export class CandidatosOfertadosComponent implements OnInit {
     private empresaService: EmpresaService,
     private dialog: MatDialog
   ) {
+    const mensajeGuardado = localStorage.getItem('mensajeInsertado');
+    if (mensajeGuardado) {
+      this.mensajeInsertado = mensajeGuardado;
+      this.insertado = true;
+    }
     this.candidatoForm = this.fb.group({
       candidato: ['', Validators.required],
       codope: [''],
@@ -323,7 +333,9 @@ export class CandidatosOfertadosComponent implements OnInit {
   
   filtroProyecto(value: string): string[] {
     const filtroProyecto = value.toLowerCase();
-    return this.proyectoLista.filter(option => option.toLowerCase().includes(filtroProyecto));
+    // Usamos Set para eliminar duplicados
+    return Array.from(new Set(this.proyectoLista))
+      .filter(option => option.toLowerCase().includes(filtroProyecto));
   }
 
   filtradoProyectos() {
@@ -376,7 +388,7 @@ export class CandidatosOfertadosComponent implements OnInit {
       // Construir el objeto en el formato deseado
       const nuevoCandidato = {
         usuario: {
-          codope: formValues.codope,
+          codope: "BAC",
           contraseña: "contraseña_default", // Ajusta según sea necesario
           activo: true
         },
@@ -423,11 +435,12 @@ export class CandidatosOfertadosComponent implements OnInit {
         activo: true,
         idOferta: 0 // Autocompletado o manejado en el backend
       };
-  
       // Aquí puedes enviar 'nuevoCandidato' al servidor
       this.ofertaService.postOferta(nuevoCandidato).subscribe(
         response => {
           console.log('Oferta enviada con éxito:', response);
+          this.mensajeInsertado = `Se ha añadido la oferta de: <br> ${formValues.candidato} <br> con ID de petición: <br> ${formValues.idPeticion}`;
+          localStorage.setItem('mensajeInsertado', this.mensajeInsertado);
           location.reload();
         },
         error => {
@@ -445,106 +458,96 @@ export class CandidatosOfertadosComponent implements OnInit {
   }
 
 
-  importCSV() {
-    const fileInput = document.getElementById('csvFile') as HTMLInputElement | null;
+  async importCSV(event: Event) {
+    const fileInput = event.target as HTMLInputElement | null;
     if (!fileInput || !fileInput.files) {
-      console.error('El archivo no ha sido seleccionado.');
-      return;
+        console.error('El archivo no ha sido seleccionado.');
+        return;
     }
 
     const file = fileInput.files[0]; // Obtener el archivo seleccionado
+    this.loading = true;
+    Papa.parse<CsvRow>(file, {
+        header: true, // Convertir las líneas en objetos usando los encabezados
+        skipEmptyLines: true, // Ignorar líneas vacías en el CSV
+        complete: async (results) => {
+            const totalRegistros = results.data.length; // Contar el total de registros
+            console.log(totalRegistros);
+            let registrosEnviados = 0; // Contador de registros enviados
 
-    Papa.parse(file, {
-      header: true, // Convertir las líneas en objetos usando los encabezados
-      skipEmptyLines: true, // Ignorar líneas vacías en el CSV
-      complete: (results) => {
-        const totalRegistros = results.data.length; // Contar el total de registros
-        console.log(totalRegistros)
-        let registrosEnviados = 0; // Contador de registros enviados
-        // results.data contiene el array de objetos ya parseados
-        const jsonData = results.data.map((row: any) => {
-          // Construir el objeto en el formato deseado
-          const nuevoCandidato = {
-            usuario: {
-              codope: row['CODOPE'], // Mapear codope desde el CSV
-              contraseña: "contraseña_default", // Ajusta según sea necesario
-              activo: true
-            },
-            recruiting: {
-              empresa: {
-                nombreEmpresa: row['CLIENTE'], // Asumiendo que 'CLIENTE' corresponde a 'nombreEmpresa'
-                activo: true,
-                idEmpresa: 0 // Autocompletado o manejado en el backend
-              },
-              nombreProyecto: row['PROYECTO'],
-              activo: true,
-              idRecruiting: row['ID PETICIÓN'] // Autocompletado o manejado en el backend
-            },
-            ubicacion: {
-              nombreProvincia: row['UBICACIÓN'],
-              activo: true,
-              idUbicacion: 0 // Autocompletado o manejado en el backend
-            },
-            puesto: {
-              nombrePuesto: row['PERFIL'],
-              activo: true,
-              idPuesto: 0 // Autocompletado o manejado en el backend
-            },
-            tecnologias: row['TECNOLOGÍA'], // Asumiendo que esto es una lista o un string
-            experiencia: row['AÑOS EXPERIENCIA'], // Ajusta según sea necesario
-            salario: parseFloat(row['SALARIO (SB)'].replace(',', '.')), // Convertir a número, ajustando el formato
-            tarifa: parseFloat(row['TARIFA  DE INCORPORACIÓN'].replace(',', '.')), // Convertir a número, ajustando el formato
-            rentabilidadCliente: parseFloat(row['RENTABILIDAD QUE CORRESPONDE AL CLIENTE'].replace(',', '.')), // Convertir a número, ajustando el formato
-            rentabilidadClienteIncorpor: parseFloat(row['RENTABILIDAD APLICADA AL CLIENTE EN LA INCORPORACIÓN'].replace(',', '.')), // Convertir a número, ajustando el formato
-            estado: {
-              estado: row['ESTADO'],
-              activo: true,
-              idEstado: 0 // Autocompletado o manejado en el backend
-            },
-            fechaActualizacion: new Date().toISOString(), // Establecer la fecha actual
-            observaciones: row['RESUMEN'], // Ajusta según sea necesario
-            historicoCambioEstados: "", // Ajusta según sea necesario
-            candidato: {
-              nombreCandidato: row['CANDIDATO'],
-              telefono: row['TELEFONO'] || null, // Asegúrate de que existe este campo en tu CSV
-              activo: true,
-              idCandidato: 0 // Autocompletado o manejado en el backend
-            },
-            activo: true,
-            idOferta: 0 // Autocompletado o manejado en el backend
-          };
+            for (const row of results.data) {
+                // Construir el objeto en el formato deseado
+                const nuevoCandidato = {
+                    usuario: {
+                        codope: row['CODOPE'], // Mapear codope desde el CSV
+                        contraseña: "contraseña_default", // Ajusta según sea necesario
+                        activo: true
+                    },
+                    recruiting: {
+                        empresa: {
+                            nombreEmpresa: row['CLIENTE'], // Asumiendo que 'CLIENTE' corresponde a 'nombreEmpresa'
+                            activo: true,
+                            idEmpresa: 0 // Autocompletado o manejado en el backend
+                        },
+                        nombreProyecto: row['PROYECTO'],
+                        activo: true,
+                        idRecruiting: row['ID PETICIÓN'] // Autocompletado o manejado en el backend
+                    },
+                    ubicacion: {
+                        nombreProvincia: row['UBICACIÓN'],
+                        activo: true,
+                        idUbicacion: 0 // Autocompletado o manejado en el backend
+                    },
+                    puesto: {
+                        nombrePuesto: row['PERFIL'],
+                        activo: true,
+                        idPuesto: 0 // Autocompletado o manejado en el backend
+                    },
+                    tecnologias: row['TECNOLOGÍA'], // Asumiendo que esto es una lista o un string
+                    experiencia: row['AÑOS EXPERIENCIA'], // Ajusta según sea necesario
+                    salario: parseFloat(row['SALARIO (SB)']?.replace(',', '.') || '0'), // Convertir a número
+                    tarifa: parseFloat(row['TARIFA  DE INCORPORACIÓN']?.replace(',', '.') || '0'), // Convertir a número
+                    rentabilidadCliente: parseFloat(row['RENTABILIDAD QUE CORRESPONDE AL CLIENTE']?.replace(',', '.') || '0'), // Convertir a número
+                    rentabilidadClienteIncorpor: parseFloat(row['RENTABILIDAD APLICADA AL CLIENTE EN LA INCORPORACIÓN']?.replace(',', '.') || '0'), // Convertir a número
+                    estado: {
+                        estado: row['ESTADO'],
+                        activo: true,
+                        idEstado: 0 // Autocompletado o manejado en el backend
+                    },
+                    fechaActualizacion: new Date().toISOString(), // Establecer la fecha actual
+                    observaciones: row['RESUMEN'], // Ajusta según sea necesario
+                    historicoCambioEstados: "", // Ajusta según sea necesario
+                    candidato: {
+                        nombreCandidato: row['CANDIDATO'],
+                        telefono: row['TELEFONO'] || null, // Asegúrate de que existe este campo en tu CSV
+                        activo: true,
+                        idCandidato: 0 // Autocompletado o manejado en el backend
+                    },
+                    activo: true,
+                    idOferta: 0 // Autocompletado o manejado en el backend
+                };
 
-          // Aquí puedes enviar 'nuevoCandidato' al servidor
-          this.ofertaService.postOferta(nuevoCandidato).subscribe(
-            response => {
-              console.log('Oferta enviada con éxito:', response);
-              registrosEnviados++;
-              console.log(registrosEnviados)
-              /*if (registrosEnviados === totalRegistros) {
-                console.log('Todos los registros han sido enviados. Recargando la página...');
-                location.reload(); // Recargar la página
-              }*/
-            },
-            error => {
-              console.error('Error al enviar la oferta:', error);
-              if (error.error) {
-                console.error('Detalles del error:', error.error); // Detalles adicionales del error
-              }
-              registrosEnviados++;
-              console.log(registrosEnviados)
-              /*if (registrosEnviados === totalRegistros) {
-                console.log('Todos los registros han sido procesados. Recargando la página...');
-                location.reload(); // Recargar la página
-              }*/
+                try {
+                    const response = await this.ofertaService.postOferta(nuevoCandidato).toPromise();
+                    console.log('Oferta enviada con éxito:', response);
+                    registrosEnviados++;
+                } catch (error) {
+                    console.error('Error al enviar la oferta:', error);
+                    if (typeof error === 'object' && error !== null && 'error' in error) {
+                        console.error('Detalles del error:', (error as { error?: any }).error); // Acceder a error de forma segura
+                    }
+                }
             }
-          );
-
-          return nuevoCandidato; // Retorna el nuevo candidato si es necesario
-        });
-        console.log(JSON.stringify(jsonData, null, 2));
-      }
+            this.mensajeInsertado = `Todos los registros han sido procesados. Registros añadidos: ${registrosEnviados}/${totalRegistros}`;
+            localStorage.setItem('mensajeInsertado', this.mensajeInsertado);
+            // Recargar la página una vez que se han procesado todos los registros
+            location.reload();
+        }
     });
-  }
+}
+
+
+
 
     
   // -------------------------------------------------------------------------------------------------------------
