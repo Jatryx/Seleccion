@@ -21,7 +21,7 @@ public class RecruitingModel {
     @Column(nullable = false, length = 50)
     private String nombreProyecto;
     
-    @Column(nullable = false, length = 50)
+    @Column(nullable = true, length = 50)
     private String URL;
     
     @Column
