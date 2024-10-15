@@ -126,6 +126,7 @@ export class CandidatosOfertadosComponent implements OnInit {
       codope: [''],
       telefono: ['', [Validators.required, Validators.pattern('[0-9]{9}')]],
       idPeticion: ['', [Validators.required, Validators.min(0)]],
+      url:['', [Validators.required, Validators.min(0)]],
       proyecto: ['', Validators.required],
       cliente: ['', Validators.required],
       ubicacion: ['', Validators.required],
@@ -400,6 +401,7 @@ export class CandidatosOfertadosComponent implements OnInit {
           },
           nombreProyecto: formValues.proyecto,
           activo: true,
+          url: formValues.url,
           idRecruiting: formValues.idPeticion // Autocompletado o manejado en el backend
         },
         ubicacion: {
@@ -491,6 +493,7 @@ export class CandidatosOfertadosComponent implements OnInit {
                         },
                         nombreProyecto: row['PROYECTO'],
                         activo: true,
+                        url: null,
                         idRecruiting: row['ID PETICIÓN'] // Autocompletado o manejado en el backend
                     },
                     ubicacion: {
