@@ -573,7 +573,7 @@ export class CandidatosOfertadosComponent implements OnInit {
             this.mensajeInsertado = `Todos los registros han sido procesados. Registros añadidos: ${registrosEnviados}/${totalRegistros}`;
             localStorage.setItem('mensajeInsertado', this.mensajeInsertado);
             // Recargar la página una vez que se han procesado todos los registros
-            //location.reload();
+            location.reload();
         }
     });
 }
