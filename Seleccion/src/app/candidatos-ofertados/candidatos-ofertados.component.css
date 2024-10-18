@@ -123,13 +123,17 @@ button:hover {
 
 table {
   width: 100%; 
-  table-layout: fixed; 
+  table-layout: auto; 
 }
 
 th.mat-header-cell, 
 td.mat-cell {
   padding: 4px; 
-  text-align: center; 
+  text-align: center;
+  text-align: center;
+  white-space: nowrap; /* Evita que el contenido se divida en varias líneas */
+  overflow: visible; /* Asegura que el contenido no se recorte */
+  text-overflow: clip; 
 }
 
 th.mat-header-cell:nth-child(9),
@@ -268,6 +272,8 @@ mat-menu {
   position: relative;
   bottom: 0;
   box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .footer-content {
