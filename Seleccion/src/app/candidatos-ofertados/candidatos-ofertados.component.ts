@@ -65,7 +65,9 @@ export class CandidatosOfertadosComponent implements OnInit {
   isReadonlyProyecto: boolean = false;
   loading: boolean = false;
   insertado: boolean = false;
-  mensajeInsertado: string = "";
+  mensajeInsertado: string = "insertado";
+  error: boolean = false;
+  mensajeError: string = "error";
   candidatoForm: FormGroup;
   ofertaLista = new MatTableDataSource<Ofertas>([]);
   provinciaLista: string[];
@@ -102,7 +104,6 @@ export class CandidatosOfertadosComponent implements OnInit {
     'estado', 
     'fechaActualizacion', 
     'resumen',
-    'actu'
   ];
 
   constructor(
@@ -116,17 +117,30 @@ export class CandidatosOfertadosComponent implements OnInit {
     private empresaService: EmpresaService,
     private dialog: MatDialog
   ) {
-    const mensajeGuardado = localStorage.getItem('mensajeInsertado');
-    if (mensajeGuardado) {
-      this.mensajeInsertado = mensajeGuardado;
+    const mensajeInfo = localStorage.getItem('mensajeInsertado');
+    const mensajeError = localStorage.getItem('mensajeError');
+
+    
+    if (mensajeInfo && mensajeInfo !== "insertado") {
+      console.log(mensajeInfo)
+      this.mensajeInsertado = mensajeInfo ?? ''; // Asignamos un string vacío si es null
       this.insertado = true;
+      this.error = false;
     }
+      if (mensajeError && mensajeError !== "error") {
+      console.log(mensajeError)
+      this.mensajeError = mensajeError ?? ''; // Asignamos un string vacío si es null
+      this.insertado = false;
+      this.error = true;
+    }
+    // Verificamos si mensajeError no es nulo y no es igual a "error"
+
     this.candidatoForm = this.fb.group({
       candidato: ['', Validators.required],
       codope: [''],
       telefono: ['', [Validators.required, Validators.pattern('[0-9]{9}')]],
       idPeticion: ['', [Validators.required, Validators.min(0)]],
-      url:['', [Validators.required, Validators.min(0)]],
+      url:[''],
       proyecto: ['', Validators.required],
       cliente: ['', Validators.required],
       ubicacion: ['', Validators.required],
@@ -389,8 +403,8 @@ export class CandidatosOfertadosComponent implements OnInit {
       // Construir el objeto en el formato deseado
       const nuevoCandidato = {
         usuario: {
-          codope: "BAC",
-          contraseña: "contraseña_default", // Ajusta según sea necesario
+          codope: "IACA",
+          contraseña: "contraseña_default",
           activo: true
         },
         recruiting: {
@@ -402,7 +416,7 @@ export class CandidatosOfertadosComponent implements OnInit {
           nombreProyecto: formValues.proyecto,
           activo: true,
           url: formValues.url,
-          idRecruiting: formValues.idPeticion // Autocompletado o manejado en el backend
+          idRecruiting: formValues.idPeticion
         },
         ubicacion: {
           nombreProvincia: formValues.ubicacion,
@@ -417,17 +431,17 @@ export class CandidatosOfertadosComponent implements OnInit {
         tecnologias: formValues.tecnologia,
         experiencia: formValues.experiencia,
         salario: formValues.salario,
-        tarifa: formValues.tarifa, // Ajusta según sea necesario
-        rentabilidadCliente: formValues.rentabilidadCliente, // Ajusta según sea necesario
-        rentabilidadClienteIncorpor: formValues.rentabilidadPropuesta, // Ajusta según sea necesario
+        tarifa: formValues.tarifa,
+        rentabilidadCliente: formValues.rentabilidadCliente,
+        rentabilidadClienteIncorpor: formValues.rentabilidadPropuesta, 
         estado: {
           estado: formValues.estado,
           activo: true,
           idEstado: 0 // Autocompletado o manejado en el backend
         },
-        fechaActualizacion: new Date().toISOString(), // Establecer la fecha actual
-        observaciones: formValues.resumen, // Ajusta según sea necesario
-        historicoCambioEstados: "", // Ajusta según sea necesario
+        fechaActualizacion: new Date().toISOString(),
+        observaciones: formValues.resumen, 
+        historicoCambioEstados: "",
         candidato: {
           nombreCandidato: formValues.candidato,
           telefono: formValues.telefono,
@@ -437,23 +451,38 @@ export class CandidatosOfertadosComponent implements OnInit {
         activo: true,
         idOferta: 0 // Autocompletado o manejado en el backend
       };
+
       // Aquí puedes enviar 'nuevoCandidato' al servidor
       this.ofertaService.postOferta(nuevoCandidato).subscribe(
         response => {
           console.log('Oferta enviada con éxito:', response);
           this.mensajeInsertado = `Se ha añadido la oferta de: <br> ${formValues.candidato} <br> con ID de petición: <br> ${formValues.idPeticion}`;
           localStorage.setItem('mensajeInsertado', this.mensajeInsertado);
+          localStorage.setItem('mensajeError', "error");
           location.reload();
         },
         error => {
           console.error('Error al enviar la oferta:', error);
+        
+          // Verificamos si el mensaje de error proviene del backend
+          this.mensajeError= 'Detalles del error: ';
+          
           if (error.error) {
             console.error('Detalles del error:', error.error); // Detalles adicionales del error
+        
+            // Capturamos el mensaje enviado por el backend
+            this.mensajeError += error.error; // Aquí el backend ya envía el mensaje "Ya existe una oferta..."
+          } else {
+            this.mensajeError += 'Ocurrió un error desconocido.';
           }
+        
+          // Guardamos el mensaje en el localStorage
+          localStorage.setItem('mensajeError', this.mensajeError);
+          localStorage.setItem('mensajeInsertado', "insertado");
+          location.reload();
         }
       );
-      // Resetear el formulario
-      this.candidatoForm.reset();
+
     } else {
       console.log('Formulario no válido');
     }
@@ -544,7 +573,7 @@ export class CandidatosOfertadosComponent implements OnInit {
             this.mensajeInsertado = `Todos los registros han sido procesados. Registros añadidos: ${registrosEnviados}/${totalRegistros}`;
             localStorage.setItem('mensajeInsertado', this.mensajeInsertado);
             // Recargar la página una vez que se han procesado todos los registros
-            location.reload();
+            //location.reload();
         }
     });
 }
@@ -561,6 +590,11 @@ export class CandidatosOfertadosComponent implements OnInit {
 
   verFormAnadir(): void {
     this.formVisible = !this.formVisible; // Cambiar el estado de la variable
+  }
+
+  cerrar(): void {
+    this.insertado = false
+    this.error = false
   }
 
   openPopup(oferta: Ofertas): void {
