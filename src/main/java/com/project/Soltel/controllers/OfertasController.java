@@ -104,8 +104,10 @@ public class OfertasController {
         if (candidatoBuscado.isPresent()) {
             // El candidato existe
             CandidatosModel candidato = candidatoBuscado.get();
-            nuevaOferta.setCandidato(candidato);
-            /*nuevaOferta.setNombreCandidato(candidato.getNombreCandidato());*/
+            if (candidato.getTelefono() != oferta.getCandidato().getTelefono()) {
+            	 candidato.setTelefono(oferta.getCandidato().getTelefono());
+            }
+           nuevaOferta.setCandidato(candidato);
         } else {
             
             // El candidato no existe
