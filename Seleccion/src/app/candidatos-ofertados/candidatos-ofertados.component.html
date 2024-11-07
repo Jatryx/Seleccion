@@ -102,8 +102,20 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Teléfono</mat-label>
-      <input matInput formControlName="telefono" maxlength="9" pattern="[0-9]{9}" />
+      <input 
+        matInput 
+        formControlName="telefono" 
+        maxlength="9" 
+        pattern="[0-9]{9}" 
+        [readonly]="isReadonlyCandidato" 
+        [matAutocomplete]="autoTelefono">
+      <mat-autocomplete #autoTelefono="matAutocomplete">
+        <mat-option *ngFor="let option of filtroTelefonos | async" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
+    
 
     <mat-form-field appearance="fill">
       <mat-label>Cliente</mat-label>
@@ -220,7 +232,8 @@
   </div>
 
   <div class="anadir-cancelar">
-    <button mat-raised-button color="primary" type="submit">Añadir</button>
+    <button mat-raised-button color="primary" type="submit" *ngIf="botonAnadirOActualizar == true">Añadir</button>
+    <button mat-raised-button color="primary" type="submit" *ngIf="botonAnadirOActualizar == false">Actualizar</button>
     <button mat-raised-button color="accent" class="cancelar" type="button" (click)="verFormAnadir()">Cancelar</button>
   </div>
 </form>
@@ -233,7 +246,7 @@
     <!-- Candidato Column -->
     <ng-container matColumnDef="candidato">
       <th mat-header-cell *matHeaderCellDef>Candidato</th>
-      <td mat-cell *matCellDef="let oferta"><a href="">{{ oferta.candidato.nombreCandidato }}</a></td>
+      <td mat-cell *matCellDef="let oferta" (click)="ofertaPorID(oferta.candidato.nombreCandidato, oferta.recruiting.idRecruiting)">{{ oferta.candidato.nombreCandidato }}</td>
     </ng-container>
 
     <!-- Telefono Column -->

@@ -24,7 +24,7 @@ export class OfertasService {
     return this.http.post<any>(this.apiRoot + '/insertar', oferta);
   }
 
-  putOferta(nombreCandidato: string, idRecruiting: number, oferta: Ofertas): Observable<Object>{
+  putOferta(nombreCandidato: string, idRecruiting: number, oferta: any): Observable<Object>{
     return this.http.put<Ofertas>(this.apiRoot + '/actualizar/' + nombreCandidato + '/' + idRecruiting, oferta);
   }
 

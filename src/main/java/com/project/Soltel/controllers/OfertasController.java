@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -197,7 +198,7 @@ public class OfertasController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOferta);
     }
 
-    @PutMapping("/actualizarOferta/{nombreCandidato}/{idRecruiting}")
+    @PutMapping("/actualizar/{nombreCandidato}/{idRecruiting}")
     public ResponseEntity<?> updateOferta(@PathVariable("nombreCandidato") String nombreCandadito,
     		@PathVariable("idRecruiting") int idRecruiting, @RequestBody OfertasModel ofertaDetails) {
     	
@@ -231,6 +232,13 @@ public class OfertasController {
 	        if (candidatoBuscado.isPresent()) {
 	            // El candidato existe
 	            CandidatosModel candidato = candidatoBuscado.get();
+	            
+	            BigDecimal nuevoTelefono = ofertaDetails.getCandidato().getTelefono();
+	            if (nuevoTelefono.compareTo(candidato.getTelefono()) != 0) {
+	                // Actualizamos el número de teléfono
+	                candidato.setTelefono(nuevoTelefono);
+	            }
+	            
 	            ofertaActualizada.setCandidato(candidato);
 	            /*nuevaOferta.setNombreCandidato(candidato.getNombreCandidato());*/
 	        } else {
