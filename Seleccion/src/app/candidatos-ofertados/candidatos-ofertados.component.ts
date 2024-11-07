@@ -27,7 +27,8 @@ import { CandidatosService } from '../services/serviceCandidatos/candidatos.serv
 import { RecruitingService } from '../services/serviceRecruiting/recruiting.service';
 import { EmpresaService } from '../services/serviceEmpresa/empresa.service';
 import * as Papa from 'papaparse';
-import { LoadingComponent } from '../loading/loading.component'; // Asegúrate de importar el componente
+import { LoadingComponent } from '../loading/loading.component';
+import { tap } from 'rxjs/operators';
 interface CsvRow {
   [key: string]: string | null; // Index signature para claves dinámicas
 }
@@ -63,34 +64,42 @@ export class CandidatosOfertadosComponent implements OnInit {
   faHome = faHome;
   formVisible: boolean = false;
   isReadonlyProyecto: boolean = false;
+  isReadonlyCandidato: boolean = false;
+  candidatoForm: FormGroup;
+  botonAnadirOActualizar: boolean = true //True es añadir, false es actualizar
+
   loading: boolean = false;
   insertado: boolean = false;
   mensajeInsertado: string = "insertado";
   error: boolean = false;
   mensajeError: string = "error";
-  candidatoForm: FormGroup;
-  ofertaLista = new MatTableDataSource<Ofertas>([]);
-  provinciaLista: string[];
-  perfilesLista: string[];
-  estadoLista: string[];
-  tecnologiaLista: string[];
-  candidatoLista: string[];
-  empresaLista: string[];
-  recruitingLista: number[];
-  proyectoLista: string[];
-  proyecto: string = '';
-  empresa: string = '';
-  codope: string = 'IACA';
-  filtroProvincias!: Observable<string[]>;  // Observable para el autocompletado
-  filtroPerfiles!: Observable<string[]>;  // Observable para el autocompletado
+
+  filtroProvincias!: Observable<string[]>;
+  filtroPerfiles!: Observable<string[]>;
   filtroTecnologias!: Observable<string[]>; 
   filtroCandidatos!: Observable<string[]>;
   filtroRecruitings!: Observable<number[]>;
   filtroEstados!: Observable<string[]>;
   filtroEmpresas!: Observable<string[]>;
   filtroProyectos!: Observable<string[]>;
+  filtroTelefonos!: Observable<number[]>;
+
+
+  ofertaLista = new MatTableDataSource<Ofertas>([]);
+  ofertaPorIDValor?: Ofertas 
+  provinciaLista: string[];
+  perfilesLista: string[];
+  estadoLista: string[];
+  tecnologiaLista: string[];
+  candidatoLista: string[];
+  candidatoTelLista: number[];
+  empresaLista: string[];
+  recruitingLista: number[];
+  proyectoLista: string[];
+  proyecto: string = '';
+  empresa: string = '';
+  codope: string = 'IACA';
   fecha: Date = new Date();  
-  mostrarCampoOtro = false;
   displayedColumns: string[] = [
     'candidato', 
     'telefono',
@@ -153,7 +162,9 @@ export class CandidatosOfertadosComponent implements OnInit {
       rentabilidadPropuesta: ['', [Validators.min(0)]],
       estado: [new Date(), Validators.required],
       fechaActualizacion: ['', Validators.required],
-      resumen: ['']
+      resumen: [''],
+      candidatoAntesActualizacion: [''],
+      idRecruitingAntesActualizacion: ['']
     });
   }
 
@@ -189,6 +200,49 @@ export class CandidatosOfertadosComponent implements OnInit {
     );
   }
 
+ofertaPorID(candidato: string, idRecruiting: number) {
+  this.ofertaService.getOfertaPorNombreCandidatoEIdRecruiting(candidato, idRecruiting).subscribe(
+    data => {
+      this.botonAnadirOActualizar = false;
+      this.ofertaPorIDValor = data;
+
+      this.candidatoForm.patchValue({
+        candidato: this.ofertaPorIDValor.candidato?.nombreCandidato,
+        codope: this.ofertaPorIDValor.usuario?.codope,
+        telefono: this.ofertaPorIDValor.candidato?.numero,
+        idPeticion: this.ofertaPorIDValor.recruiting?.idRecruiting,
+        url: this.ofertaPorIDValor.recruiting?.URL,
+        proyecto: this.ofertaPorIDValor.recruiting?.nombreProyecto,
+        cliente: this.ofertaPorIDValor.recruiting?.empresa?.nombreEmpresa,
+        ubicacion: this.ofertaPorIDValor.ubicacion?.nombreProvincia,
+        perfil: this.ofertaPorIDValor.puesto?.nombrePuesto,
+        tecnologia: this.ofertaPorIDValor.tecnologias,
+        experiencia: this.ofertaPorIDValor.experiencia,
+        salario: this.ofertaPorIDValor.salario,
+        tarifa: this.ofertaPorIDValor.tarifa,
+        rentabilidadCliente: this.ofertaPorIDValor.rentabilidadCliente,
+        rentabilidadPropuesta: this.ofertaPorIDValor.rentabilidadClienteIncorpor,
+        estado: this.ofertaPorIDValor.estado?.estado,
+        fechaActualizacion: this.ofertaPorIDValor.fechaActualizacion,
+        resumen: this.ofertaPorIDValor.observaciones,
+        candidatoAntesActualizacion: candidato,
+        idRecruitingAntesActualizacion: idRecruiting
+      });
+
+      // Verificar que `recruiting` exista antes de llamar a `cargarProyectoPorID`
+      if (this.ofertaPorIDValor.recruiting?.idRecruiting) {
+        setTimeout(() => {
+          this.cargarProyectoPorID(this.ofertaPorIDValor!.recruiting.idRecruiting);
+        });
+      }
+
+      this.formVisible = true; // Cambiar el estado de la variable
+    },
+    error => {
+      console.error('Error al cargar la oferta:', error);
+    }
+  );
+}
 
 
   cargarProvincias() {
@@ -234,11 +288,39 @@ export class CandidatosOfertadosComponent implements OnInit {
     this.candidatoService.getCandidatos().subscribe(
       data => {
         this.candidatoLista = data.map(candidato => candidato.nombreCandidato);
+        this.candidatoTelLista = data.map(telefono => telefono.numero);
         // Llama a filtrado aquí después de cargar estados
         this.filtradoCandidato();
       },
       error => {
         console.error('Error al cargar los estados:', error);
+      }
+    );
+  }
+
+  cargarCandidatoPorNombre(nombre: string) {
+    this.candidatoService.getCandidatoPorNombre(nombre).subscribe(
+      data => {
+        if (data) {
+          this.candidatoForm.patchValue({
+            telefono: data.numero,
+          });
+          this.isReadonlyCandidato = true; // Hacer que el campo sea solo lectura si existe el candidato
+        } else {
+          this.candidatoForm.patchValue({
+            candidato: '',
+            telefono: '',
+          });
+          this.isReadonlyCandidato = false; // Permitir edición si no hay candidato
+        }
+      },
+      error => {
+        console.error('Error al cargar el candidato:', error);
+        this.candidatoForm.patchValue({
+          candidato: '',
+          telefono: '',
+        });
+        this.isReadonlyCandidato = false; // Permitir edición si hay error
       }
     );
   }
@@ -310,10 +392,24 @@ export class CandidatosOfertadosComponent implements OnInit {
     return this.candidatoLista.filter(option => option.toLowerCase().includes(filtroCandidato));
   }
 
-  filtradoCandidato() {
+  /*filtradoCandidato() {
     this.filtroCandidatos = this.candidatoForm.get('candidato')!.valueChanges.pipe(
       startWith(''),
       map(value => this.filtroCandidato(value || ''))
+    );
+  }*/
+  
+  filtradoCandidato() {
+    this.filtroCandidatos = this.candidatoForm.get('candidato')!.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const nombreCandidato = value as string;
+        if (nombreCandidato) {
+          // Cargar el candidato si no está vacío
+          this.cargarCandidatoPorNombre(nombreCandidato);
+        }
+          return this.filtroCandidato(nombreCandidato);
+      })
     );
   }
 
@@ -334,6 +430,7 @@ export class CandidatosOfertadosComponent implements OnInit {
       })
     );
   }
+
   filtroEmpresa(value: string): string[] {
     const filtroEmpresa = value.toLowerCase();
     return this.empresaLista.filter(option => option.toLowerCase().includes(filtroEmpresa));
@@ -451,11 +548,40 @@ export class CandidatosOfertadosComponent implements OnInit {
         activo: true,
         idOferta: 0 // Autocompletado o manejado en el backend
       };
-
+      if (this.botonAnadirOActualizar == false){
+        console.log(nuevoCandidato)
+        this.ofertaService.putOferta(formValues.candidatoAntesActualizacion, formValues.idRecruitingAntesActualizacion, nuevoCandidato).subscribe(
+          response => {
+            this.mensajeInsertado = `Se ha añadido la oferta de: <br> ${formValues.candidato} <br> con ID de petición: <br> ${formValues.idPeticion}`;
+            localStorage.setItem('mensajeInsertado', this.mensajeInsertado);
+            localStorage.setItem('mensajeError', "error");
+            //location.reload();
+          },
+          error => {
+            console.error('Error al enviar la oferta:', error);
+          
+            // Verificamos si el mensaje de error proviene del backend
+            this.mensajeError= 'Detalles del error: ';
+            
+            if (error.error) {
+              console.error('Detalles del error:', error.error); // Detalles adicionales del error
+          
+              // Capturamos el mensaje enviado por el backend
+              this.mensajeError += error.error; // Aquí el backend ya envía el mensaje "Ya existe una oferta..."
+            } else {
+              this.mensajeError += 'Ocurrió un error desconocido.';
+            }
+          
+            // Guardamos el mensaje en el localStorage
+            localStorage.setItem('mensajeError', this.mensajeError);
+            localStorage.setItem('mensajeInsertado', "insertado");
+            //location.reload();
+          }
+        );
+      }else {
       // Aquí puedes enviar 'nuevoCandidato' al servidor
       this.ofertaService.postOferta(nuevoCandidato).subscribe(
         response => {
-          console.log('Oferta enviada con éxito:', response);
           this.mensajeInsertado = `Se ha añadido la oferta de: <br> ${formValues.candidato} <br> con ID de petición: <br> ${formValues.idPeticion}`;
           localStorage.setItem('mensajeInsertado', this.mensajeInsertado);
           localStorage.setItem('mensajeError', "error");
@@ -479,10 +605,10 @@ export class CandidatosOfertadosComponent implements OnInit {
           // Guardamos el mensaje en el localStorage
           localStorage.setItem('mensajeError', this.mensajeError);
           localStorage.setItem('mensajeInsertado', "insertado");
-          location.reload();
+          //location.reload();
         }
       );
-
+    }
     } else {
       console.log('Formulario no válido');
     }
@@ -589,7 +715,9 @@ export class CandidatosOfertadosComponent implements OnInit {
   // -------------------------------------------------------------------------------------------------------------
 
   verFormAnadir(): void {
+    this.botonAnadirOActualizar = true;
     this.formVisible = !this.formVisible; // Cambiar el estado de la variable
+    this.candidatoForm.reset();
   }
 
   cerrar(): void {
