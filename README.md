@@ -18,13 +18,13 @@ Indice
 ---------------
 
 >📝 [!NOTE]
-      >(la parte de tecnologia lista era una idea que tenia para hacer, ahora mismo solo almacena las tecnologias)
- >
-      >Lo que hace es separar todas las entradas que esten separadas por ","
- >
-      >Si tenia (Java, Angular, React) guarda cada una de las entradas en un array, en caso de que haya 2 Java no coge el segundo y asi solo >se mantienen valores unicos, la idea era que en el apartado de tecnologias pudieses autocompletar cada vez que pusieses una ","
- >
-      >Que pusieses J (te salgan todas las tecnologias por J) pusieses "," (Java, ) y luego A (te salgan todas las tecnologias por A) y asi >hasta poner todas las tecnolgias que quieras (Java, Angular, ....)
+>(la parte de tecnologia lista era una idea que tenia para hacer, ahora mismo solo almacena las tecnologias)
+>
+>Lo que hace es separar todas las entradas que esten separadas por ","
+>
+>Si tenia (Java, Angular, React) guarda cada una de las entradas en un array, en caso de que haya 2 Java no coge el segundo y asi solo >se mantienen valores unicos, la idea era que en el apartado de tecnologias pudieses autocompletar >cada vez que pusieses una ","
+>
+>Que pusieses J (te salgan todas las tecnologias por J) pusieses "," (Java, ) y luego A (te salgan todas las tecnologias por A) y asi >hasta poner todas las tecnolgias que quieras (Java, Angular, ....)
 
 ------------------
 
