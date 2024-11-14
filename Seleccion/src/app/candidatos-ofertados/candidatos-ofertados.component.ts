@@ -209,7 +209,7 @@ ofertaPorID(candidato: string, idRecruiting: number) {
       this.candidatoForm.patchValue({
         candidato: this.ofertaPorIDValor.candidato?.nombreCandidato,
         codope: this.ofertaPorIDValor.usuario?.codope,
-        telefono: this.ofertaPorIDValor.candidato?.numero,
+        telefono: this.ofertaPorIDValor.candidato?.telefono,
         idPeticion: this.ofertaPorIDValor.recruiting?.idRecruiting,
         url: this.ofertaPorIDValor.recruiting?.URL,
         proyecto: this.ofertaPorIDValor.recruiting?.nombreProyecto,
@@ -229,10 +229,10 @@ ofertaPorID(candidato: string, idRecruiting: number) {
         idRecruitingAntesActualizacion: idRecruiting
       });
 
-      // Verificar que `recruiting` exista antes de llamar a `cargarProyectoPorID`
+      // Verificar que `recruiting` exista antes de llamar a `cargarRecruitingPorID`
       if (this.ofertaPorIDValor.recruiting?.idRecruiting) {
         setTimeout(() => {
-          this.cargarProyectoPorID(this.ofertaPorIDValor!.recruiting.idRecruiting);
+          this.cargarRecruitingPorID(this.ofertaPorIDValor!.recruiting.idRecruiting);
         });
       }
 
@@ -288,7 +288,7 @@ ofertaPorID(candidato: string, idRecruiting: number) {
     this.candidatoService.getCandidatos().subscribe(
       data => {
         this.candidatoLista = data.map(candidato => candidato.nombreCandidato);
-        this.candidatoTelLista = data.map(telefono => telefono.numero);
+        this.candidatoTelLista = data.map(telefono => telefono.telefono);
         // Llama a filtrado aquí después de cargar estados
         this.filtradoCandidato();
       },
@@ -303,12 +303,13 @@ ofertaPorID(candidato: string, idRecruiting: number) {
       data => {
         if (data) {
           this.candidatoForm.patchValue({
-            telefono: data.numero,
+            telefono: data.telefono,
+            
           });
+          console.log(data.telefono)
           this.isReadonlyCandidato = true; // Hacer que el campo sea solo lectura si existe el candidato
         } else {
           this.candidatoForm.patchValue({
-            candidato: '',
             telefono: '',
           });
           this.isReadonlyCandidato = false; // Permitir edición si no hay candidato
@@ -317,7 +318,6 @@ ofertaPorID(candidato: string, idRecruiting: number) {
       error => {
         console.error('Error al cargar el candidato:', error);
         this.candidatoForm.patchValue({
-          candidato: '',
           telefono: '',
         });
         this.isReadonlyCandidato = false; // Permitir edición si hay error
@@ -340,7 +340,7 @@ ofertaPorID(candidato: string, idRecruiting: number) {
     );
   }
 
-  cargarProyectoPorID(id: number) {
+  cargarRecruitingPorID(id: number) {
     this.recruitingService.getRecruitingIdrecruiting(id).subscribe(
       data => {
         if (data) {
@@ -391,13 +391,6 @@ ofertaPorID(candidato: string, idRecruiting: number) {
     const filtroCandidato = value.toLowerCase();
     return this.candidatoLista.filter(option => option.toLowerCase().includes(filtroCandidato));
   }
-
-  /*filtradoCandidato() {
-    this.filtroCandidatos = this.candidatoForm.get('candidato')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filtroCandidato(value || ''))
-    );
-  }*/
   
   filtradoCandidato() {
     this.filtroCandidatos = this.candidatoForm.get('candidato')!.valueChanges.pipe(
@@ -424,7 +417,7 @@ ofertaPorID(candidato: string, idRecruiting: number) {
         const recruitingValue = Number(value);
         // Llama al método para verificar si el proyecto existe
         if (!isNaN(recruitingValue)) {
-          this.cargarProyectoPorID(recruitingValue);
+          this.cargarRecruitingPorID(recruitingValue);
         }
         return this.filtroRecruiting(recruitingValue);
       })

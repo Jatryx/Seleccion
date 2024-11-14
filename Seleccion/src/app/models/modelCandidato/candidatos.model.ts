@@ -2,7 +2,7 @@ export interface Candidatos {
 
     idCandidato: number,
     nombreCandidato: string,
-	numero: number,
+	telefono: number,
     activo: boolean,
     
 }
