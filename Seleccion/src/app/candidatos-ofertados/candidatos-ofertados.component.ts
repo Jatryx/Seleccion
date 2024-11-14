@@ -147,7 +147,7 @@ export class CandidatosOfertadosComponent implements OnInit {
     this.candidatoForm = this.fb.group({
       candidato: ['', Validators.required],
       codope: [''],
-      telefono: ['', [Validators.required, Validators.pattern('[0-9]{9}')]],
+      telefono: ['', Validators.pattern('[0-9]{9}')],
       idPeticion: ['', [Validators.required, Validators.min(0)]],
       url:[''],
       proyecto: ['', Validators.required],
@@ -205,6 +205,9 @@ ofertaPorID(candidato: string, idRecruiting: number) {
     data => {
       this.botonAnadirOActualizar = false;
       this.ofertaPorIDValor = data;
+
+      this.isReadonlyProyecto = false;
+      this.isReadonlyCandidato = false;
 
       this.candidatoForm.patchValue({
         candidato: this.ofertaPorIDValor.candidato?.nombreCandidato,
@@ -541,14 +544,15 @@ ofertaPorID(candidato: string, idRecruiting: number) {
         activo: true,
         idOferta: 0 // Autocompletado o manejado en el backend
       };
+
+      //false es actualizar
       if (this.botonAnadirOActualizar == false){
-        console.log(nuevoCandidato)
         this.ofertaService.putOferta(formValues.candidatoAntesActualizacion, formValues.idRecruitingAntesActualizacion, nuevoCandidato).subscribe(
           response => {
             this.mensajeInsertado = `Se ha añadido la oferta de: <br> ${formValues.candidato} <br> con ID de petición: <br> ${formValues.idPeticion}`;
             localStorage.setItem('mensajeInsertado', this.mensajeInsertado);
             localStorage.setItem('mensajeError', "error");
-            //location.reload();
+            location.reload();
           },
           error => {
             console.error('Error al enviar la oferta:', error);
@@ -568,7 +572,7 @@ ofertaPorID(candidato: string, idRecruiting: number) {
             // Guardamos el mensaje en el localStorage
             localStorage.setItem('mensajeError', this.mensajeError);
             localStorage.setItem('mensajeInsertado', "insertado");
-            //location.reload();
+            location.reload();
           }
         );
       }else {

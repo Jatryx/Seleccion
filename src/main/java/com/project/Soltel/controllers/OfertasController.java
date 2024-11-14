@@ -233,10 +233,10 @@ public class OfertasController {
 	            // El candidato existe
 	            CandidatosModel candidato = candidatoBuscado.get();
 	            
+	            if (ofertaDetails.getCandidato().getTelefono() != null) {
 	            BigDecimal nuevoTelefono = ofertaDetails.getCandidato().getTelefono();
-	            if (nuevoTelefono.compareTo(candidato.getTelefono()) != 0) {
-	                // Actualizamos el número de teléfono
-	                candidato.setTelefono(nuevoTelefono);
+	            
+	            candidato.setTelefono(nuevoTelefono);
 	            }
 	            
 	            ofertaActualizada.setCandidato(candidato);
