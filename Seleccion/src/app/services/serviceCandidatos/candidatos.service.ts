@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Candidatos } from '../../models/modelCandidato/candidatos.model';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class CandidatosService {
     return this.http.get<Candidatos[]>(this.apiRoot + '/consultar');
   }
   getCandidatoPorNombre(nombreCandidato: string): Observable<Candidatos>{
-      return this.http.get<Candidatos>(this.apiRoot + '/consultar/' + nombreCandidato);
+      return this.http.get<Candidatos>(this.apiRoot + '/consultar/' + nombreCandidato)
     }
   postCandidato(candidato: Candidatos): Observable<Object>{
     return this.http.post(this.apiRoot + '/insertar', candidato);

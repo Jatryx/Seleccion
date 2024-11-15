@@ -4,6 +4,7 @@ import com.project.Soltel.models.CandidatosModel;
 import com.project.Soltel.models.EmpresaModel;
 import com.project.Soltel.models.EstadoModel;
 import com.project.Soltel.models.OfertasModel;
+import com.project.Soltel.models.ProveedorModel;
 import com.project.Soltel.models.PuestoModel;
 import com.project.Soltel.models.RecruitingModel;
 import com.project.Soltel.models.UbicacionModel;
@@ -12,6 +13,7 @@ import com.project.Soltel.services.CandidatosService;
 import com.project.Soltel.services.EmpresaService;
 import com.project.Soltel.services.EstadoService;
 import com.project.Soltel.services.OfertaService;
+import com.project.Soltel.services.ProveedorService;
 import com.project.Soltel.services.PuestoService;
 import com.project.Soltel.services.RecruitingService;
 import com.project.Soltel.services.UbicacionService;
@@ -55,6 +57,9 @@ public class OfertasController {
 
     @Autowired
     private  UsuarioService usuarioService;
+    
+    @Autowired
+    private  ProveedorService proveedorService;
 
     // Controladores de las entidades relacionadas
     CandidatosController candidatoController = new CandidatosController();
@@ -64,6 +69,7 @@ public class OfertasController {
     RecruitingController recruitingController = new RecruitingController();
     UbicacionController ubicacionController = new UbicacionController();
     UsuarioController usuarioController = new UsuarioController();
+    ProveedorController proveedorController = new ProveedorController();
     
 
     @GetMapping("/consultar")
@@ -226,6 +232,7 @@ public class OfertasController {
 	        Optional<UbicacionModel> ubicacionBuscada = ubicacionService.consultarNombreUbicacion(ofertaDetails.getUbicacion().getNombreProvincia());
 	        Optional<PuestoModel> puestoBuscado = puestoService.consultarNombrePuesto(ofertaDetails.getPuesto().getNombrePuesto());
 	        Optional<RecruitingModel> recruitingBuscado = recruitingService.consultarRecruitingPorId(ofertaDetails.getRecruiting().getIdRecruiting());
+	        Optional<ProveedorModel> proveedorBuscado = proveedorService.consultarNombreProveedor(ofertaDetails.getProveedor().getNombreProveedor());
 
 	        OfertasModel ofertaActualizada = oferta.get();
 
@@ -233,10 +240,10 @@ public class OfertasController {
 	            // El candidato existe
 	            CandidatosModel candidato = candidatoBuscado.get();
 	            
+	            if (ofertaDetails.getCandidato().getTelefono() != null) {
 	            BigDecimal nuevoTelefono = ofertaDetails.getCandidato().getTelefono();
-	            if (nuevoTelefono.compareTo(candidato.getTelefono()) != 0) {
-	                // Actualizamos el número de teléfono
-	                candidato.setTelefono(nuevoTelefono);
+	            
+	            candidato.setTelefono(nuevoTelefono);
 	            }
 	            
 	            ofertaActualizada.setCandidato(candidato);
@@ -289,6 +296,22 @@ public class OfertasController {
 	        	ofertaDetails.getRecruiting().setEmpresa(empresa); 
 	        	RecruitingModel recruiting = recruitingService.guardarRecruiting(ofertaDetails.getRecruiting());
 	        	ofertaActualizada.setRecruiting(recruiting);
+	        }
+	        
+	        if (proveedorBuscado.isPresent()) {
+	            // El proveedor existe
+	            ProveedorModel proveedor = proveedorBuscado.get();
+
+	            // Actualizamos rentabilidad si se proporciona en ofertaDetails
+	                BigDecimal nuevaRentabilidad = ofertaDetails.getProveedor().getRentabilidadProveedor();
+	                proveedor.setRentabilidadProveedor(nuevaRentabilidad);
+
+	            // Asociamos el proveedor existente a la oferta
+	            ofertaActualizada.setProveedor(proveedor);
+	        } else {
+	            // El proveedor no existe, lo creamos
+	            ProveedorModel nuevoProveedor = proveedorService.guardarProveedor(ofertaDetails.getProveedor());
+	            ofertaActualizada.setProveedor(nuevoProveedor);
 	        }
 	        
 
