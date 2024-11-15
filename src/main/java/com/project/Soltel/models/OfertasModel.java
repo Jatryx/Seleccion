@@ -57,6 +57,10 @@ public class OfertasModel {
     @ManyToOne
     @JoinColumn(name = "estadoId", referencedColumnName = "IdEstado")
     private EstadoModel estado;
+    
+    @ManyToOne
+    @JoinColumn(name = "proveedorId", referencedColumnName = "IdProveedor")
+    private ProveedorModel proveedor;
 
     @Column(nullable = false)
     private LocalDate fechaActualizacion;
@@ -135,6 +139,14 @@ public class OfertasModel {
 
 	public void setExperiencia(BigDecimal experiencia) {
 		this.experiencia = experiencia;
+	}
+
+	public ProveedorModel getProveedor() {
+		return proveedor;
+	}
+
+	public void setProveedor(ProveedorModel proveedor) {
+		this.proveedor = proveedor;
 	}
 
 	public BigDecimal getSalario() {
