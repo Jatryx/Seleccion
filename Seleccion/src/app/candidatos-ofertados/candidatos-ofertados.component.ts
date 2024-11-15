@@ -1,12 +1,12 @@
 import { CommonModule, provideCloudinaryLoader } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OfertasService } from '../services/serviceOfertas/ofertas.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Ofertas } from '../models/modelOfertas/ofertas.model';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UbicacionService } from '../services/serviceUbicacion/ubicacion.service';
@@ -115,6 +115,8 @@ export class CandidatosOfertadosComponent implements OnInit {
     'resumen',
   ];
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   constructor(
     private fb: FormBuilder, 
     private ofertaService: OfertasService, 
@@ -190,7 +192,8 @@ export class CandidatosOfertadosComponent implements OnInit {
     this.ofertaService.getOfertas().subscribe(
       data => {
         this.ofertaLista.data = data
-
+        this.ofertaLista.paginator = this.paginator;
+        
         this.tecnologiaLista = data.flatMap(oferta => oferta.tecnologias.split(',').map(t => t.trim()));
         this.tecnologiaLista = Array.from(new Set(this.tecnologiaLista)); // Elimina duplicados
       },
