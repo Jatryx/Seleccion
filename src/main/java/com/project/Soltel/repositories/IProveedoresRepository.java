@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.project.Soltel.models.ProveedorModel;
 
 @Repository
-public interface IProveedoresRepository extends JpaRepository<ProveedorModel, String> {
+public interface IProveedoresRepository extends JpaRepository<ProveedorModel, Integer> {
 
     @Query("SELECT p FROM ProveedorModel p WHERE p.activo = true")
     List<ProveedorModel> findProveedoresActivos();

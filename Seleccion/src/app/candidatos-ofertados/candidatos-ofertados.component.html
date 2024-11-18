@@ -209,6 +209,19 @@
       </mat-error>
     </mat-form-field>
 
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Proveedor</mat-label>
+      <input matInput formControlName="nombreProveedor" type="string"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Rent Proveedor</mat-label>
+      <input matInput formControlName="rentabilidadProveedor" type="number" />
+      <mat-error *ngIf="candidatoForm.get('rentabilidadProveedor')?.hasError('min')">
+      No se permiten valores negativos.
+      </mat-error>
+    </mat-form-field>
+
     <mat-form-field appearance="fill">
       <mat-label>Rentabilidad del Cliente</mat-label>
       <input matInput formControlName="rentabilidadCliente" type="number" />

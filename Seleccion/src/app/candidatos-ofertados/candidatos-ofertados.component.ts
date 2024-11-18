@@ -1,4 +1,4 @@
-import { CommonModule, provideCloudinaryLoader } from '@angular/common';
+import { CommonModule} from '@angular/common';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OfertasService } from '../services/serviceOfertas/ofertas.service';
@@ -16,11 +16,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { PuestoService } from '../services/servicePuesto/puesto.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { from, map, Observable, startWith } from 'rxjs';
+import { map, Observable, startWith } from 'rxjs';
 import { EstadoService } from '../services/serviceEstado/estado.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faPray } from '@fortawesome/free-solid-svg-icons';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { CandidatosService } from '../services/serviceCandidatos/candidatos.service';
@@ -28,7 +28,9 @@ import { RecruitingService } from '../services/serviceRecruiting/recruiting.serv
 import { EmpresaService } from '../services/serviceEmpresa/empresa.service';
 import * as Papa from 'papaparse';
 import { LoadingComponent } from '../loading/loading.component';
-import { tap } from 'rxjs/operators';
+import { ProveedorService } from '../services/serviceProveedor/proveedor.service';
+
+
 interface CsvRow {
   [key: string]: string | null; // Index signature para claves dinámicas
 }
@@ -56,8 +58,10 @@ interface CsvRow {
     MatIconModule,
     MatMenuModule,
     LoadingComponent,
+    
+    
   ],
-  providers: [OfertasService, UbicacionService, PuestoService, EstadoService, CandidatosService, RecruitingService, EmpresaService]
+  providers: [OfertasService, UbicacionService, PuestoService, EstadoService, CandidatosService, RecruitingService, EmpresaService, ProveedorService]
 })
 
 export class CandidatosOfertadosComponent implements OnInit {
@@ -109,7 +113,7 @@ export class CandidatosOfertadosComponent implements OnInit {
     'cliente', 
     'ubicacion', 
     'perfil', 
-    'tecnologia', 
+    'tecnologia',
     'estado', 
     'fechaActualizacion', 
     'resumen',
@@ -126,6 +130,7 @@ export class CandidatosOfertadosComponent implements OnInit {
     private candidatoService: CandidatosService,
     private recruitingService: RecruitingService,
     private empresaService: EmpresaService,
+    private proveedorService: ProveedorService,
     private dialog: MatDialog
   ) {
     const mensajeInfo = localStorage.getItem('mensajeInsertado');
@@ -162,6 +167,8 @@ export class CandidatosOfertadosComponent implements OnInit {
       tarifa: ['', [Validators.min(0)]],
       rentabilidadCliente: ['', [Validators.min(0)]],
       rentabilidadPropuesta: ['', [Validators.min(0)]],
+      nombreProveedor: [''],
+      rentabilidadProveedor: ['', [Validators.min(0)]],
       estado: [new Date(), Validators.required],
       fechaActualizacion: ['', Validators.required],
       resumen: [''],
@@ -193,8 +200,8 @@ export class CandidatosOfertadosComponent implements OnInit {
       data => {
         this.ofertaLista.data = data
         this.ofertaLista.paginator = this.paginator;
-        
-        this.tecnologiaLista = data.flatMap(oferta => oferta.tecnologias.split(',').map(t => t.trim()));
+
+        this.tecnologiaLista = data.flatMap(oferta => oferta.tecnologias?.split(',').map(t => t.trim()));
         this.tecnologiaLista = Array.from(new Set(this.tecnologiaLista)); // Elimina duplicados
       },
       error => {
@@ -212,6 +219,8 @@ ofertaPorID(candidato: string, idRecruiting: number) {
       this.isReadonlyProyecto = false;
       this.isReadonlyCandidato = false;
 
+      console.log(data)
+
       this.candidatoForm.patchValue({
         candidato: this.ofertaPorIDValor.candidato?.nombreCandidato,
         codope: this.ofertaPorIDValor.usuario?.codope,
@@ -226,6 +235,8 @@ ofertaPorID(candidato: string, idRecruiting: number) {
         experiencia: this.ofertaPorIDValor.experiencia,
         salario: this.ofertaPorIDValor.salario,
         tarifa: this.ofertaPorIDValor.tarifa,
+        nombreProveedor: this.ofertaPorIDValor.proveedor?.nombreProveedor,
+        rentabilidadProveedor: this.ofertaPorIDValor.proveedor?.rentabildiadProveedor,
         rentabilidadCliente: this.ofertaPorIDValor.rentabilidadCliente,
         rentabilidadPropuesta: this.ofertaPorIDValor.rentabilidadClienteIncorpor,
         estado: this.ofertaPorIDValor.estado?.estado,
@@ -312,7 +323,6 @@ ofertaPorID(candidato: string, idRecruiting: number) {
             telefono: data.telefono,
             
           });
-          console.log(data.telefono)
           this.isReadonlyCandidato = true; // Hacer que el campo sea solo lectura si existe el candidato
         } else {
           this.candidatoForm.patchValue({
@@ -535,6 +545,12 @@ ofertaPorID(candidato: string, idRecruiting: number) {
           activo: true,
           idEstado: 0 // Autocompletado o manejado en el backend
         },
+        proveedor: {
+          idProveedor: 0, // Autocompletado o manejado en el backend
+          nombreProveedor: formValues.nombreProveedor,
+          rentabilidadProveedor: formValues.rentabildiadProveedor,
+          activo: true
+        },
         fechaActualizacion: new Date().toISOString(),
         observaciones: formValues.resumen, 
         historicoCambioEstados: "",
@@ -552,7 +568,7 @@ ofertaPorID(candidato: string, idRecruiting: number) {
       if (this.botonAnadirOActualizar == false){
         this.ofertaService.putOferta(formValues.candidatoAntesActualizacion, formValues.idRecruitingAntesActualizacion, nuevoCandidato).subscribe(
           response => {
-            this.mensajeInsertado = `Se ha añadido la oferta de: <br> ${formValues.candidato} <br> con ID de petición: <br> ${formValues.idPeticion}`;
+            this.mensajeInsertado = `Se ha actualizado la oferta de: <br> ${formValues.candidato} <br> con ID de petición: <br> ${formValues.idPeticion}`;
             localStorage.setItem('mensajeInsertado', this.mensajeInsertado);
             localStorage.setItem('mensajeError', "error");
             location.reload();
@@ -582,10 +598,11 @@ ofertaPorID(candidato: string, idRecruiting: number) {
       // Aquí puedes enviar 'nuevoCandidato' al servidor
       this.ofertaService.postOferta(nuevoCandidato).subscribe(
         response => {
+          console.log(nuevoCandidato);
           this.mensajeInsertado = `Se ha añadido la oferta de: <br> ${formValues.candidato} <br> con ID de petición: <br> ${formValues.idPeticion}`;
           localStorage.setItem('mensajeInsertado', this.mensajeInsertado);
           localStorage.setItem('mensajeError', "error");
-          location.reload();
+          //location.reload();
         },
         error => {
           console.error('Error al enviar la oferta:', error);
@@ -672,6 +689,12 @@ ofertaPorID(candidato: string, idRecruiting: number) {
                         activo: true,
                         idEstado: 0 // Autocompletado o manejado en el backend
                     },
+                    proveedor: {
+                      idProveedor: 0, // Autocompletado o manejado en el backend
+                      nombreProveedor: row['PROVEEDOR'],
+                      rentabilidadProveedor: parseFloat(row['FEE']?.replace(',', '.') || '0'),
+                      activo: true
+                    },
                     fechaActualizacion: new Date().toISOString(), // Establecer la fecha actual
                     observaciones: row['RESUMEN'], // Ajusta según sea necesario
                     historicoCambioEstados: "", // Ajusta según sea necesario
@@ -733,10 +756,13 @@ ofertaPorID(candidato: string, idRecruiting: number) {
         salario: oferta.salario,
         tarifa: oferta.tarifa,
         experiencia: oferta.experiencia,
-        historico: oferta.historicoCambioEstados,
         rentabilidadCliente: oferta.rentabilidadCliente,
         rentabilidadClienteIncorpor: oferta.rentabilidadClienteIncorpor,
-      }
+        historico: oferta.historicoCambioEstados,
+        proveedor: oferta.proveedor.nombreProveedor,
+        rentabilidadProveedor: oferta.proveedor.rentabildiadProveedor,
+
+      }        
     });
   }
 }
@@ -754,6 +780,9 @@ ofertaPorID(candidato: string, idRecruiting: number) {
   </p>
   <p style="margin-bottom: 10px;">
     <strong>Salario:</strong> {{ data.salario}} €
+  </p>  
+  <p style="margin-bottom: 10px;">
+    <strong>Experiencia:</strong> {{ data.experiencia }} año/s
   </p>
   <p style="margin-bottom: 10px;">
     <strong>Tarifa:</strong> {{ data.tarifa}} €
@@ -765,7 +794,10 @@ ofertaPorID(candidato: string, idRecruiting: number) {
     <strong>Rentabilidad aplicada al cliente en la incorporacion:</strong> {{ data.rentabilidadClienteIncorpor}} %
   </p>
   <p style="margin-bottom: 10px;">
-    <strong>Experiencia:</strong> {{ data.experiencia }} año/s
+    <strong>Proveedor:</strong> {{ data.proveedor}}
+  </p>
+  <p style="margin-bottom: 10px;">
+    <strong>Rentabilidad proveedor:</strong> {{ data.rentabildiadProveedor}} %
   </p>
   <p style="margin-bottom: 20px;">
     <strong>Histórico:</strong> <span [innerHTML]="data.historico"></span>
