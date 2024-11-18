@@ -759,8 +759,8 @@ ofertaPorID(candidato: string, idRecruiting: number) {
         rentabilidadCliente: oferta.rentabilidadCliente,
         rentabilidadClienteIncorpor: oferta.rentabilidadClienteIncorpor,
         historico: oferta.historicoCambioEstados,
-        proveedor: oferta.proveedor.nombreProveedor,
-        rentabilidadProveedor: oferta.proveedor.rentabildiadProveedor,
+        proveedor: oferta.proveedor?.nombreProveedor,
+        rentabilidadProveedor: oferta.proveedor?.rentabildiadProveedor,
 
       }        
     });
