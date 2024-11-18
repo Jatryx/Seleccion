@@ -34,7 +34,6 @@ import { ProveedorService } from '../services/serviceProveedor/proveedor.service
 interface CsvRow {
   [key: string]: string | null; // Index signature para claves dinámicas
 }
-//Borrar esta linea
 @Component({
   selector: 'app-candidatos-ofertados',
   templateUrl: './candidatos-ofertados.component.html',
