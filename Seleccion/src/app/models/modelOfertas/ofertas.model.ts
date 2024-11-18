@@ -1,6 +1,6 @@
 import { Candidatos } from "../modelCandidato/candidatos.model";
-import { Empresa } from "../modelEmpresa/empresa.model";
 import { Estado } from "../modelEstado/estado.model";
+import { Proveedor } from "../modelProveedor/proveedor.model";
 import { Puesto } from "../modelPuesto/puesto.model";
 import { Recruiting } from "../modelRecruiting/recruiting.model";
 import { Ubicacion } from "../modelUbicacion/ubicacion.model";
@@ -20,6 +20,7 @@ export interface Ofertas {
     rentabilidadClienteIncorpor: number,
     estado: Estado,
     fechaActualizacion: Date,
+    proveedor: Proveedor,
     observaciones: string,
     historicoCambioEstados: string,
     candidato: Candidatos,

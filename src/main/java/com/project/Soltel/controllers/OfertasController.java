@@ -103,6 +103,7 @@ public class OfertasController {
         Optional<UbicacionModel> ubicacionBuscada = ubicacionService.consultarNombreUbicacion(oferta.getUbicacion().getNombreProvincia().trim().toUpperCase());
         Optional<PuestoModel> puestoBuscado = puestoService.consultarNombrePuesto(oferta.getPuesto().getNombrePuesto().trim().toUpperCase());
         Optional<RecruitingModel> recruitingBuscado = recruitingService.consultarRecruitingPorId(idPeticion);
+        Optional<ProveedorModel> proveedorBuscado = proveedorService.consultarNombreProveedor(oferta.getProveedor().getNombreProveedor().trim().toUpperCase());
 
         OfertasModel nuevaOferta = new OfertasModel();
 
@@ -159,6 +160,17 @@ public class OfertasController {
             // El puesto no existe
             PuestoModel puesto = puestoService.guardarPuesto(oferta.getPuesto());
             nuevaOferta.setPuesto(puesto);
+        }
+        
+
+        if (proveedorBuscado.isPresent()) {
+            // El proveedor existe
+            ProveedorModel proveedor = proveedorBuscado.get();
+            nuevaOferta.setProveedor(proveedor);
+        } else {
+            // El puesto no existe
+        	ProveedorModel proveedor = proveedorService.guardarProveedor(oferta.getProveedor());
+            nuevaOferta.setProveedor(proveedor);
         }
         
         if (recruitingBuscado.isPresent()) {

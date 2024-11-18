@@ -1,0 +1,61 @@
+/* Contenedor principal que ocupa toda la pantalla y centra el contenido */
+.login-container {
+    display: flex;
+    justify-content: center;  /* Centra el contenido horizontalmente */
+    align-items: center;      /* Centra el contenido verticalmente */
+    height: 100vh;            /* Ocupa toda la altura de la pantalla */
+    background-color: #f4f4f4; /* Fondo suave para la página */
+  }
+  
+  /* Estilos del formulario */
+  .login-form {
+    max-width: 400px;
+    width: 100%;              /* Asegura que el formulario ocupe el 100% de su contenedor */
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .form-field {
+    width: 100%;
+  }
+  
+  mat-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  mat-input {
+    font-size: 16px;
+  }
+  
+  .submit-button {
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Para hacer que el formulario ocupe el 100% de su contenedor */
+  mat-form-field {
+    width: 100%;
+  }
+  
+  mat-error {
+    color: #e74c3c;
+    font-size: 12px;
+  }
+  

@@ -1,0 +1,24 @@
+<div class="login-container">
+    <div class="login-form">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Codope</mat-label>
+            <input matInput formControlName="username" placeholder="Ingrese su Codope" />
+            <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+            El Codope es obligatorio.
+            </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Contraseña</mat-label>
+            <input matInput type="password" formControlName="password" placeholder="Ingrese su contraseña" />
+            <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            La contraseña es obligatoria.
+            </mat-error>
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit" class="submit-button">Iniciar Sesión</button>
+        </form>
+    </div>
+  </div>
+  
