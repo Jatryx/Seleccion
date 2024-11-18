@@ -17,7 +17,7 @@ public class ProveedorModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idProveedor;
     
-    @Column(nullable = false, length = 100)
+    @Column(nullable = true, length = 100)
     private String nombreProveedor;
     
     @Column(nullable = true, precision = 4, scale = 2)

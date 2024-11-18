@@ -579,6 +579,7 @@ ofertaPorID(candidato: string, idRecruiting: number) {
             this.mensajeError= 'Detalles del error: ';
             
             if (error.error) {
+
               console.error('Detalles del error:', error.error); // Detalles adicionales del error
           
               // Capturamos el mensaje enviado por el backend
@@ -601,9 +602,10 @@ ofertaPorID(candidato: string, idRecruiting: number) {
           this.mensajeInsertado = `Se ha añadido la oferta de: <br> ${formValues.candidato} <br> con ID de petición: <br> ${formValues.idPeticion}`;
           localStorage.setItem('mensajeInsertado', this.mensajeInsertado);
           localStorage.setItem('mensajeError', "error");
-          //location.reload();
+          location.reload();
         },
-        error => {
+        error => {              
+          console.log(nuevoCandidato)
           console.error('Error al enviar la oferta:', error);
         
           // Verificamos si el mensaje de error proviene del backend
@@ -621,7 +623,7 @@ ofertaPorID(candidato: string, idRecruiting: number) {
           // Guardamos el mensaje en el localStorage
           localStorage.setItem('mensajeError', this.mensajeError);
           localStorage.setItem('mensajeInsertado', "insertado");
-          //location.reload();
+          location.reload();
         }
       );
     }
