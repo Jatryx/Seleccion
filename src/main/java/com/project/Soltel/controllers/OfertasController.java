@@ -103,8 +103,10 @@ public class OfertasController {
         Optional<UbicacionModel> ubicacionBuscada = ubicacionService.consultarNombreUbicacion(oferta.getUbicacion().getNombreProvincia().trim().toUpperCase());
         Optional<PuestoModel> puestoBuscado = puestoService.consultarNombrePuesto(oferta.getPuesto().getNombrePuesto().trim().toUpperCase());
         Optional<RecruitingModel> recruitingBuscado = recruitingService.consultarRecruitingPorId(idPeticion);
-        Optional<ProveedorModel> proveedorBuscado = proveedorService.consultarNombreProveedor(oferta.getProveedor().getNombreProveedor().trim().toUpperCase());
-
+        Optional<ProveedorModel> proveedorBuscado = Optional.empty();
+        if (oferta.getProveedor() != null && oferta.getProveedor().getNombreProveedor() != null) {
+            proveedorBuscado = proveedorService.consultarNombreProveedor(oferta.getProveedor().getNombreProveedor().trim().toUpperCase());
+        }
         OfertasModel nuevaOferta = new OfertasModel();
 
         if (candidatoBuscado.isPresent()) {
@@ -244,8 +246,10 @@ public class OfertasController {
 	        Optional<UbicacionModel> ubicacionBuscada = ubicacionService.consultarNombreUbicacion(ofertaDetails.getUbicacion().getNombreProvincia());
 	        Optional<PuestoModel> puestoBuscado = puestoService.consultarNombrePuesto(ofertaDetails.getPuesto().getNombrePuesto());
 	        Optional<RecruitingModel> recruitingBuscado = recruitingService.consultarRecruitingPorId(ofertaDetails.getRecruiting().getIdRecruiting());
-	        Optional<ProveedorModel> proveedorBuscado = proveedorService.consultarNombreProveedor(ofertaDetails.getProveedor().getNombreProveedor());
-
+	        Optional<ProveedorModel> proveedorBuscado = Optional.empty();
+            if (oferta.isPresent() && oferta.get().getProveedor() != null && oferta.get().getProveedor().getNombreProveedor() != null) {
+                proveedorBuscado = proveedorService.consultarNombreProveedor(oferta.get().getProveedor().getNombreProveedor().trim().toUpperCase());
+            }
 	        OfertasModel ofertaActualizada = oferta.get();
 
 	        if (candidatoBuscado.isPresent()) {

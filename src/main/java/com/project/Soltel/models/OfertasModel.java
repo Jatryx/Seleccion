@@ -59,7 +59,7 @@ public class OfertasModel {
     private EstadoModel estado;
     
     @ManyToOne
-    @JoinColumn(name = "proveedorId", referencedColumnName = "IdProveedor")
+    @JoinColumn(nullable = true, name = "proveedorId", referencedColumnName = "IdProveedor")
     private ProveedorModel proveedor;
 
     @Column(nullable = false)
