@@ -34,7 +34,6 @@ import { ProveedorService } from '../services/serviceProveedor/proveedor.service
 interface CsvRow {
   [key: string]: string | null; // Index signature para claves dinámicas
 }
-
 @Component({
   selector: 'app-candidatos-ofertados',
   templateUrl: './candidatos-ofertados.component.html',
@@ -759,8 +758,8 @@ ofertaPorID(candidato: string, idRecruiting: number) {
         rentabilidadCliente: oferta.rentabilidadCliente,
         rentabilidadClienteIncorpor: oferta.rentabilidadClienteIncorpor,
         historico: oferta.historicoCambioEstados,
-        proveedor: oferta.proveedor.nombreProveedor,
-        rentabilidadProveedor: oferta.proveedor.rentabildiadProveedor,
+        proveedor: oferta.proveedor?.nombreProveedor,
+        rentabilidadProveedor: oferta.proveedor?.rentabildiadProveedor,
 
       }        
     });
