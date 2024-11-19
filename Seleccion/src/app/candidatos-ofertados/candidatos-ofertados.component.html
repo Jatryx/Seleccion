@@ -15,7 +15,7 @@
 
     <input type="file" id="csvFile" accept=".csv" style="display: none;" #fileInput (change)="importCSV($event)" />
 
-    <button mat-menu-item class="custom-menu-item">
+    <button mat-menu-item class="custom-menu-item" (click)="logout()">
       <mat-icon class="custom-menu-icon">exit_to_app</mat-icon>
       <span class="custom-menu-text">Cerrar sesión</span>
     </button>
@@ -201,20 +201,14 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Tarifa</mat-label>
-      <input matInput formControlName="tarifa" type="number" />
-      <mat-error *ngIf="candidatoForm.get('tarifa')?.hasError('min')">
-      No se permiten valores negativos.
-      </mat-error>
-    </mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width">
+
+    <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
       <mat-label>Proveedor</mat-label>
       <input matInput formControlName="nombreProveedor" type="string"/>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
       <mat-label>Rent Proveedor</mat-label>
       <input matInput formControlName="rentabilidadProveedor" type="number" />
       <mat-error *ngIf="candidatoForm.get('rentabilidadProveedor')?.hasError('min')">
@@ -222,25 +216,45 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
       <mat-label>Rentabilidad del Cliente</mat-label>
       <input matInput formControlName="rentabilidadCliente" type="number" />
       <mat-error *ngIf="candidatoForm.get('rentabilidadCliente')?.hasError('min')">
       No se permiten valores negativos.
       </mat-error>
     </mat-form-field>
-
-    <mat-form-field appearance="fill">
+    
+    <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
       <mat-label>Rentabilidad por la que se sube </mat-label>
       <input matInput formControlName="rentabilidadPropuesta" type="number" />
       <mat-error *ngIf="candidatoForm.get('rentabilidadPropuesta')?.hasError('min')">
       No se permiten valores negativos.
       </mat-error>
+    </mat-form-field>  
+    
+    <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
+      <mat-label>Tarifa</mat-label>
+      <input matInput formControlName="tarifa" type="number" />
+      <mat-error *ngIf="candidatoForm.get('tarifa')?.hasError('min')">
+      No se permiten valores negativos.
+      </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width">
+    <mat-form-field class="half-width" *ngIf="mostrarCamposAdicionales">
+      <mat-label>URL</mat-label>
+      <input matInput formControlName="url" type="url" placeholder="https://ejemplo.com" />
+    </mat-form-field>
+
+  </div>
+
+  <a (click)="toggleMostrarCampos()" class="mostrar-mas-link">
+    {{ mostrarCamposAdicionales ? '▼ Menos detalles' : '▶ Más detalles' }}
+  </a>
+  
+  <div class="form-group compact">
+    <mat-form-field class="wide-full">
       <mat-label>Observaciones</mat-label>
-      <textarea matInput formControlName="resumen"></textarea>
+      <textarea matInput formControlName="resumen" rows="4"></textarea>
     </mat-form-field>
   </div>
 
@@ -335,7 +349,6 @@
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
-
 <!-- Footer -->
  <div class="contenedor-footer">
 <footer class="footer">

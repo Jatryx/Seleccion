@@ -20,4 +20,8 @@ public interface IUsuarioRepository extends JpaRepository<UsuarioModel, String> 
 
     @Query("SELECT a FROM UsuarioModel a WHERE a.codope = :codope")
     Optional<UsuarioModel> findUsuarioByCodope(String codope);
+    
+    @Query("SELECT a FROM UsuarioModel a WHERE a.codope = :codope AND a.contraseña = :contrasena")
+    Optional<UsuarioModel> login(String codope, String contrasena);
+    
 }

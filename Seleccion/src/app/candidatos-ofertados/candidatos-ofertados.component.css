@@ -397,3 +397,23 @@ mat-menu {
 .error__close path {
   fill: #fff;
 }
+
+.mostrar-mas-link {
+  color: #666;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 2px 8px;  /* Reducido el padding vertical */
+  margin: 0 0 4px 0;  /* Reducido el margen y solo aplicado abajo */
+  display: block;
+  text-align: left;
+}
+
+.mostrar-mas-link:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+.form-group.compact {
+  margin-top: 8px;  /* Reducido el margen superior */
+}

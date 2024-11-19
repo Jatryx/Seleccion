@@ -93,10 +93,6 @@ public class OfertasController {
         String nombreCandidato = oferta.getCandidato().getNombreCandidato();
         Integer idPeticion = oferta.getRecruiting().getIdRecruiting();
 
-        Optional<OfertasModel> ofertaAcoparar = ofertaService.consultarPorNombreCandidatoAndIdPeticion(nombreCandidato, idPeticion);
-
-
-
         Optional<CandidatosModel> candidatoBuscado = candidatosService.consultarCandidatosNombre(nombreCandidato.trim().toUpperCase());
         Optional<EstadoModel> estadoBuscado = estadoService.consultarNombreEstado(oferta.getEstado().getEstado());
         Optional<UsuarioModel> usuarioBuscado = usuarioService.consultarUsuarioCodope(oferta.getUsuario().getCodope().trim().toUpperCase());
