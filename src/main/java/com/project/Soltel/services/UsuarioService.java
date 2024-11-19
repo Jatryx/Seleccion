@@ -31,6 +31,10 @@ public class UsuarioService {
         return iusuarioRepository.findUsuarioByCodope(codope);
     }
 
+    public Optional<UsuarioModel> login(String codope, String contrasena){
+        return iusuarioRepository.login(codope, contrasena);
+    }
+    
     public UsuarioModel guardarUsuario(UsuarioModel usuario){
         return iusuarioRepository.save(usuario);
     }

@@ -20,6 +20,10 @@ export class UsuarioService {
     return this.http.get<Usuario>(this.apiRoot + '/consultar/' + codope);
   }
 
+  login(usuario: Usuario): Observable<boolean>{
+    return this.http.post<boolean>(this.apiRoot + '/consultarLogin', usuario);
+  }
+
   postUsuario(usuario: Usuario): Observable<Object>{
     return this.http.post<Usuario>(this.apiRoot + '/insertar', usuario);
   }

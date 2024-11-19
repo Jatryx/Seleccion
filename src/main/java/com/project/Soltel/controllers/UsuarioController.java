@@ -33,6 +33,12 @@ public class UsuarioController {
                 return ResponseEntity.notFound().build();
             }   
     }
+    
+    @PostMapping("/consultarLogin")
+    public boolean login(@RequestBody UsuarioModel usuario) {
+        Optional<UsuarioModel> login = usuarioService.login(usuario.getCodope(), usuario.getContraseña());
+        return login.isPresent();
+    }
 
     @PostMapping("/insertar")
     public ResponseEntity<?> createUsuario(@RequestBody UsuarioModel codope) {

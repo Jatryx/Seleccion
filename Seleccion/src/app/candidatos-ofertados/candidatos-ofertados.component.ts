@@ -70,6 +70,7 @@ export class CandidatosOfertadosComponent implements OnInit {
   isReadonlyCandidato: boolean = false;
   candidatoForm: FormGroup;
   botonAnadirOActualizar: boolean = true //True es añadir, false es actualizar
+  mostrarCamposAdicionales: boolean = false;
 
   loading: boolean = false;
   insertado: boolean = false;
@@ -119,6 +120,7 @@ export class CandidatosOfertadosComponent implements OnInit {
   ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  router: any;
 
   constructor(
     private fb: FormBuilder, 
@@ -197,7 +199,7 @@ export class CandidatosOfertadosComponent implements OnInit {
   cargarOfertas() {
     this.ofertaService.getOfertas().subscribe(
       data => {
-        this.ofertaLista.data = data
+        this.ofertaLista.data = data.reverse();
         this.ofertaLista.paginator = this.paginator;
 
         this.tecnologiaLista = data.flatMap(oferta => oferta.tecnologias?.split(',').map(t => t.trim()));
@@ -508,8 +510,8 @@ ofertaPorID(candidato: string, idRecruiting: number) {
       // Construir el objeto en el formato deseado
       const nuevoCandidato = {
         usuario: {
-          codope: "IACA",
-          contraseña: "contraseña_default",
+          codope: localStorage.getItem('codopeActual'),
+          contraseña: "",
           activo: true
         },
         recruiting: {
@@ -744,6 +746,10 @@ ofertaPorID(candidato: string, idRecruiting: number) {
     this.candidatoForm.reset();
   }
 
+  toggleMostrarCampos() {
+    this.mostrarCamposAdicionales = !this.mostrarCamposAdicionales;
+  }
+
   cerrar(): void {
     this.insertado = false
     this.error = false
@@ -765,6 +771,11 @@ ofertaPorID(candidato: string, idRecruiting: number) {
 
       }        
     });
+  }
+  
+  logout() {
+    localStorage.removeItem('isLoggedIn');
+    location.reload();    
   }
 }
 

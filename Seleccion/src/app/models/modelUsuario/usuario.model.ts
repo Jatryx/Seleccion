@@ -1,6 +1,6 @@
 export interface Usuario {
     codope: string,
-    contrasena: string,
+    contraseña: string,
     activo: boolean,
 
 }
