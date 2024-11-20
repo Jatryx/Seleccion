@@ -1,275 +1,329 @@
 <div class="header">
-    <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
-    <mat-icon class="header-icon">menu</mat-icon>
+  <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
+  <mat-icon class="header-icon">menu</mat-icon>
+</button>
+<img class="header-title" src="assets/3.png" alt="Recruiting Home">
+  <mat-menu #menu="matMenu">
+  <button mat-menu-item class="custom-menu-item">
+    <mat-icon class="custom-menu-icon">home</mat-icon>
+    <span class="custom-menu-text">Inicio</span>
   </button>
-  <img class="header-title" src="assets/3.png" alt="Recruiting Home">
-    <mat-menu #menu="matMenu">
-    <button mat-menu-item class="custom-menu-item">
-      <mat-icon class="custom-menu-icon">home</mat-icon>
-      <span class="custom-menu-text">Inicio</span>
-    </button>
-    <button mat-menu-item class="custom-menu-item" (click)="fileInput.click()">
-    <mat-icon class="custom-menu-icon">insert_drive_file</mat-icon>
-    <span class="custom-menu-text">Importar CSV</span>
-    </button>
+  <button mat-menu-item class="custom-menu-item" (click)="fileInput.click()">
+  <mat-icon class="custom-menu-icon">insert_drive_file</mat-icon>
+  <span class="custom-menu-text">Importar CSV</span>
+  </button>
 
-    <input type="file" id="csvFile" accept=".csv" style="display: none;" #fileInput (change)="importCSV($event)" />
+  <input type="file" id="csvFile" accept=".csv" style="display: none;" #fileInput (change)="importCSV($event)" />
 
-    <button mat-menu-item class="custom-menu-item" (click)="logout()">
-      <mat-icon class="custom-menu-icon">exit_to_app</mat-icon>
-      <span class="custom-menu-text">Cerrar sesión</span>
-    </button>
-  </mat-menu>
+  <button mat-menu-item class="custom-menu-item" (click)="logout()">
+    <mat-icon class="custom-menu-icon">exit_to_app</mat-icon>
+    <span class="custom-menu-text">Cerrar sesión</span>
+  </button>
+</mat-menu>
 </div>
 
 
 <h1 class="title">Candidatos Ofertados</h1>
 <div class="loading-component">
-  <app-loading *ngIf="loading" ></app-loading>
+<app-loading *ngIf="loading" ></app-loading>
 </div>
 
 <div class="info" *ngIf="insertado" >
-  <div class="info__icon">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m12 1.5c-5.79844 0-10.5 4.70156-10.5 10.5 0 5.7984 4.70156 10.5 10.5 10.5 5.7984 0 10.5-4.7016 10.5-10.5 0-5.79844-4.7016-10.5-10.5-10.5zm.75 15.5625c0 .1031-.0844.1875-.1875.1875h-1.125c-.1031 0-.1875-.0844-.1875-.1875v-6.375c0-.1031.0844-.1875.1875-.1875h1.125c.1031 0 .1875.0844.1875.1875zm-.75-8.0625c-.2944-.00601-.5747-.12718-.7808-.3375-.206-.21032-.3215-.49305-.3215-.7875s.1155-.57718.3215-.7875c.2061-.21032.4864-.33149.7808-.3375.2944.00601.5747.12718.7808.3375.206.21032.3215.49305.3215.7875s-.1155.57718-.3215.7875c-.2061.21032-.4864.33149-.7808.3375z"></path></svg>
-  </div>
-  <div class="info__title" [innerHTML]="mensajeInsertado">{{mensajeInsertado}}</div>
-  <div class="info__close" (click)="cerrar()"><svg height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z" fill="#393a37"></path></svg></div>
+<div class="info__icon">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m12 1.5c-5.79844 0-10.5 4.70156-10.5 10.5 0 5.7984 4.70156 10.5 10.5 10.5 5.7984 0 10.5-4.7016 10.5-10.5 0-5.79844-4.7016-10.5-10.5-10.5zm.75 15.5625c0 .1031-.0844.1875-.1875.1875h-1.125c-.1031 0-.1875-.0844-.1875-.1875v-6.375c0-.1031.0844-.1875.1875-.1875h1.125c.1031 0 .1875.0844.1875.1875zm-.75-8.0625c-.2944-.00601-.5747-.12718-.7808-.3375-.206-.21032-.3215-.49305-.3215-.7875s.1155-.57718.3215-.7875c.2061-.21032.4864-.33149.7808-.3375.2944.00601.5747.12718.7808.3375.206.21032.3215.49305.3215.7875s-.1155.57718-.3215.7875c-.2061.21032-.4864.33149-.7808.3375z"></path></svg>
+</div>
+<div class="info__title" [innerHTML]="mensajeInsertado">{{mensajeInsertado}}</div>
+<div class="info__close" (click)="cerrar()"><svg height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z" fill="#393a37"></path></svg></div>
 </div>
 
 <div class="error" *ngIf="error">
-    <div class="error__icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path></svg>
-    </div>
-    <div class="error__title" [innerHTML]="mensajeError">{{mensajeError}}></div>
-    <div class="error__close" (click)="cerrar()"><svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20"><path fill="#393a37" d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z"></path></svg></div>
+  <div class="error__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path></svg>
+  </div>
+  <div class="error__title" [innerHTML]="mensajeError">{{mensajeError}}></div>
+  <div class="error__close" (click)="cerrar()"><svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20"><path fill="#393a37" d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z"></path></svg></div>
 </div>
 
 
-<div class="botones-funcionalidades" *ngIf="!formVisible">
-  <button mat-raised-button color="primary"(click)="verFormAnadir()">Añadir Candidato</button>
-</div>
+
 <div *ngIf="formVisible">
 <form [formGroup]="candidatoForm" (ngSubmit)="onSubmit()" class="form-container">
-  <h2>Añadir candidato</h2>
-  
-  <div class="form-group">
-    <mat-form-field appearance="fill" class="full-width codope" [hidden]="true">
-      <mat-label>CODOPE</mat-label>
-      <input matInput formControlName="codope" value="IACA">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Candidato</mat-label>
-      <input 
-        type="text" 
-        matInput 
-        formControlName="candidato"
-        [matAutocomplete]="autoCandidato">
-      <mat-autocomplete #autoCandidato="matAutocomplete">
-        <mat-option *ngFor="let option of filtroCandidatos | async" [value]="option">
+<h2>Añadir candidato</h2>
+
+<div class="form-group">
+  <mat-form-field appearance="fill" class="full-width codope" [hidden]="true">
+    <mat-label>CODOPE</mat-label>
+    <input matInput formControlName="codope" value="IACA">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Candidato</mat-label>
+    <input 
+      type="text" 
+      matInput 
+      formControlName="candidato"
+      [matAutocomplete]="autoCandidato">
+    <mat-autocomplete #autoCandidato="matAutocomplete">
+      <mat-option *ngFor="let option of filtroCandidatos | async" [value]="option">
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>ID Recruiting</mat-label>
+    <input 
+      type="number" 
+      matInput 
+      formControlName="idPeticion"
+      [matAutocomplete]="autoPeticion">
+    <mat-autocomplete #autoPeticion="matAutocomplete">
+      <mat-option *ngFor="let option of filtroRecruitings | async" [value]="option">
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Proyecto</mat-label>
+    <input 
+      matInput 
+      formControlName="proyecto"
+      [value]="proyecto" 
+      [readonly]="isReadonlyProyecto" 
+      [matAutocomplete]="autoProyecto">
+      <mat-autocomplete #autoProyecto="matAutocomplete">
+        <mat-option *ngFor="let option of filtroProyectos | async" [value]="option">
           {{ option }}
         </mat-option>
       </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Teléfono</mat-label>
+    <input 
+      matInput 
+      formControlName="telefono" 
+      maxlength="9" 
+      pattern="[0-9]{9}" 
+      [readonly]="isReadonlyCandidato" 
+      [matAutocomplete]="autoTelefono">
+    <mat-autocomplete #autoTelefono="matAutocomplete">
+      <mat-option *ngFor="let option of filtroTelefonos | async" [value]="option">
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  
+
+  <mat-form-field appearance="fill">
+    <mat-label>Cliente</mat-label>
+    <input 
+      matInput 
+      formControlName="cliente"
+      [value]="empresa" 
+      [readonly]="isReadonlyProyecto"
+      [matAutocomplete]="autoCliente">
+  <mat-autocomplete #autoCliente="matAutocomplete">
+  <mat-option *ngFor="let option of filtroEmpresas | async" [value]="option">
+    {{ option }}
+  </mat-option>
+</mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Ubicacion</mat-label>
+    <input 
+      type="text" 
+      matInput 
+      formControlName="ubicacion"
+      [matAutocomplete]="autoUbiciacion">
+    <mat-autocomplete #autoUbiciacion="matAutocomplete">
+      <mat-option *ngFor="let option of filtroProvincias | async" [value]="option">
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Perfil</mat-label>
+    <input 
+      type="text" 
+      matInput 
+      formControlName="perfil"
+      [matAutocomplete]="autoPerfil">
+    <mat-autocomplete #autoPerfil="matAutocomplete">
+      <mat-option *ngFor="let option of filtroPerfiles | async" [value]="option">
+        {{ option }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Tecnologias</mat-label>
+    <input matInput formControlName="tecnologia" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Estado</mat-label>
+    <mat-select formControlName="estado">
+      <mat-option *ngFor="let estado of estadoLista" [value]="estado">
+        {{ estado }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Fecha Creación</mat-label>
+    <input 
+      matInput 
+      [matDatepicker]="picker" 
+      formControlName="fechaActualizacion" 
+      placeholder="dd/mm/aaaa" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Años de experiencia</mat-label>
+    <input matInput formControlName="experiencia" type="number" />
+    <mat-error *ngIf="candidatoForm.get('experiencia')?.hasError('min')">
+      No se permiten valores negativos.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Salario</mat-label>
+    <input matInput formControlName="salario" type="number" />
+    <mat-error *ngIf="candidatoForm.get('salario')?.hasError('min')">
+    No se permiten valores negativos.
+    </mat-error>
+  </mat-form-field>
+
+
+
+  <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
+    <mat-label>Proveedor</mat-label>
+    <input matInput formControlName="nombreProveedor" type="string"/>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
+    <mat-label>Rent Proveedor</mat-label>
+    <input matInput formControlName="rentabilidadProveedor" type="number" />
+    <mat-error *ngIf="candidatoForm.get('rentabilidadProveedor')?.hasError('min')">
+    No se permiten valores negativos.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
+    <mat-label>Rentabilidad del Cliente</mat-label>
+    <input matInput formControlName="rentabilidadCliente" type="number" />
+    <mat-error *ngIf="candidatoForm.get('rentabilidadCliente')?.hasError('min')">
+    No se permiten valores negativos.
+    </mat-error>
+  </mat-form-field>
+  
+  <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
+    <mat-label>Rentabilidad por la que se sube </mat-label>
+    <input matInput formControlName="rentabilidadPropuesta" type="number" />
+    <mat-error *ngIf="candidatoForm.get('rentabilidadPropuesta')?.hasError('min')">
+    No se permiten valores negativos.
+    </mat-error>
+  </mat-form-field>  
+  
+  <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
+    <mat-label>Tarifa</mat-label>
+    <input matInput formControlName="tarifa" type="number" />
+    <mat-error *ngIf="candidatoForm.get('tarifa')?.hasError('min')">
+    No se permiten valores negativos.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="half-width" *ngIf="mostrarCamposAdicionales">
+    <mat-label>URL</mat-label>
+    <input matInput formControlName="url" type="url" placeholder="https://ejemplo.com" />
+  </mat-form-field>
+
+  
+
+</div>
+
+<a (click)="toggleMostrarCampos()" class="mostrar-mas-link">
+  {{ mostrarCamposAdicionales ? '▼ Menos detalles' : '▶ Más detalles' }}
+</a>
+
+<div class="form-group compact">
+  <mat-form-field class="wide-full">
+    <mat-label>Observaciones</mat-label>
+    <textarea matInput formControlName="resumen" rows="4"></textarea>
+  </mat-form-field>
+</div>
+
+<div class="anadir-cancelar">
+  <button mat-raised-button color="primary" type="submit" *ngIf="botonAnadirOActualizar == true">Añadir</button>
+  <button mat-raised-button color="primary" type="submit" *ngIf="botonAnadirOActualizar == false">Actualizar</button>
+  <button mat-raised-button color="accent" class="cancelar" type="button" (click)="verFormAnadir()">Cancelar</button>
+</div>
+</form>
+</div>
+
+
+
+<div class="botones-container">
+  <div class="botones-funcionalidades">
+  <button mat-raised-button color="primary" (click)="verFormAnadir()" *ngIf="!formVisible">
+    Añadir Candidato
+  </button>
+  </div>
+  <div class="botones-funcionalidades">
+  <button mat-raised-button color="primary" (click)="toggleMostrarFiltros()">
+    {{ mostrarFiltros ? 'Ocultar Filtros' : 'Mostrar Filtros' }}
+  </button>
+</div>
+</div>
+<!-- TABLA CANDIDATOS OFERTADOS -->
+
+<div class="table-container">
+  <!-- Fila de filtros -->
+  <div class="filtros-row" *ngIf="mostrarFiltros">
+
+  <mat-form-field appearance="fill">
+    <mat-label>Candidato</mat-label>
+    <input matInput [(ngModel)]="candidatoFilter" (input)="applyCandidatoFilter(candidatoFilter)" />
+  </mat-form-field>
+    
+    <mat-form-field appearance="fill">
+      <mat-label>Codope</mat-label>
+      <input matInput [(ngModel)]="codopeFilter" (input)="applyCodopeFilter(codopeFilter)" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>ID Recruiting</mat-label>
-      <input 
-        type="number" 
-        matInput 
-        formControlName="idPeticion"
-        [matAutocomplete]="autoPeticion">
-      <mat-autocomplete #autoPeticion="matAutocomplete">
-        <mat-option *ngFor="let option of filtroRecruitings | async" [value]="option">
-          {{ option }}
-        </mat-option>
-      </mat-autocomplete>
+      <input matInput [(ngModel)]="idRecruitingFilter" (input)="applyIdRecruitingFilter(idRecruitingFilter)" />
     </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Proyecto</mat-label>
-      <input 
-        matInput 
-        formControlName="proyecto"
-        [value]="proyecto" 
-        [readonly]="isReadonlyProyecto" 
-        [matAutocomplete]="autoProyecto">
-        <mat-autocomplete #autoProyecto="matAutocomplete">
-          <mat-option *ngFor="let option of filtroProyectos | async" [value]="option">
-            {{ option }}
-          </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Teléfono</mat-label>
-      <input 
-        matInput 
-        formControlName="telefono" 
-        maxlength="9" 
-        pattern="[0-9]{9}" 
-        [readonly]="isReadonlyCandidato" 
-        [matAutocomplete]="autoTelefono">
-      <mat-autocomplete #autoTelefono="matAutocomplete">
-        <mat-option *ngFor="let option of filtroTelefonos | async" [value]="option">
-          {{ option }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-    
 
     <mat-form-field appearance="fill">
       <mat-label>Cliente</mat-label>
-      <input 
-        matInput 
-        formControlName="cliente"
-        [value]="empresa" 
-        [readonly]="isReadonlyProyecto"
-        [matAutocomplete]="autoCliente">
-    <mat-autocomplete #autoCliente="matAutocomplete">
-    <mat-option *ngFor="let option of filtroEmpresas | async" [value]="option">
-      {{ option }}
-    </mat-option>
-  </mat-autocomplete>
+      <input matInput [(ngModel)]="clienteFilter" (input)="applyClienteFilter(clienteFilter)" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Ubicacion</mat-label>
-      <input 
-        type="text" 
-        matInput 
-        formControlName="ubicacion"
-        [matAutocomplete]="autoUbiciacion">
-      <mat-autocomplete #autoUbiciacion="matAutocomplete">
-        <mat-option *ngFor="let option of filtroProvincias | async" [value]="option">
-          {{ option }}
-        </mat-option>
-      </mat-autocomplete>
+      <mat-label>Ubicación</mat-label>
+      <input matInput [(ngModel)]="ubicacionFilter" (input)="applyUbicacionFilter(ubicacionFilter)" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Perfil</mat-label>
-      <input 
-        type="text" 
-        matInput 
-        formControlName="perfil"
-        [matAutocomplete]="autoPerfil">
-      <mat-autocomplete #autoPerfil="matAutocomplete">
-        <mat-option *ngFor="let option of filtroPerfiles | async" [value]="option">
-          {{ option }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Tecnologias</mat-label>
-      <input matInput formControlName="tecnologia" />
+      <input matInput [(ngModel)]="perfilFilter" (input)="applyPerfilFilter(perfilFilter)" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Estado</mat-label>
-      <mat-select formControlName="estado">
-        <mat-option *ngFor="let estado of estadoLista" [value]="estado">
-          {{ estado }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Fecha Creación</mat-label>
-      <input 
-        matInput 
-        [matDatepicker]="picker" 
-        formControlName="fechaActualizacion" 
-        placeholder="dd/mm/aaaa" />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Años de experiencia</mat-label>
-      <input matInput formControlName="experiencia" type="number" />
-      <mat-error *ngIf="candidatoForm.get('experiencia')?.hasError('min')">
-        No se permiten valores negativos.
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Salario</mat-label>
-      <input matInput formControlName="salario" type="number" />
-      <mat-error *ngIf="candidatoForm.get('salario')?.hasError('min')">
-      No se permiten valores negativos.
-      </mat-error>
-    </mat-form-field>
-
-
-
-    <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
-      <mat-label>Proveedor</mat-label>
-      <input matInput formControlName="nombreProveedor" type="string"/>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
-      <mat-label>Rent Proveedor</mat-label>
-      <input matInput formControlName="rentabilidadProveedor" type="number" />
-      <mat-error *ngIf="candidatoForm.get('rentabilidadProveedor')?.hasError('min')">
-      No se permiten valores negativos.
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
-      <mat-label>Rentabilidad del Cliente</mat-label>
-      <input matInput formControlName="rentabilidadCliente" type="number" />
-      <mat-error *ngIf="candidatoForm.get('rentabilidadCliente')?.hasError('min')">
-      No se permiten valores negativos.
-      </mat-error>
-    </mat-form-field>
-    
-    <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
-      <mat-label>Rentabilidad por la que se sube </mat-label>
-      <input matInput formControlName="rentabilidadPropuesta" type="number" />
-      <mat-error *ngIf="candidatoForm.get('rentabilidadPropuesta')?.hasError('min')">
-      No se permiten valores negativos.
-      </mat-error>
-    </mat-form-field>  
-    
-    <mat-form-field appearance="fill" *ngIf="mostrarCamposAdicionales">
-      <mat-label>Tarifa</mat-label>
-      <input matInput formControlName="tarifa" type="number" />
-      <mat-error *ngIf="candidatoForm.get('tarifa')?.hasError('min')">
-      No se permiten valores negativos.
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field class="half-width" *ngIf="mostrarCamposAdicionales">
-      <mat-label>URL</mat-label>
-      <input matInput formControlName="url" type="url" placeholder="https://ejemplo.com" />
-    </mat-form-field>
-
-  </div>
-
-  <a (click)="toggleMostrarCampos()" class="mostrar-mas-link">
-    {{ mostrarCamposAdicionales ? '▼ Menos detalles' : '▶ Más detalles' }}
-  </a>
-  
-  <div class="form-group compact">
-    <mat-form-field class="wide-full">
-      <mat-label>Observaciones</mat-label>
-      <textarea matInput formControlName="resumen" rows="4"></textarea>
+      <input matInput [(ngModel)]="estadoFilter" (input)="applyEstadoFilter(estadoFilter)" />
     </mat-form-field>
   </div>
 
-  <div class="anadir-cancelar">
-    <button mat-raised-button color="primary" type="submit" *ngIf="botonAnadirOActualizar == true">Añadir</button>
-    <button mat-raised-button color="primary" type="submit" *ngIf="botonAnadirOActualizar == false">Actualizar</button>
-    <button mat-raised-button color="accent" class="cancelar" type="button" (click)="verFormAnadir()">Cancelar</button>
-  </div>
-</form>
-</div>
-
-<!-- TABLA CANDIDATOS OFERTADOS -->
- 
-<div class="table-container">
-  <table mat-table [dataSource]="ofertaLista" matSort class="mat-elevation-z8">
+  <!-- Tabla existente -->
+  <table mat-table [dataSource]="ofertaLista" matSort>
     <!-- Candidato Column -->
     <ng-container matColumnDef="candidato">
       <th mat-header-cell *matHeaderCellDef>Candidato</th>
@@ -350,15 +404,15 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 <!-- Footer -->
- <div class="contenedor-footer">
+<div class="contenedor-footer">
 <footer class="footer">
-  <div class="footer-content">
-    <p>&copy; 2024 Soltel Group. Todos los derechos reservados.</p>
-    <div class="footer-links">
-      <a href="#">Política de Privacidad</a>
-      <a href="#">Términos de Servicio</a>
-      <a href="#">Contacto</a>
-    </div>
+<div class="footer-content">
+  <p>&copy; 2024 Soltel Group. Todos los derechos reservados.</p>
+  <div class="footer-links">
+    <a href="#">Política de Privacidad</a>
+    <a href="#">Términos de Servicio</a>
+    <a href="#">Contacto</a>
   </div>
+</div>
 </footer>
 </div>

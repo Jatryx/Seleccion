@@ -29,6 +29,7 @@ import { EmpresaService } from '../services/serviceEmpresa/empresa.service';
 import * as Papa from 'papaparse';
 import { LoadingComponent } from '../loading/loading.component';
 import { ProveedorService } from '../services/serviceProveedor/proveedor.service';
+import { FormsModule } from '@angular/forms';
 //borrrar esta linea
 
 interface CsvRow {
@@ -57,7 +58,7 @@ interface CsvRow {
     MatIconModule,
     MatMenuModule,
     LoadingComponent,
-    
+    FormsModule,
     
   ],
   providers: [OfertasService, UbicacionService, PuestoService, EstadoService, CandidatosService, RecruitingService, EmpresaService, ProveedorService]
@@ -121,6 +122,22 @@ export class CandidatosOfertadosComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   router: any;
+
+  codopeFilter: string = '';
+  candidatoFilter: string = '';
+
+  // Propiedades de filtro
+  idRecruitingFilter: string = '';
+  clienteFilter: string = '';
+  ubicacionFilter: string = '';
+  perfilFilter: string = '';
+  estadoFilter: string = '';
+
+
+  // Almacenar la lista original de ofertas
+  ofertaListaOriginal: Ofertas[] = [];
+
+  mostrarFiltros: boolean = false; // Inicializa la variable para mostrar/ocultar filtros
 
   constructor(
     private fb: FormBuilder, 
@@ -199,7 +216,8 @@ export class CandidatosOfertadosComponent implements OnInit {
   cargarOfertas() {
     this.ofertaService.getOfertas().subscribe(
       data => {
-        this.ofertaLista.data = data.reverse();
+        this.ofertaListaOriginal = data.reverse(); // Guardar la lista original
+        this.ofertaLista.data = this.ofertaListaOriginal; // Inicializar la lista filtrada
         this.ofertaLista.paginator = this.paginator;
 
         this.tecnologiaLista = data.flatMap(oferta => oferta.tecnologias?.split(',').map(t => t.trim()));
@@ -776,6 +794,97 @@ ofertaPorID(candidato: string, idRecruiting: number) {
   logout() {
     localStorage.removeItem('isLoggedIn');
     location.reload();    
+  }
+
+  applyCodopeFilter(value: string) {
+    this.codopeFilter = value;
+    this.applyFilters();
+  }
+
+  applyCandidatoFilter(value: string) {
+    this.candidatoFilter = value;
+    this.applyFilters();
+  }
+
+  applyIdRecruitingFilter(value: string) {
+    this.idRecruitingFilter = value;
+    this.applyFilters();
+  }
+
+  applyClienteFilter(value: string) {
+    this.clienteFilter = value;
+    this.applyFilters();
+  }
+
+  applyUbicacionFilter(value: string) {
+    this.ubicacionFilter = value;
+    this.applyFilters();
+  }
+
+  applyPerfilFilter(value: string) {
+    this.perfilFilter = value;
+    this.applyFilters();
+  }
+
+  applyEstadoFilter(value: string) {
+    this.estadoFilter = value;
+    this.applyFilters();
+  }
+
+  // Función para aplicar todos los filtros
+  applyFilters() {
+    let filteredData = this.ofertaListaOriginal; // Comenzar con la lista original
+
+    // Aplicar cada filtro
+    if (this.codopeFilter) {
+        filteredData = filteredData.filter(oferta => 
+            oferta.usuario.codope.toLowerCase().includes(this.codopeFilter.trim().toLowerCase())
+        );
+    }
+
+    if (this.candidatoFilter) {
+        filteredData = filteredData.filter(oferta => 
+            oferta.candidato.nombreCandidato.toLowerCase().includes(this.candidatoFilter.trim().toLowerCase())
+        );
+    }
+
+    if (this.idRecruitingFilter) {
+        filteredData = filteredData.filter(oferta => 
+            oferta.recruiting?.idRecruiting.toString().includes(this.idRecruitingFilter.trim())
+        );
+    }
+
+    if (this.clienteFilter) {
+        filteredData = filteredData.filter(oferta => 
+            oferta.recruiting?.empresa?.nombreEmpresa.toLowerCase().includes(this.clienteFilter.trim().toLowerCase())
+        );
+    }
+
+    if (this.ubicacionFilter) {
+        filteredData = filteredData.filter(oferta => 
+            oferta.ubicacion?.nombreProvincia.toLowerCase().includes(this.ubicacionFilter.trim().toLowerCase())
+        );
+    }
+
+    if (this.perfilFilter) {
+        filteredData = filteredData.filter(oferta => 
+            oferta.puesto?.nombrePuesto.toLowerCase().includes(this.perfilFilter.trim().toLowerCase())
+        );
+    }
+
+    if (this.estadoFilter) {
+        filteredData = filteredData.filter(oferta => 
+            oferta.estado?.estado.toLowerCase().includes(this.estadoFilter.trim().toLowerCase())
+        );
+    }
+
+    // Actualizar la lista filtrada
+    this.ofertaLista.data = filteredData;
+  }
+
+  // Función para alternar la visibilidad de los filtros
+  toggleMostrarFiltros() {
+    this.mostrarFiltros = !this.mostrarFiltros; // Cambia el estado de mostrarFiltros
   }
 }
 
